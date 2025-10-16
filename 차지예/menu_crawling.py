@@ -6,12 +6,12 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 from time import sleep
 
-# ===== 사람마다 여기만 바꿔서 실행 =====
+# ===== 팀원별로 여기만 바꿔 실행 =====
 INPUT_CSV  = "bluer_foodV2.csv"   # 상세URL이 들어있는 원본 CSV
 URL_COL    = "상세URL"
 START      = 1                     # 1-based 시작 (포함)
-END        = 10                 # 1-based 끝   (포함)
-OUTPUT_CSV = "차지예_test.csv"  # 
+END        = 32                    # 1-based 끝   (포함)
+OUTPUT_CSV = "result_part_01.csv"  # 각자 다른 파일명
 # ====================================
 
 BASE    = "https://www.bluer.co.kr"
@@ -21,46 +21,56 @@ def clean_text(s: str) -> str:
     return " ".join(s.split()) if s else s
 
 def normalize_url(u: str) -> str:
-    """상대경로('/restaurants/30639')도 절대경로로 보정."""
-    if not u: 
+    if not u:
         return None
     u = u.strip()
     return u if u.startswith("http") else urljoin(BASE, u)
 
-def split_option_price(price_raw: str):
+# --- 핵심: 옵션/가격 파서 (정규식) ---
+OPT_PATTERN = r"(?:[A-Za-z]{1,3}|[0-9]+(?:g|G|kg|KG|인분?|명))"
+AMT_PATTERN = r"([0-9][0-9,]*)\s*원"
+
+def parse_option_and_amount_from_price_el(price_el):
     """
-    'A 290000원', 'M 180,000원', '990000원', '₩180,000' 등에서
-    (opt, amount_text) 반환. opt가 없으면 None.
-    amount_text는 '숫자+원' 형태('290000원', '180,000원')로 정리.
+    가격 영역에서 (옵션/중량/사이즈)와 금액을 분리해서 (opt, amount_text) 반환.
+    - 먼저 텍스트를 정규화(₩ 제거, \xa0→space, 다중 공백 축약)
+    - 정규식으로 '옵션? + 금액'을 찾되, **마지막 매치**를 신뢰
+    - 옵션은: A/B/C 같은 문자 1~3, 또는 200g/1인/2인분/3명 등만 허용(숫자만은 제외)
+    - 금액은 콤마 제거 → '원' 붙여 표준화 (예: 28,000원 → 28000원)
     """
-    if not price_raw:
+    if price_el is None:
         return None, None
-    txt = price_raw.replace("\xa0", " ").replace("₩", "")  # nbsp, 통화기호 제거
-    txt = " ".join(txt.split())  # 공백 정리
 
-    # 옵션 + 금액 (예: A 290000원 / M 180,000원 / 특 250000원)
-    m = re.match(r"^(?P<opt>[A-Za-z가-힣]+)\s*(?P<amt>[0-9][0-9,]*)\s*원?$", txt)
-    if m:
-        opt = m.group("opt")
-        amt = m.group("amt")
-        return opt, f"{amt}원"
+    html = price_el.decode_contents() if hasattr(price_el, "decode_contents") else price_el.text
+    txt = BeautifulSoup(html.replace("&nbsp;", " "), "lxml").get_text()
+    txt = txt.replace("\xa0", " ").replace("₩", "")
+    txt = re.sub(r"\s+", " ", txt).strip()
 
-    # 금액만 (예: 990000원 / 180,000원)
-    m = re.match(r"^(?P<amt>[0-9][0-9,]*)\s*원?$", txt)
-    if m:
-        amt = m.group("amt")
-        return None, f"{amt}원"
+    # 모든 후보를 찾아 마지막 매치 사용
+    # 예: "A 290000원", "200g 110000원", "1인 50,000원", "2, 8000원" 등
+    pattern = re.compile(rf"(?:\b(?P<opt>{OPT_PATTERN})\s*)?\b(?P<amt>{AMT_PATTERN})")
+    matches = list(pattern.finditer(txt))
+    if not matches:
+        # 금액만 있는 경우라도 잡아보자
+        m = re.search(AMT_PATTERN, txt)
+        if m:
+            amt = m.group(1).replace(",", "")
+            return None, f"{amt}원"
+        return None, None
 
-    # 위 패턴과 다르면 원문 그대로
-    return None, price_raw
+    m = matches[-1]
+    opt = m.group("opt")
+    # m.group("amt")에는 캡처가 중첩이라 첫 그룹만 필요
+    amt_num = re.search(r"[0-9][0-9,]*", m.group(0)).group(0)
+    amt = amt_num.replace(",", "")
+    return (opt or None), f"{amt}원"
 
 def scrape_detail(url: str) -> pd.DataFrame:
-    """상세 페이지 1개에서 메뉴/메뉴범위를 DataFrame으로 반환."""
     r = requests.get(url, headers=HEADERS, timeout=15)
     r.raise_for_status()
     soup = BeautifulSoup(r.text, "lxml")
 
-    rid = urlparse(url).path.rstrip("/").split("/")[-1]  # '30639' 등
+    rid = urlparse(url).path.rstrip("/").split("/")[-1]
 
     # 식당명(여러 후보 중 첫 매칭)
     name = None
@@ -70,16 +80,15 @@ def scrape_detail(url: str) -> pd.DataFrame:
             name = clean_text(el.get_text())
             break
 
-    # 메뉴 컨테이너(PC/모바일 중 첫 번째만 사용)
+    # 메뉴 컨테이너(PC/모바일 중 첫 번째)
     menu_box = soup.select_one(".restaurant-info-menu")
     if not menu_box:
         return pd.DataFrame(columns=["식당ID","식당명","메뉴","가격원문","대표여부","메뉴범위"])
 
-    # 상단 가격 범위(예: ₩180,000 ~ ₩990,000)
-    menu_range_el   = menu_box.select_one(".header .price")
-    menu_range_text = clean_text(menu_range_el.get_text()) if menu_range_el else None
+    # 상단 가격 범위(예: ₩180,000 ~ ₩990,000) — 원문 유지
+    range_el = menu_box.select_one(".header .price")
+    price_range_text = clean_text(range_el.get_text()) if range_el else None
 
-    # 메뉴 수집 (중복 방지)
     rows, seen = [], set()
     for li in menu_box.select("ul.restaurant-menu-list > li"):
         title_el = li.select_one(".content .title")
@@ -87,15 +96,14 @@ def scrape_detail(url: str) -> pd.DataFrame:
         badge_el = li.select_one(".title-icon")  # '대표' 텍스트 있을 수 있음
 
         menu_name = clean_text(title_el.get_text()) if title_el else None
-        price_raw = clean_text(price_el.get_text()) if price_el else None
-        badge     = clean_text(badge_el.get_text()) if badge_el else None
+        opt, amount_text = parse_option_and_amount_from_price_el(price_el)
+        badge = clean_text(badge_el.get_text()) if badge_el else None
 
-        # 옵션/가격 분리 → 메뉴명에 옵션 붙이기, 가격은 숫자+원만
-        opt, amount_text = split_option_price(price_raw)
-        menu_display  = f"{menu_name} {opt}".strip() if opt else menu_name
-        price_display = amount_text or price_raw
+        # 메뉴명 + (옵션)  ← 옵션이 있으면 괄호로 감싸 붙이기
+        menu_display  = f"{menu_name} ({opt})".strip() if (menu_name and opt) else menu_name
+        price_display = amount_text  # 숫자만 + '원' 표준화
 
-        # 중복 방지 키(동일 메뉴표시+가격표시는 한 번만)
+        # 중복 방지
         key = (menu_display, price_display)
         if key in seen:
             continue
@@ -104,10 +112,10 @@ def scrape_detail(url: str) -> pd.DataFrame:
         rows.append({
             "식당ID": rid,
             "식당명": name,
-            "메뉴": menu_display,       # 예: 다이닝마코스 A
-            "가격원문": price_display,   # 예: 290000원
+            "메뉴": menu_display,      # 예: '삼선짬뽕' 또는 '다이닝마코스 (A)' 또는 '한우양념갈비구이정식 (200g)'
+            "가격원문": price_display,  # 예: '28000원' / '290000원' / '110000원'
             "대표여부": "Y" if (badge and "대표" in badge) else "N",
-            "메뉴범위": menu_range_text,
+            "메뉴범위": price_range_text,
         })
 
     return pd.DataFrame(rows, columns=["식당ID","식당명","메뉴","가격원문","대표여부","메뉴범위"])
@@ -126,7 +134,7 @@ def main():
     s = max(1, START); e = min(END, len(src))
     part = src.iloc[s-1:e].copy()
 
-    # 이어쓰기 모드: 기존 결과가 있으면 헤더 생략
+    # 이어쓰기: 기존 파일 있으면 헤더 생략
     header_needed = not os.path.exists(OUTPUT_CSV)
 
     for i, u in enumerate(part[URL_COL].astype(str), start=s):
@@ -141,7 +149,6 @@ def main():
                 print(f"[SKIP] {i}: empty -> {url}")
                 continue
 
-            # 결과를 '추가' 저장 (덮어쓰기 아님)
             df.to_csv(
                 OUTPUT_CSV,
                 index=False,
@@ -155,7 +162,7 @@ def main():
         except Exception as e:
             print(f"[ERR] {i}: {url} -> {e}")
         finally:
-            sleep(0.25)  # 서버 배려
+            sleep(0.25) 
 
 if __name__ == "__main__":
     main()
