@@ -1,0 +1,1014 @@
+2025-10-18 01:42:14.425 [main] INFO  i.d.core.server.DefaultServerFactory - Registering jersey handler with root path prefix: /
+2025-10-18 01:42:14.428 [main] INFO  i.d.core.server.DefaultServerFactory - Registering admin handler with root path prefix: /
+2025-10-18 01:42:14.722 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: assets for path /maps/*
+2025-10-18 01:42:14.724 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: webjars for path /webjars/*
+2025-10-18 01:42:14.731 [main] INFO  i.d.core.server.ServerFactory - Starting GraphHopperApplication
+                        _     _
+   __ _ _ __ __ _ _ __ | |__ | |__   ___  _ __  _ __   ___ _ __
+  / _` | '__/ _` | '_ \| '_ \| '_ \ / _ \| '_ \| '_ \ / _ \ '__|
+ | (_| | | | (_| | |_) | | | | | | | (_) | |_) | |_) |  __/ |
+  \__, |_|  \__,_| .__/|_| |_|_| |_|\___/| .__/| .__/ \___|_|
+  |___/          |_|                     |_|   |_|
+2025-10-18 01:42:14.849 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened application@20011bf{HTTP/1.1, (http/1.1)}{localhost:8989}
+2025-10-18 01:42:14.850 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened admin@51d9b06c{HTTP/1.1, (http/1.1)}{localhost:8990}
+2025-10-18 01:42:14.853 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.26; built: 2025-08-14T18:03:14.457Z; git: 7559873b6e46eea7c2c6da2b58327ea2ecf941f4; jvm 17.0.12+8-LTS-286
+2025-10-18 01:42:14.880 [main] INFO  com.graphhopper.GraphHopper - version 11.0|2025-10-14T14:28:00Z (9,24,7,5,2,9)
+2025-10-18 01:42:14.934 [main] ERROR i.dropwizard.core.cli.ServerCommand - Unable to start server, shutting down
+java.lang.IllegalArgumentException: Encoded values missing: car_access, car_average_speed, foot_access, hike_rating, foot_priority, country, road_class, foot_road_access, mtb_rating, foot_average_speed.
+To avoid that certain encoded values are automatically removed when you change the custom model later, you need to set the encoded values manually:
+graph.encoded_values: car_access, car_average_speed, foot_access, hike_rating, foot_priority, country, road_class, foot_road_access, mtb_rating, foot_average_speed
+	at com.graphhopper.GraphHopper.prepareImport(GraphHopper.java:874)
+	at com.graphhopper.GraphHopper.process(GraphHopper.java:821)
+	at com.graphhopper.GraphHopper.importOrLoad(GraphHopper.java:796)
+	at com.graphhopper.http.GraphHopperManaged.start(GraphHopperManaged.java:44)
+	at io.dropwizard.lifecycle.JettyManaged.doStart(JettyManaged.java:27)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:171)
+	at org.eclipse.jetty.server.Server.start(Server.java:470)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:121)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:89)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:415)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at io.dropwizard.core.cli.ServerCommand.run(ServerCommand.java:52)
+	at io.dropwizard.core.cli.EnvironmentCommand.run(EnvironmentCommand.java:67)
+	at io.dropwizard.core.cli.ConfiguredCommand.run(ConfiguredCommand.java:98)
+	at io.dropwizard.core.cli.Cli.run(Cli.java:78)
+	at io.dropwizard.core.Application.run(Application.java:94)
+	at com.graphhopper.application.GraphHopperApplication.main(GraphHopperApplication.java:37)
+2025-10-18 01:42:14.936 [main] INFO  org.eclipse.jetty.server.Server - Stopped Server@64524dd{STOPPING}[11.0.26,sto=30000]
+2025-10-18 01:42:14.936 [main] INFO  org.eclipse.jetty.server.Server - Shutdown Server@64524dd{STOPPING}[11.0.26,sto=30000]
+2025-10-18 01:42:14.942 [main] WARN  i.dropwizard.core.cli.ServerCommand - Failure during stop server
+java.util.concurrent.ExecutionException: java.lang.IllegalStateException: STOPPED
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2096)
+	at org.eclipse.jetty.server.Server.doStop(Server.java:490)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.stop(AbstractLifeCycle.java:132)
+	at io.dropwizard.core.cli.ServerCommand.run(ServerCommand.java:63)
+	at io.dropwizard.core.cli.EnvironmentCommand.run(EnvironmentCommand.java:67)
+	at io.dropwizard.core.cli.ConfiguredCommand.run(ConfiguredCommand.java:98)
+	at io.dropwizard.core.cli.Cli.run(Cli.java:78)
+	at io.dropwizard.core.Application.run(Application.java:94)
+	at com.graphhopper.application.GraphHopperApplication.main(GraphHopperApplication.java:37)
+Caused by: java.lang.IllegalStateException: STOPPED
+	at org.eclipse.jetty.server.handler.ContextHandler.shutdown(ContextHandler.java:774)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at org.eclipse.jetty.util.component.Graceful.shutdown(Graceful.java:146)
+	... 8 common frames omitted
+2025-10-18 01:53:58.139 [main] INFO  i.d.core.server.DefaultServerFactory - Registering jersey handler with root path prefix: /
+2025-10-18 01:53:58.142 [main] INFO  i.d.core.server.DefaultServerFactory - Registering admin handler with root path prefix: /
+2025-10-18 01:53:58.472 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: assets for path /maps/*
+2025-10-18 01:53:58.474 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: webjars for path /webjars/*
+2025-10-18 01:53:58.479 [main] INFO  i.d.core.server.ServerFactory - Starting GraphHopperApplication
+                        _     _
+   __ _ _ __ __ _ _ __ | |__ | |__   ___  _ __  _ __   ___ _ __
+  / _` | '__/ _` | '_ \| '_ \| '_ \ / _ \| '_ \| '_ \ / _ \ '__|
+ | (_| | | | (_| | |_) | | | | | | | (_) | |_) | |_) |  __/ |
+  \__, |_|  \__,_| .__/|_| |_|_| |_|\___/| .__/| .__/ \___|_|
+  |___/          |_|                     |_|   |_|
+2025-10-18 01:53:58.588 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened application@20011bf{HTTP/1.1, (http/1.1)}{localhost:8989}
+2025-10-18 01:53:58.589 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened admin@51d9b06c{HTTP/1.1, (http/1.1)}{localhost:8990}
+2025-10-18 01:53:58.591 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.26; built: 2025-08-14T18:03:14.457Z; git: 7559873b6e46eea7c2c6da2b58327ea2ecf941f4; jvm 17.0.12+8-LTS-286
+2025-10-18 01:53:58.603 [main] INFO  com.graphhopper.GraphHopper - version 11.0|2025-10-14T14:28:00Z (9,24,7,5,2,9)
+2025-10-18 01:53:58.852 [main] ERROR i.dropwizard.core.cli.ServerCommand - Unable to start server, shutting down
+java.lang.IllegalArgumentException: Could not create weighting for profile: 'pt'.
+Profile: name=pt|turn_costs={null}|weighting=custom|hints={custom_model_files=[], custom_model=distanceInfluence=null|headingPenalty=null|speedStatements=[]|priorityStatements=[]|turnPenaltyStatements=[]|areas=[]}
+Error: Cannot compile expression: At least one initial statement under 'speed' is required.
+	at com.graphhopper.GraphHopper.checkProfilesConsistency(GraphHopper.java:1191)
+	at com.graphhopper.GraphHopper.process(GraphHopper.java:833)
+	at com.graphhopper.GraphHopper.importOrLoad(GraphHopper.java:796)
+	at com.graphhopper.http.GraphHopperManaged.start(GraphHopperManaged.java:44)
+	at io.dropwizard.lifecycle.JettyManaged.doStart(JettyManaged.java:27)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.start(ContainerLifeCycle.java:171)
+	at org.eclipse.jetty.server.Server.start(Server.java:470)
+	at org.eclipse.jetty.util.component.ContainerLifeCycle.doStart(ContainerLifeCycle.java:121)
+	at org.eclipse.jetty.server.handler.AbstractHandler.doStart(AbstractHandler.java:89)
+	at org.eclipse.jetty.server.Server.doStart(Server.java:415)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.start(AbstractLifeCycle.java:93)
+	at io.dropwizard.core.cli.ServerCommand.run(ServerCommand.java:52)
+	at io.dropwizard.core.cli.EnvironmentCommand.run(EnvironmentCommand.java:67)
+	at io.dropwizard.core.cli.ConfiguredCommand.run(ConfiguredCommand.java:98)
+	at io.dropwizard.core.cli.Cli.run(Cli.java:78)
+	at io.dropwizard.core.Application.run(Application.java:94)
+	at com.graphhopper.application.GraphHopperApplication.main(GraphHopperApplication.java:37)
+2025-10-18 01:53:58.855 [main] INFO  org.eclipse.jetty.server.Server - Stopped Server@64524dd{STOPPING}[11.0.26,sto=30000]
+2025-10-18 01:53:58.855 [main] INFO  org.eclipse.jetty.server.Server - Shutdown Server@64524dd{STOPPING}[11.0.26,sto=30000]
+2025-10-18 01:53:58.859 [main] WARN  i.dropwizard.core.cli.ServerCommand - Failure during stop server
+java.util.concurrent.ExecutionException: java.lang.IllegalStateException: STOPPED
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2096)
+	at org.eclipse.jetty.server.Server.doStop(Server.java:490)
+	at org.eclipse.jetty.util.component.AbstractLifeCycle.stop(AbstractLifeCycle.java:132)
+	at io.dropwizard.core.cli.ServerCommand.run(ServerCommand.java:63)
+	at io.dropwizard.core.cli.EnvironmentCommand.run(EnvironmentCommand.java:67)
+	at io.dropwizard.core.cli.ConfiguredCommand.run(ConfiguredCommand.java:98)
+	at io.dropwizard.core.cli.Cli.run(Cli.java:78)
+	at io.dropwizard.core.Application.run(Application.java:94)
+	at com.graphhopper.application.GraphHopperApplication.main(GraphHopperApplication.java:37)
+Caused by: java.lang.IllegalStateException: STOPPED
+	at org.eclipse.jetty.server.handler.ContextHandler.shutdown(ContextHandler.java:774)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at org.eclipse.jetty.util.component.Graceful.shutdown(Graceful.java:146)
+	... 8 common frames omitted
+2025-10-18 01:55:00.834 [main] INFO  i.d.core.server.DefaultServerFactory - Registering jersey handler with root path prefix: /
+2025-10-18 01:55:00.837 [main] INFO  i.d.core.server.DefaultServerFactory - Registering admin handler with root path prefix: /
+2025-10-18 01:55:01.154 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: assets for path /maps/*
+2025-10-18 01:55:01.155 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: webjars for path /webjars/*
+2025-10-18 01:55:01.161 [main] INFO  i.d.core.server.ServerFactory - Starting GraphHopperApplication
+                        _     _
+   __ _ _ __ __ _ _ __ | |__ | |__   ___  _ __  _ __   ___ _ __
+  / _` | '__/ _` | '_ \| '_ \| '_ \ / _ \| '_ \| '_ \ / _ \ '__|
+ | (_| | | | (_| | |_) | | | | | | | (_) | |_) | |_) |  __/ |
+  \__, |_|  \__,_| .__/|_| |_|_| |_|\___/| .__/| .__/ \___|_|
+  |___/          |_|                     |_|   |_|
+2025-10-18 01:55:01.272 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened application@20011bf{HTTP/1.1, (http/1.1)}{localhost:8989}
+2025-10-18 01:55:01.273 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened admin@51d9b06c{HTTP/1.1, (http/1.1)}{localhost:8990}
+2025-10-18 01:55:01.277 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.26; built: 2025-08-14T18:03:14.457Z; git: 7559873b6e46eea7c2c6da2b58327ea2ecf941f4; jvm 17.0.12+8-LTS-286
+2025-10-18 01:55:01.292 [main] INFO  com.graphhopper.GraphHopper - version 11.0|2025-10-14T14:28:00Z (9,24,7,5,2,9)
+2025-10-18 01:55:01.663 [main] INFO  com.graphhopper.GraphHopper - No custom areas are used, custom_areas.directory not given
+2025-10-18 01:55:01.680 [main] INFO  com.graphhopper.GraphHopper - No country rules available
+2025-10-18 01:55:01.680 [main] INFO  com.graphhopper.GraphHopper - start creating graph from data/south-korea-251014.osm.pbf
+2025-10-18 01:55:01.718 [main] INFO  com.graphhopper.GraphHopper - using car,foot|RAM_STORE|2D|no_turn_cost|nodes:9,edges:24,geometry:7,location_index:5,string_index:2,nodesCH:0,shortcuts:9, memory:totalMB:68, usedMB:36
+2025-10-18 01:55:01.728 [main] INFO  c.g.reader.osm.WaySegmentParser - Start reading OSM file: 'data\south-korea-251014.osm.pbf'
+2025-10-18 01:55:01.729 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - start
+2025-10-18 01:55:03.968 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - start reading OSM ways
+2025-10-18 01:55:09.949 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - start reading OSM relations
+2025-10-18 01:55:10.137 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - finished, processed ways: 3,390,938, accepted ways: 1,647,238, way nodes: 15,863,828, relations: 57,953, totalMB:2960, usedMB:1106
+2025-10-18 01:55:10.139 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - finished, took: 8.41s
+2025-10-18 01:55:10.144 [main] INFO  c.g.reader.osm.WaySegmentParser - Creating graph. Node count (pillar+tower): 15863828, totalMB:2960, usedMB:1106
+2025-10-18 01:55:10.144 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start
+2025-10-18 01:55:10.159 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start reading OSM nodes
+2025-10-18 01:55:11.930 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - processed nodes: 10,000,000, accepted nodes: 3,852,663, totalMB:2960, usedMB:968
+2025-10-18 01:55:13.430 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - processed nodes: 20,000,000, accepted nodes: 7,328,242, totalMB:2960, usedMB:649
+2025-10-18 01:55:15.219 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - processed nodes: 30,000,000, accepted nodes: 13,269,634, totalMB:2960, usedMB:2063
+2025-10-18 01:55:16.119 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start reading OSM ways
+2025-10-18 01:55:37.234 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start reading OSM relations
+2025-10-18 01:55:37.239 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - finished, processed ways: 3,390,938, way nodes: 15,863,828, nodes with tags: 101,668, node tag capacity: 2,105,344, ignored barriers at junctions: 637
+2025-10-18 01:55:37.239 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - finished, took: 27.09s
+2025-10-18 01:55:37.241 [main] INFO  c.g.reader.osm.WaySegmentParser - Finished reading OSM file. pass1: 8s,  pass2: 27s,  total: 35s
+2025-10-18 01:55:37.241 [main] INFO  c.graphhopper.reader.osm.OSMReader - Finished reading OSM file: C:\Users\정주환\Desktop\YGYT\정주환\data\south-korea-251014.osm.pbf, nodes: 2,633,624, edges: 3,510,173, zero distance edges: 11,337
+2025-10-18 01:55:37.242 [main] INFO  com.graphhopper.GraphHopper - sorting graph along Hilbert curve...
+2025-10-18 01:55:38.128 [main] INFO  com.graphhopper.GraphHopper - calculating sort order took: 886.50ms
+2025-10-18 01:55:38.181 [main] INFO  com.graphhopper.GraphHopper - sort graph for fixed ordering...
+2025-10-18 01:55:39.271 [main] INFO  com.graphhopper.GraphHopper - sorting 3,510,173 edges took: 1.09s
+2025-10-18 01:55:39.646 [main] INFO  com.graphhopper.GraphHopper - sorting 2,633,624 nodes took: 375.51ms
+2025-10-18 01:55:39.650 [main] INFO  c.g.r.s.PrepareRoutingSubnetworks - Start marking subnetworks, prepare.min_network_size: 200, threads: 1, nodes: 2,633,624, edges: 3,510,173, jobs: [car_subnetwork|com.graphhopper.routing.weighting.custom.CustomWeighting@27329d2a, foot_subnetwork|com.graphhopper.routing.weighting.custom.CustomWeighting@7978e022], totalMB:2960, usedMB:2582
+2025-10-18 01:55:42.226 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - foot - Found 207660 subnetworks (200743 single edges and 6917 components with more than one edge, total nodes: 7020346), took: 2.5690506s
+2025-10-18 01:55:42.274 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - foot - Marked 207651 subnetworks (biggest: 392 edges) -> 9 components(s) remain (smallest: 410, biggest: 6756815 edges), total marked edges: 28775, took: 0.0440799s
+2025-10-18 01:55:43.781 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - car - Found 1551178 subnetworks (1548323 single edges and 2855 components with more than one edge, total nodes: 7020346), took: 1.5066974s
+2025-10-18 01:55:43.833 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - car - Marked 1551169 subnetworks (biggest: 353 edges) -> 9 components(s) remain (smallest: 402, biggest: 5433596 edges), total marked edges: 16189, took: 0.0521326s
+2025-10-18 01:55:44.013 [main] INFO  c.g.r.s.PrepareRoutingSubnetworks - Finished finding and marking subnetworks for 2 jobs, took: 4.36375s, totalMB:2960, usedMB:1300
+2025-10-18 01:55:44.013 [main] INFO  com.graphhopper.GraphHopper - nodes: 2,633,624, edges: 3,510,173
+2025-10-18 01:55:45.348 [main] INFO  c.g.storage.index.LocationIndexTree - location index created in 1.3147207s, size:5,335,646, leafs:692,537, precision:300, depth:7, checksum:1941509, entries:[16, 16, 16, 16, 16, 4, 4], entriesPerLeaf:7.704492
+2025-10-18 01:55:45.351 [main] INFO  c.g.routing.ch.CHPreparationHandler - Creating CH preparations, totalMB:2960, usedMB:1556
+2025-10-18 01:55:45.353 [main] INFO  c.g.routing.ch.CHPreparationHandler - 1/1 Setting up CH preparation for profile 'car' NODE_BASED ... (totalMB:2960, usedMB:1556)
+2025-10-18 01:55:45.368 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Creating CH prepare graph, totalMB:2960, usedMB:1613
+2025-10-18 01:55:45.378 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Building CH prepare graph, totalMB:2960, usedMB:1686
+2025-10-18 01:55:45.714 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Finished building CH prepare graph, took: 0.33555707s, totalMB:2960, usedMB:1819
+2025-10-18 01:55:45.731 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Building initial queue of nodes to be contracted: 2633624 nodes, totalMB:2960, usedMB:1843
+2025-10-18 01:55:48.237 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Finished building queue, took: 2.505968s, totalMB:2960, usedMB:2079
+2025-10-18 01:55:48.238 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  2,633,624, shortcuts:          0, updates:  0, checked-nodes:          0, t(total):   2.87,  t(period):   2.51, t(lazy):   0.00, t(neighbor):   0.00, t(contr):   0.00, t(other) :   0.36, dijkstra-ratio:  59.22%, meanDegree: 1.33, dijkstras:  9,974,352, mem:       20MB, totalMB:2960, usedMB:2079
+2025-10-18 01:55:49.523 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  2,109,447, shortcuts:      9,766, updates:  0, checked-nodes:    526,725, t(total):   4.15,  t(period):   2.51, t(lazy):   0.25, t(neighbor):   0.60, t(contr):   0.28, t(other) :   0.51, dijkstra-ratio:  55.77%, meanDegree: 1.01, dijkstras: 12,042,791, mem:       20MB, totalMB:2960, usedMB:2293
+2025-10-18 01:55:51.941 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  1,583,755, shortcuts:     58,536, updates:  0, checked-nodes:  1,053,450, t(total):   6.57,  t(period):   2.51, t(lazy):   0.67, t(neighbor):   1.85, t(contr):   0.91, t(other) :   0.64, dijkstra-ratio:  57.54%, meanDegree: 2.11, dijkstras: 16,798,664, mem:       20MB, totalMB:2960, usedMB:1295
+2025-10-18 01:55:57.050 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  1,069,830, shortcuts:    469,380, updates:  0, checked-nodes:  1,580,175, t(total):  11.68,  t(period):   2.51, t(lazy):   1.64, t(neighbor):   4.49, t(contr):   2.26, t(other) :   0.79, dijkstra-ratio:  62.17%, meanDegree: 3.10, dijkstras: 25,960,776, mem:       20MB, totalMB:2960, usedMB:1288
+2025-10-18 01:56:01.190 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:    579,611, shortcuts:    949,362, updates:  0, checked-nodes:  2,106,900, t(total):  15.82,  t(period):   2.51, t(lazy):   2.57, t(neighbor):   6.44, t(contr):   3.37, t(other) :   0.94, dijkstra-ratio:  63.36%, meanDegree: 0.00, dijkstras: 32,786,886, mem:       20MB, totalMB:2960, usedMB:1277
+2025-10-18 01:56:08.136 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:     99,947, shortcuts:  1,627,031, updates:  0, checked-nodes:  2,633,625, t(total):  22.77,  t(period):   2.51, t(lazy):   4.33, t(neighbor):   9.74, t(contr):   5.10, t(other) :   1.09, dijkstra-ratio:  67.22%, meanDegree: 3.51, dijkstras: 43,251,802, mem:       20MB, totalMB:2960, usedMB:1341
+2025-10-18 01:56:22.756 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:          0, shortcuts:  2,365,059, updates:  0, checked-nodes:  2,773,200, t(total):  37.39,  t(period):   2.51, t(lazy):   9.08, t(neighbor):  16.63, t(contr):   7.98, t(other) :   1.19, dijkstra-ratio:  75.44%, meanDegree: 1.83, dijkstras: 60,343,483, mem:       20MB, totalMB:2960, usedMB:1608
+2025-10-18 01:56:22.759 [car] INFO  c.g.r.c.PrepareContractionHierarchies - new shortcuts: 2,365,059, initSize:2,633,624, com.graphhopper.routing.weighting.custom.CustomWeighting@41ae73ac, periodic:0, lazy:100, neighbor:100, t(total):  37.39,  t(period):   2.51, t(lazy):   9.08, t(neighbor):  16.63, t(contr):   7.98, t(other) :   1.19, dijkstra-ratio:  75.44%, lazy-overhead: 5%, totalMB:2960, usedMB:1608
+2025-10-18 01:56:22.759 [car] INFO  c.g.r.c.PrepareContractionHierarchies - shortcuts that exceed maximum weight: 0
+2025-10-18 01:56:22.759 [car] INFO  c.g.r.c.PrepareContractionHierarchies - took: 37s, graph now - num edges: 3,510,173, num nodes: 2,633,624, num shortcuts: 2,365,059
+2025-10-18 01:56:22.852 [main] INFO  c.g.routing.ch.CHPreparationHandler - Finished CH preparation, totalMB:2960, usedMB:1698
+2025-10-18 01:56:22.857 [main] INFO  com.graphhopper.GraphHopper - flushing graph car,foot|RAM_STORE|2D|no_turn_cost|nodes:9,edges:24,geometry:7,location_index:5,string_index:2,nodesCH:0,shortcuts:9, details:edges: 3,510,173(134MB), nodes: 2,633,624(31MB), bounds: 117.8144075,135.4220067,33.1133109,43.111880500000005, name:(6MB), geo:92,108,626/-1(88MB), totalMB:2960, usedMB:1698)
+2025-10-18 01:56:23.067 [main] INFO  com.graphhopper.GraphHopper - flushed graph totalMB:2960, usedMB:1738)
+2025-10-18 01:56:23.071 [main] INFO  c.g.http.GraphHopperManaged - loaded graph at:graph-cache, data_reader_file:data/south-korea-251014.osm.pbf, encoded values:["{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"car_access\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":0,\"bwd_shift\":1,\"fwd_mask\":1,\"bwd_mask\":2}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"car_average_speed\",\"bits\":7,\"min_storable_value\":0,\"max_storable_value\":127,\"max_value\":68,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":2,\"bwd_shift\":9,\"fwd_mask\":508,\"bwd_mask\":65024,\"factor\":2.0,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"foot_access\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":16,\"bwd_shift\":17,\"fwd_mask\":65536,\"bwd_mask\":131072}","{\"className\":\"com.graphhopper.routing.ev.IntEncodedValueImpl\",\"name\":\"hike_rating\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":6,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":18,\"bwd_shift\":-1,\"fwd_mask\":1835008,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"foot_priority\",\"bits\":4,\"min_storable_value\":0,\"max_storable_value\":15,\"max_value\":12,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":21,\"bwd_shift\":-1,\"fwd_mask\":31457280,\"bwd_mask\":0,\"factor\":0.1,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"country\",\"bits\":8,\"min_storable_value\":0,\"max_storable_value\":255,\"max_value\":157,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":0,\"bwd_shift\":-1,\"fwd_mask\":255,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.Country\"}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"road_class\",\"bits\":5,\"min_storable_value\":0,\"max_storable_value\":31,\"max_value\":21,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":8,\"bwd_shift\":-1,\"fwd_mask\":7936,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.RoadClass\"}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"foot_road_access\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":6,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":13,\"bwd_shift\":-1,\"fwd_mask\":57344,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.FootRoadAccess\"}","{\"className\":\"com.graphhopper.routing.ev.IntEncodedValueImpl\",\"name\":\"mtb_rating\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":7,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":16,\"bwd_shift\":-1,\"fwd_mask\":458752,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"foot_average_speed\",\"bits\":4,\"min_storable_value\":0,\"max_storable_value\":15,\"max_value\":15,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":19,\"bwd_shift\":-1,\"fwd_mask\":7864320,\"bwd_mask\":0,\"factor\":1.0,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"road_environment\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":5,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":23,\"bwd_shift\":-1,\"fwd_mask\":58720256,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.RoadEnvironment\"}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"roundabout\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":26,\"bwd_shift\":-1,\"fwd_mask\":67108864,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"road_class_link\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":27,\"bwd_shift\":-1,\"fwd_mask\":134217728,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"max_speed\",\"bits\":7,\"min_storable_value\":0,\"max_storable_value\":127,\"max_value\":127,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":2,\"bwd_data_index\":2,\"fwd_shift\":0,\"bwd_shift\":7,\"fwd_mask\":127,\"bwd_mask\":16256,\"factor\":2.0,\"use_maximum_as_infinity\":true}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"ferry_speed\",\"bits\":5,\"min_storable_value\":0,\"max_storable_value\":31,\"max_value\":25,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":14,\"bwd_shift\":-1,\"fwd_mask\":507904,\"bwd_mask\":0,\"factor\":2.0,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"foot_network\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":4,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":19,\"bwd_shift\":-1,\"fwd_mask\":3670016,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.RouteNetwork\"}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"car_subnetwork\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":22,\"bwd_shift\":-1,\"fwd_mask\":4194304,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"foot_subnetwork\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":23,\"bwd_shift\":-1,\"fwd_mask\":8388608,\"bwd_mask\":0}"], 11 bytes for edge flags, edges: 3,510,173(134MB), nodes: 2,633,624(31MB), bounds: 117.8144075,135.4220067,33.1133109,43.111880500000005, name:(6MB), geo:92,108,626/-1(88MB)
+2025-10-18 01:56:23.305 [main] WARN  o.g.jersey.internal.inject.Providers - A provider com.codahale.metrics.health.HealthCheckRegistry registered in SERVER runtime does not implement any provider interfaces applicable in the SERVER runtime. Due to constraint configuration problems the provider com.codahale.metrics.health.HealthCheckRegistry will be ignored. 
+2025-10-18 01:56:23.425 [main] INFO  i.d.jersey.DropwizardResourceConfig - The following paths were found for the configured resources:
+
+    GET     / (com.graphhopper.application.resources.RootResource)
+    GET     /health (com.graphhopper.resources.HealthCheckResource)
+    GET     /i18n (com.graphhopper.resources.I18NResource)
+    GET     /i18n/{locale} (com.graphhopper.resources.I18NResource)
+    GET     /info (com.graphhopper.resources.InfoResource)
+    GET     /isochrone (com.graphhopper.resources.IsochroneResource)
+    POST    /match (com.graphhopper.resources.MapMatchingResource)
+    GET     /mvt/{z}/{x}/{y}.mvt (com.graphhopper.resources.MVTResource)
+    POST    /navigate (com.graphhopper.navigation.NavigateResource)
+    GET     /navigate/directions/v5/gh/{profile}/{coordinatesArray : .+} (com.graphhopper.navigation.NavigateResource)
+    GET     /nearest (com.graphhopper.resources.NearestResource)
+    GET     /route (com.graphhopper.resources.RouteResource)
+    POST    /route (com.graphhopper.resources.RouteResource)
+    GET     /spt (com.graphhopper.resources.SPTResource)
+
+2025-10-18 01:56:23.427 [main] INFO  o.e.j.server.handler.ContextHandler - Started i.d.j.MutableServletContextHandler@7e191fda{/,null,AVAILABLE}
+2025-10-18 01:56:23.430 [main] INFO  i.d.core.setup.AdminEnvironment - tasks = 
+
+    POST    /tasks/log-level (io.dropwizard.servlets.tasks.LogConfigurationTask)
+    POST    /tasks/gc (io.dropwizard.servlets.tasks.GarbageCollectionTask)
+
+2025-10-18 01:56:23.430 [main] INFO  o.e.j.server.handler.ContextHandler - Started i.d.j.MutableServletContextHandler@19a5b637{/,null,AVAILABLE}
+2025-10-18 01:56:23.487 [main] INFO  o.e.jetty.server.AbstractConnector - Started application@20011bf{HTTP/1.1, (http/1.1)}{localhost:8989}
+2025-10-18 01:56:23.496 [main] INFO  o.e.jetty.server.AbstractConnector - Started admin@51d9b06c{HTTP/1.1, (http/1.1)}{localhost:8990}
+2025-10-18 01:56:23.497 [main] INFO  org.eclipse.jetty.server.Server - Started Server@64524dd{STARTING}[11.0.26,sto=30000] @83725ms
+2025-10-18 02:07:16.413 [dw-55 - GET /route?point=37.498%2C127.027&point=37.576%2C126.977&pt.earliest_departure_time=2025-10-19T05%3A50%3A00Z&pt.arrive_by=true&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT500M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:08:41.138 [dw-34 - GET /route?point=37.5796%2C126.977&point=37.5663%2C0&pt.earliest_departure_time=2025-10-17T17%3A07%3A34Z&pt.arrive_by=false&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT120M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:09:20.981 [dw-33 - GET /route?point=37.5796%2C126.977&point=37.5663%2C0&pt.earliest_departure_time=2025-10-18T05%3A07%3A00Z&pt.arrive_by=false&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT120M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:09:23.584 [dw-28 - GET /route?point=37.5796%2C126.977&point=37.5663%2C0&pt.earliest_departure_time=2025-10-19T05%3A07%3A00Z&pt.arrive_by=false&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT120M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:10:17.120 [dw-58 - GET /route?point=37.5796%2C126.977&point=37.4979%2C0&pt.earliest_departure_time=2025-10-19T05%3A07%3A00Z&pt.arrive_by=false&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT120M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:10:23.332 [dw-34 - GET /route?point=37.5796%2C126.977&point=37.4979%2C0&pt.earliest_departure_time=2025-10-19T05%3A07%3A00Z&pt.arrive_by=true&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT120M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:10:24.369 [dw-58 - GET /route?point=37.5796%2C126.977&point=37.4979%2C0&pt.earliest_departure_time=2025-10-19T05%3A07%3A00Z&pt.arrive_by=false&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT120M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:11:03.819 [dw-60 - GET /route?point=37.5796%2C126.977&point=37.4979%2C0&pt.earliest_departure_time=2025-10-19T05%3A07%3A00Z&pt.arrive_by=false&locale=en-US&profile=pt&pt.profile=false&pt.access_profile=foot&pt.beta_access_time=1&pt.egress_profile=foot&pt.beta_egress_time=1&pt.profile_duration=PT120M&pt.limit_street_time=PT30M&pt.ignore_transfers=false] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+java.lang.IllegalArgumentException: The requested profile 'pt' does not exist.
+Available profiles: [car, foot]
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:46)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:14:42.769 [dw-61 - GET /route] INFO  c.g.h.IllegalArgumentExceptionMapper - bad request: profile parameter required
+java.lang.IllegalArgumentException: profile parameter required
+	at com.graphhopper.http.ProfileResolver.resolveProfile(ProfileResolver.java:42)
+	at com.graphhopper.resources.RouteResource.doGet(RouteResource.java:150)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:146)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:189)
+	at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:176)
+	at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:93)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:478)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:400)
+	at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81)
+	at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:256)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248)
+	at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:292)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:274)
+	at org.glassfish.jersey.internal.Errors.process(Errors.java:244)
+	at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265)
+	at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:235)
+	at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:684)
+	at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:398)
+	at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:350)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:379)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:312)
+	at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:764)
+	at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1665)
+	at io.dropwizard.servlets.ThreadNameFilter.doFilter(ThreadNameFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.handle(AllowedMethodsFilter.java:46)
+	at io.dropwizard.jersey.filter.AllowedMethodsFilter.doFilter(AllowedMethodsFilter.java:40)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at com.graphhopper.http.CORSFilter.doFilter(CORSFilter.java:36)
+	at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:202)
+	at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1635)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:527)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:221)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1381)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:176)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:484)
+	at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:174)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1303)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:129)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at io.dropwizard.metrics.jetty11.InstrumentedHandler.handle(InstrumentedHandler.java:313)
+	at io.dropwizard.jetty.RoutingHandler.handle(RoutingHandler.java:52)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.handler.gzip.GzipHandler.handle(GzipHandler.java:822)
+	at io.dropwizard.jetty.ZipExceptionHandlingGzipHandler.handle(ZipExceptionHandlingGzipHandler.java:26)
+	at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:173)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:122)
+	at org.eclipse.jetty.server.Server.handle(Server.java:563)
+	at org.eclipse.jetty.server.HttpChannel$RequestDispatchable.dispatch(HttpChannel.java:1598)
+	at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:753)
+	at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:501)
+	at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:287)
+	at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:314)
+	at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:100)
+	at org.eclipse.jetty.io.SelectableChannelEndPoint$1.run(SelectableChannelEndPoint.java:53)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.runTask(AdaptiveExecutionStrategy.java:421)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.consumeTask(AdaptiveExecutionStrategy.java:390)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.tryProduce(AdaptiveExecutionStrategy.java:277)
+	at org.eclipse.jetty.util.thread.strategy.AdaptiveExecutionStrategy.run(AdaptiveExecutionStrategy.java:199)
+	at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:411)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:969)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.doRunJob(QueuedThreadPool.java:1194)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$Runner.run(QueuedThreadPool.java:1149)
+	at java.base/java.lang.Thread.run(Thread.java:842)
+2025-10-18 02:17:45.546 [main] INFO  i.d.core.server.DefaultServerFactory - Registering jersey handler with root path prefix: /
+2025-10-18 02:17:45.548 [main] INFO  i.d.core.server.DefaultServerFactory - Registering admin handler with root path prefix: /
+2025-10-18 02:17:45.870 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: assets for path /maps/*
+2025-10-18 02:17:45.873 [main] INFO  io.dropwizard.assets.AssetsBundle - Registering AssetBundle with name: webjars for path /webjars/*
+2025-10-18 02:17:45.883 [main] INFO  i.d.core.server.ServerFactory - Starting GraphHopperApplication
+                        _     _
+   __ _ _ __ __ _ _ __ | |__ | |__   ___  _ __  _ __   ___ _ __
+  / _` | '__/ _` | '_ \| '_ \| '_ \ / _ \| '_ \| '_ \ / _ \ '__|
+ | (_| | | | (_| | |_) | | | | | | | (_) | |_) | |_) |  __/ |
+  \__, |_|  \__,_| .__/|_| |_|_| |_|\___/| .__/| .__/ \___|_|
+  |___/          |_|                     |_|   |_|
+2025-10-18 02:17:46.018 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened application@20011bf{HTTP/1.1, (http/1.1)}{localhost:8989}
+2025-10-18 02:17:46.019 [main] INFO  o.e.jetty.setuid.SetUIDListener - Opened admin@51d9b06c{HTTP/1.1, (http/1.1)}{localhost:8990}
+2025-10-18 02:17:46.021 [main] INFO  org.eclipse.jetty.server.Server - jetty-11.0.26; built: 2025-08-14T18:03:14.457Z; git: 7559873b6e46eea7c2c6da2b58327ea2ecf941f4; jvm 17.0.12+8-LTS-286
+2025-10-18 02:17:46.038 [main] INFO  com.graphhopper.GraphHopper - version 11.0|2025-10-14T14:28:00Z (9,24,7,5,2,9)
+2025-10-18 02:17:46.429 [main] INFO  com.graphhopper.GraphHopper - No custom areas are used, custom_areas.directory not given
+2025-10-18 02:17:46.453 [main] INFO  com.graphhopper.GraphHopper - No country rules available
+2025-10-18 02:17:46.453 [main] INFO  com.graphhopper.GraphHopper - start creating graph from data/south-korea-251014.osm.pbf
+2025-10-18 02:17:46.515 [main] INFO  com.graphhopper.GraphHopper - using car,foot|RAM_STORE|2D|no_turn_cost|nodes:9,edges:24,geometry:7,location_index:5,string_index:2,nodesCH:0,shortcuts:9, memory:totalMB:68, usedMB:36
+2025-10-18 02:17:46.527 [main] INFO  c.g.reader.osm.WaySegmentParser - Start reading OSM file: 'data\south-korea-251014.osm.pbf'
+2025-10-18 02:17:46.527 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - start
+2025-10-18 02:17:48.676 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - start reading OSM ways
+2025-10-18 02:17:54.479 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - start reading OSM relations
+2025-10-18 02:17:54.683 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - finished, processed ways: 3,390,938, accepted ways: 1,647,238, way nodes: 15,863,828, relations: 57,953, totalMB:2860, usedMB:570
+2025-10-18 02:17:54.685 [main] INFO  c.g.reader.osm.WaySegmentParser - pass1 - finished, took: 8.15s
+2025-10-18 02:17:54.689 [main] INFO  c.g.reader.osm.WaySegmentParser - Creating graph. Node count (pillar+tower): 15863828, totalMB:2860, usedMB:572
+2025-10-18 02:17:54.689 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start
+2025-10-18 02:17:54.706 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start reading OSM nodes
+2025-10-18 02:17:56.573 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - processed nodes: 10,000,000, accepted nodes: 3,852,663, totalMB:2860, usedMB:564
+2025-10-18 02:17:58.026 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - processed nodes: 20,000,000, accepted nodes: 7,328,242, totalMB:2860, usedMB:1666
+2025-10-18 02:17:59.761 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - processed nodes: 30,000,000, accepted nodes: 13,269,634, totalMB:2860, usedMB:1398
+2025-10-18 02:18:00.603 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start reading OSM ways
+2025-10-18 02:18:21.767 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - start reading OSM relations
+2025-10-18 02:18:21.772 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - finished, processed ways: 3,390,938, way nodes: 15,863,828, nodes with tags: 101,668, node tag capacity: 2,105,344, ignored barriers at junctions: 637
+2025-10-18 02:18:21.772 [main] INFO  c.g.reader.osm.WaySegmentParser - pass2 - finished, took: 27.08s
+2025-10-18 02:18:21.774 [main] INFO  c.g.reader.osm.WaySegmentParser - Finished reading OSM file. pass1: 8s,  pass2: 27s,  total: 35s
+2025-10-18 02:18:21.775 [main] INFO  c.graphhopper.reader.osm.OSMReader - Finished reading OSM file: C:\Users\정주환\Desktop\YGYT\정주환\data\south-korea-251014.osm.pbf, nodes: 2,633,624, edges: 3,510,173, zero distance edges: 11,337
+2025-10-18 02:18:21.775 [main] INFO  com.graphhopper.GraphHopper - sorting graph along Hilbert curve...
+2025-10-18 02:18:22.674 [main] INFO  com.graphhopper.GraphHopper - calculating sort order took: 898.40ms
+2025-10-18 02:18:22.727 [main] INFO  com.graphhopper.GraphHopper - sort graph for fixed ordering...
+2025-10-18 02:18:23.869 [main] INFO  com.graphhopper.GraphHopper - sorting 3,510,173 edges took: 1.14s
+2025-10-18 02:18:24.239 [main] INFO  com.graphhopper.GraphHopper - sorting 2,633,624 nodes took: 370.17ms
+2025-10-18 02:18:24.244 [main] INFO  c.g.r.s.PrepareRoutingSubnetworks - Start marking subnetworks, prepare.min_network_size: 200, threads: 1, nodes: 2,633,624, edges: 3,510,173, jobs: [car_subnetwork|com.graphhopper.routing.weighting.custom.CustomWeighting@27329d2a, foot_subnetwork|com.graphhopper.routing.weighting.custom.CustomWeighting@7978e022], totalMB:2860, usedMB:1056
+2025-10-18 02:18:26.888 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - foot - Found 207660 subnetworks (200743 single edges and 6917 components with more than one edge, total nodes: 7020346), took: 2.6362855s
+2025-10-18 02:18:26.942 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - foot - Marked 207651 subnetworks (biggest: 392 edges) -> 9 components(s) remain (smallest: 410, biggest: 6756815 edges), total marked edges: 28775, took: 0.0505263s
+2025-10-18 02:18:28.503 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - car - Found 1551178 subnetworks (1548323 single edges and 2855 components with more than one edge, total nodes: 7020346), took: 1.5606627s
+2025-10-18 02:18:28.555 [ForkJoinPool-1-worker-1] INFO  c.g.r.s.PrepareRoutingSubnetworks - car - Marked 1551169 subnetworks (biggest: 353 edges) -> 9 components(s) remain (smallest: 402, biggest: 5433596 edges), total marked edges: 16189, took: 0.0516399s
+2025-10-18 02:18:28.733 [main] INFO  c.g.r.s.PrepareRoutingSubnetworks - Finished finding and marking subnetworks for 2 jobs, took: 4.490519s, totalMB:2860, usedMB:1265
+2025-10-18 02:18:28.733 [main] INFO  com.graphhopper.GraphHopper - nodes: 2,633,624, edges: 3,510,173
+2025-10-18 02:18:30.219 [main] INFO  c.g.storage.index.LocationIndexTree - location index created in 1.4644148s, size:5,335,646, leafs:692,537, precision:300, depth:7, checksum:1941509, entries:[16, 16, 16, 16, 16, 4, 4], entriesPerLeaf:7.704492
+2025-10-18 02:18:30.222 [main] INFO  c.g.routing.ch.CHPreparationHandler - Creating CH preparations, totalMB:2860, usedMB:2294
+2025-10-18 02:18:30.223 [main] INFO  c.g.routing.ch.CHPreparationHandler - 1/1 Setting up CH preparation for profile 'car' NODE_BASED ... (totalMB:2860, usedMB:2294)
+2025-10-18 02:18:30.239 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Creating CH prepare graph, totalMB:2860, usedMB:2350
+2025-10-18 02:18:30.247 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Building CH prepare graph, totalMB:2860, usedMB:2422
+2025-10-18 02:18:30.572 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Finished building CH prepare graph, took: 0.3255014s, totalMB:2860, usedMB:1226
+2025-10-18 02:18:30.589 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Building initial queue of nodes to be contracted: 2633624 nodes, totalMB:2860, usedMB:1250
+2025-10-18 02:18:32.884 [car] INFO  c.g.r.c.PrepareContractionHierarchies - Finished building queue, took: 2.2949667s, totalMB:2860, usedMB:1416
+2025-10-18 02:18:32.885 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  2,633,624, shortcuts:          0, updates:  0, checked-nodes:          0, t(total):   2.64,  t(period):   2.29, t(lazy):   0.00, t(neighbor):   0.00, t(contr):   0.00, t(other) :   0.35, dijkstra-ratio:  59.54%, meanDegree: 1.33, dijkstras:  9,974,352, mem:       20MB, totalMB:2860, usedMB:1416
+2025-10-18 02:18:34.176 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  2,109,447, shortcuts:      9,766, updates:  0, checked-nodes:    526,725, t(total):   3.94,  t(period):   2.29, t(lazy):   0.24, t(neighbor):   0.57, t(contr):   0.33, t(other) :   0.50, dijkstra-ratio:  56.12%, meanDegree: 1.01, dijkstras: 12,042,791, mem:       20MB, totalMB:2860, usedMB:1538
+2025-10-18 02:18:36.469 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  1,583,755, shortcuts:     58,536, updates:  0, checked-nodes:  1,053,450, t(total):   6.23,  t(period):   2.29, t(lazy):   0.59, t(neighbor):   1.75, t(contr):   0.96, t(other) :   0.64, dijkstra-ratio:  58.44%, meanDegree: 2.11, dijkstras: 16,798,664, mem:       20MB, totalMB:2860, usedMB:1308
+2025-10-18 02:18:41.283 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:  1,069,830, shortcuts:    469,380, updates:  0, checked-nodes:  1,580,175, t(total):  11.04,  t(period):   2.29, t(lazy):   1.49, t(neighbor):   4.16, t(contr):   2.31, t(other) :   0.78, dijkstra-ratio:  63.30%, meanDegree: 3.10, dijkstras: 25,960,776, mem:       20MB, totalMB:2860, usedMB:1255
+2025-10-18 02:18:45.221 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:    579,611, shortcuts:    949,362, updates:  0, checked-nodes:  2,106,900, t(total):  14.98,  t(period):   2.29, t(lazy):   2.36, t(neighbor):   5.98, t(contr):   3.42, t(other) :   0.93, dijkstra-ratio:  64.55%, meanDegree: 0.00, dijkstras: 32,786,886, mem:       20MB, totalMB:2860, usedMB:1349
+2025-10-18 02:18:51.926 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:     99,947, shortcuts:  1,627,031, updates:  0, checked-nodes:  2,633,625, t(total):  21.69,  t(period):   2.29, t(lazy):   4.04, t(neighbor):   9.08, t(contr):   5.20, t(other) :   1.08, dijkstra-ratio:  68.43%, meanDegree: 3.51, dijkstras: 43,251,802, mem:       20MB, totalMB:2860, usedMB:1403
+2025-10-18 02:19:05.767 [car] INFO  c.g.r.c.PrepareContractionHierarchies - node, nodes:          0, shortcuts:  2,365,059, updates:  0, checked-nodes:  2,773,200, t(total):  35.53,  t(period):   2.29, t(lazy):   8.43, t(neighbor):  15.46, t(contr):   8.17, t(other) :   1.18, dijkstra-ratio:  76.22%, meanDegree: 1.83, dijkstras: 60,343,483, mem:       20MB, totalMB:2860, usedMB:1394
+2025-10-18 02:19:05.770 [car] INFO  c.g.r.c.PrepareContractionHierarchies - new shortcuts: 2,365,059, initSize:2,633,624, com.graphhopper.routing.weighting.custom.CustomWeighting@471e007e, periodic:0, lazy:100, neighbor:100, t(total):  35.53,  t(period):   2.29, t(lazy):   8.43, t(neighbor):  15.46, t(contr):   8.17, t(other) :   1.18, dijkstra-ratio:  76.22%, lazy-overhead: 5%, totalMB:2860, usedMB:1394
+2025-10-18 02:19:05.770 [car] INFO  c.g.r.c.PrepareContractionHierarchies - shortcuts that exceed maximum weight: 0
+2025-10-18 02:19:05.771 [car] INFO  c.g.r.c.PrepareContractionHierarchies - took: 35s, graph now - num edges: 3,510,173, num nodes: 2,633,624, num shortcuts: 2,365,059
+2025-10-18 02:19:05.847 [main] INFO  c.g.routing.ch.CHPreparationHandler - Finished CH preparation, totalMB:2860, usedMB:1482
+2025-10-18 02:19:05.852 [main] INFO  com.graphhopper.GraphHopper - flushing graph car,foot|RAM_STORE|2D|no_turn_cost|nodes:9,edges:24,geometry:7,location_index:5,string_index:2,nodesCH:0,shortcuts:9, details:edges: 3,510,173(134MB), nodes: 2,633,624(31MB), bounds: 117.8144075,135.4220067,33.1133109,43.111880500000005, name:(6MB), geo:92,108,626/-1(88MB), totalMB:2860, usedMB:1482)
+2025-10-18 02:19:06.059 [main] INFO  com.graphhopper.GraphHopper - flushed graph totalMB:2860, usedMB:1522)
+2025-10-18 02:19:06.063 [main] INFO  c.g.http.GraphHopperManaged - loaded graph at:graph-cache, data_reader_file:data/south-korea-251014.osm.pbf, encoded values:["{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"car_access\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":0,\"bwd_shift\":1,\"fwd_mask\":1,\"bwd_mask\":2}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"car_average_speed\",\"bits\":7,\"min_storable_value\":0,\"max_storable_value\":127,\"max_value\":68,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":2,\"bwd_shift\":9,\"fwd_mask\":508,\"bwd_mask\":65024,\"factor\":2.0,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"foot_access\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":16,\"bwd_shift\":17,\"fwd_mask\":65536,\"bwd_mask\":131072}","{\"className\":\"com.graphhopper.routing.ev.IntEncodedValueImpl\",\"name\":\"hike_rating\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":6,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":18,\"bwd_shift\":-1,\"fwd_mask\":1835008,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"foot_priority\",\"bits\":4,\"min_storable_value\":0,\"max_storable_value\":15,\"max_value\":12,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":0,\"bwd_data_index\":0,\"fwd_shift\":21,\"bwd_shift\":-1,\"fwd_mask\":31457280,\"bwd_mask\":0,\"factor\":0.1,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"country\",\"bits\":8,\"min_storable_value\":0,\"max_storable_value\":255,\"max_value\":157,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":0,\"bwd_shift\":-1,\"fwd_mask\":255,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.Country\"}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"road_class\",\"bits\":5,\"min_storable_value\":0,\"max_storable_value\":31,\"max_value\":21,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":8,\"bwd_shift\":-1,\"fwd_mask\":7936,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.RoadClass\"}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"foot_road_access\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":6,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":13,\"bwd_shift\":-1,\"fwd_mask\":57344,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.FootRoadAccess\"}","{\"className\":\"com.graphhopper.routing.ev.IntEncodedValueImpl\",\"name\":\"mtb_rating\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":7,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":16,\"bwd_shift\":-1,\"fwd_mask\":458752,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"foot_average_speed\",\"bits\":4,\"min_storable_value\":0,\"max_storable_value\":15,\"max_value\":15,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":19,\"bwd_shift\":-1,\"fwd_mask\":7864320,\"bwd_mask\":0,\"factor\":1.0,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"road_environment\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":5,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":23,\"bwd_shift\":-1,\"fwd_mask\":58720256,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.RoadEnvironment\"}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"roundabout\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":26,\"bwd_shift\":-1,\"fwd_mask\":67108864,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"road_class_link\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":1,\"bwd_data_index\":0,\"fwd_shift\":27,\"bwd_shift\":-1,\"fwd_mask\":134217728,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"max_speed\",\"bits\":7,\"min_storable_value\":0,\"max_storable_value\":127,\"max_value\":127,\"negate_reverse_direction\":false,\"store_two_directions\":true,\"fwd_data_index\":2,\"bwd_data_index\":2,\"fwd_shift\":0,\"bwd_shift\":7,\"fwd_mask\":127,\"bwd_mask\":16256,\"factor\":2.0,\"use_maximum_as_infinity\":true}","{\"className\":\"com.graphhopper.routing.ev.DecimalEncodedValueImpl\",\"name\":\"ferry_speed\",\"bits\":5,\"min_storable_value\":0,\"max_storable_value\":31,\"max_value\":25,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":14,\"bwd_shift\":-1,\"fwd_mask\":507904,\"bwd_mask\":0,\"factor\":2.0,\"use_maximum_as_infinity\":false}","{\"className\":\"com.graphhopper.routing.ev.EnumEncodedValue\",\"name\":\"foot_network\",\"bits\":3,\"min_storable_value\":0,\"max_storable_value\":7,\"max_value\":4,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":19,\"bwd_shift\":-1,\"fwd_mask\":3670016,\"bwd_mask\":0,\"enum_type\":\"com.graphhopper.routing.ev.RouteNetwork\"}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"car_subnetwork\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":22,\"bwd_shift\":-1,\"fwd_mask\":4194304,\"bwd_mask\":0}","{\"className\":\"com.graphhopper.routing.ev.SimpleBooleanEncodedValue\",\"name\":\"foot_subnetwork\",\"bits\":1,\"min_storable_value\":0,\"max_storable_value\":1,\"max_value\":1,\"negate_reverse_direction\":false,\"store_two_directions\":false,\"fwd_data_index\":2,\"bwd_data_index\":0,\"fwd_shift\":23,\"bwd_shift\":-1,\"fwd_mask\":8388608,\"bwd_mask\":0}"], 11 bytes for edge flags, edges: 3,510,173(134MB), nodes: 2,633,624(31MB), bounds: 117.8144075,135.4220067,33.1133109,43.111880500000005, name:(6MB), geo:92,108,626/-1(88MB)
+2025-10-18 02:19:06.285 [main] WARN  o.g.jersey.internal.inject.Providers - A provider com.codahale.metrics.health.HealthCheckRegistry registered in SERVER runtime does not implement any provider interfaces applicable in the SERVER runtime. Due to constraint configuration problems the provider com.codahale.metrics.health.HealthCheckRegistry will be ignored. 
+2025-10-18 02:19:06.389 [main] INFO  i.d.jersey.DropwizardResourceConfig - The following paths were found for the configured resources:
+
+    GET     / (com.graphhopper.application.resources.RootResource)
+    GET     /health (com.graphhopper.resources.HealthCheckResource)
+    GET     /i18n (com.graphhopper.resources.I18NResource)
+    GET     /i18n/{locale} (com.graphhopper.resources.I18NResource)
+    GET     /info (com.graphhopper.resources.InfoResource)
+    GET     /isochrone (com.graphhopper.resources.IsochroneResource)
+    POST    /match (com.graphhopper.resources.MapMatchingResource)
+    GET     /mvt/{z}/{x}/{y}.mvt (com.graphhopper.resources.MVTResource)
+    POST    /navigate (com.graphhopper.navigation.NavigateResource)
+    GET     /navigate/directions/v5/gh/{profile}/{coordinatesArray : .+} (com.graphhopper.navigation.NavigateResource)
+    GET     /nearest (com.graphhopper.resources.NearestResource)
+    GET     /route (com.graphhopper.resources.RouteResource)
+    POST    /route (com.graphhopper.resources.RouteResource)
+    GET     /spt (com.graphhopper.resources.SPTResource)
+
+2025-10-18 02:19:06.390 [main] INFO  o.e.j.server.handler.ContextHandler - Started i.d.j.MutableServletContextHandler@7e191fda{/,null,AVAILABLE}
+2025-10-18 02:19:06.393 [main] INFO  i.d.core.setup.AdminEnvironment - tasks = 
+
+    POST    /tasks/log-level (io.dropwizard.servlets.tasks.LogConfigurationTask)
+    POST    /tasks/gc (io.dropwizard.servlets.tasks.GarbageCollectionTask)
+
+2025-10-18 02:19:06.393 [main] INFO  o.e.j.server.handler.ContextHandler - Started i.d.j.MutableServletContextHandler@19a5b637{/,null,AVAILABLE}
+2025-10-18 02:19:06.444 [main] INFO  o.e.jetty.server.AbstractConnector - Started application@20011bf{HTTP/1.1, (http/1.1)}{localhost:8989}
+2025-10-18 02:19:06.455 [main] INFO  o.e.jetty.server.AbstractConnector - Started admin@51d9b06c{HTTP/1.1, (http/1.1)}{localhost:8990}
+2025-10-18 02:19:06.456 [main] INFO  org.eclipse.jetty.server.Server - Started Server@64524dd{STARTING}[11.0.26,sto=30000] @81972ms
+2025-10-18 02:29:05.273 [JettyShutdownThread] INFO  org.eclipse.jetty.server.Server - Stopped Server@64524dd{STOPPING}[11.0.26,sto=30000]
+2025-10-18 02:29:05.273 [JettyShutdownThread] INFO  org.eclipse.jetty.server.Server - Shutdown Server@64524dd{STOPPING}[11.0.26,sto=30000]
+2025-10-18 02:29:05.279 [JettyShutdownThread] INFO  o.e.jetty.server.AbstractConnector - Stopped application@20011bf{HTTP/1.1, (http/1.1)}{localhost:8989}
+2025-10-18 02:29:05.280 [JettyShutdownThread] INFO  o.e.jetty.server.AbstractConnector - Stopped admin@51d9b06c{HTTP/1.1, (http/1.1)}{localhost:8990}
+2025-10-18 02:29:05.282 [JettyShutdownThread] INFO  o.e.j.server.handler.ContextHandler - Stopped i.d.j.MutableServletContextHandler@19a5b637{/,null,STOPPED}
+2025-10-18 02:29:05.288 [JettyShutdownThread] INFO  o.e.j.server.handler.ContextHandler - Stopped i.d.j.MutableServletContextHandler@7e191fda{/,null,STOPPED}

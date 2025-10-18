@@ -1,0 +1,8 @@
+﻿정주환/__pycache__
+정주환/data
+정주환/graph-cache
+*.txt
+*.zip
+*.pbf
+*.jar
+정주환/.env

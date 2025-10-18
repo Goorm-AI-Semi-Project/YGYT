@@ -1,0 +1,10 @@
+{
+  "osm": [ { "source": "south-korea-251014.osm.pbf" } ],
+  "transitFeeds": [
+    {
+      "type": "gtfs",
+      "source": "202303_GTFS_DataSet.zip"
+    }
+  ],
+  "subwayAccessTime": 2.5
+}
