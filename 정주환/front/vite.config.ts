@@ -54,7 +54,7 @@
       outDir: 'build',
     },
     server: {
-      port: 3000,
-      open: true,
+      host: '0.0.0.0',  // 모든 외부 IP에서 접근 가능하도록 설정
+      port: 5173,        // 포트 설정 (기본값 5173)
     },
   });

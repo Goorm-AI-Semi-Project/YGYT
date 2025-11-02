@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build: 
+      context: ./front
+    ports:
+      - "80:5173"
+    depends_on:
+      - backend
+
+  backend:
+    build: ./back
+    network_mode: "host"
+    ports:
+      - "8000:8000"
