@@ -1,0 +1,6282 @@
+{
+  "route_plans": [
+    {
+      "distance": 496.675,
+      "weight": 1785834,
+      "time": 1785834,
+      "transfers": 2,
+      "legs": [
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.970393,
+                37.555054
+              ],
+              [
+                126.97112,
+                37.555063
+              ],
+              [
+                126.971196,
+                37.555062
+              ],
+              [
+                126.971257,
+                37.555064
+              ],
+              [
+                126.971314,
+                37.555017
+              ],
+              [
+                126.971411,
+                37.554938
+              ],
+              [
+                126.971575,
+                37.554806
+              ],
+              [
+                126.971639,
+                37.554792
+              ],
+              [
+                126.971851,
+                37.554798
+              ],
+              [
+                126.971925,
+                37.554798
+              ],
+              [
+                126.971963,
+                37.554801
+              ],
+              [
+                126.971985,
+                37.554801
+              ],
+              [
+                126.972001,
+                37.554717
+              ],
+              [
+                126.972046,
+                37.554636
+              ],
+              [
+                126.97211,
+                37.554587
+              ],
+              [
+                126.972202,
+                37.554532
+              ],
+              [
+                126.972259,
+                37.554508
+              ],
+              [
+                126.972424,
+                37.554444
+              ],
+              [
+                126.972572,
+                37.554269
+              ],
+              [
+                126.972615,
+                37.553712
+              ]
+            ]
+          },
+          "distance": 297.34733640793115,
+          "instructions": [
+            {
+              "distance": 122.117,
+              "heading": 89.08,
+              "sign": 0,
+              "interval": [
+                0,
+                7
+              ],
+              "text": "Continue",
+              "time": 87925,
+              "street_name": ""
+            },
+            {
+              "distance": 18.69,
+              "sign": -1,
+              "interval": [
+                7,
+                8
+              ],
+              "text": "Turn slight left",
+              "time": 22428,
+              "street_name": ""
+            },
+            {
+              "distance": 9.912,
+              "sign": 0,
+              "interval": [
+                8,
+                10
+              ],
+              "text": "Continue onto 서울역광장",
+              "time": 7137,
+              "street_name": "서울역광장"
+            },
+            {
+              "distance": 1.957,
+              "sign": 0,
+              "interval": [
+                10,
+                11
+              ],
+              "text": "Continue",
+              "time": 1409,
+              "street_name": ""
+            },
+            {
+              "distance": 19.328,
+              "sign": 2,
+              "interval": [
+                11,
+                13
+              ],
+              "text": "Turn right",
+              "time": 13916,
+              "street_name": ""
+            },
+            {
+              "distance": 63.292,
+              "sign": -7,
+              "interval": [
+                13,
+                18
+              ],
+              "text": "Keep left",
+              "time": 45570,
+              "street_name": ""
+            },
+            {
+              "distance": 62.051,
+              "sign": 1,
+              "interval": [
+                18,
+                19
+              ],
+              "text": "Turn slight right onto 한강대로",
+              "time": 44677,
+              "street_name": "한강대로"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 176.5053783680014,
+              "interval": [
+                19,
+                19
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:00:16.938+00:00",
+          "arrival_time": "2025-10-19T09:04:00.000+00:00"
+        },
+        {
+          "type": "pt",
+          "departure_location": "서울역",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.97265,
+                37.55311
+              ],
+              [
+                126.97825,
+                37.55851
+              ],
+              [
+                126.98633,
+                37.56099
+              ],
+              [
+                126.99422,
+                37.56124
+              ]
+            ]
+          },
+          "distance": 0,
+          "feed_id": "gtfs_0",
+          "is_in_same_vehicle_as_previous": false,
+          "trip_headsign": "extra",
+          "travel_time": 270000,
+          "stops": [
+            {
+              "stop_id": "RS_ACC1_S-1-0426",
+              "stop_sequence": 31,
+              "stop_name": "서울역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.97265,
+                  37.55311
+                ]
+              },
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:04:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:04:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0425",
+              "stop_sequence": 32,
+              "stop_name": "회현",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.97825,
+                  37.55851
+                ]
+              },
+              "arrival_time": "2025-10-19T09:05:30.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:05:30.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:06:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:06:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0424",
+              "stop_sequence": 33,
+              "stop_name": "명동",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98633,
+                  37.56099
+                ]
+              },
+              "arrival_time": "2025-10-19T09:07:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:07:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:07:30.000+00:00",
+              "planned_departure_time": "2025-10-19T09:07:30.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0423",
+              "stop_sequence": 34,
+              "stop_name": "충무로",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.99422,
+                  37.56124
+                ]
+              },
+              "arrival_time": "2025-10-19T09:08:30.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:08:30.000+00:00",
+              "arrival_cancelled": false,
+              "departure_cancelled": false
+            }
+          ],
+          "trip_id": "RR_ACC1_S-1-04-1U_Ord158",
+          "route_id": "RR_ACC1_S-1-04-1U",
+          "arrival_time": "2025-10-19T09:08:30.000+00:00",
+          "departure_time": "2025-10-19T09:04:00.000+00:00"
+        },
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.994209,
+                37.561298
+              ],
+              [
+                126.994185,
+                37.561347
+              ],
+              [
+                126.994185,
+                37.561377
+              ]
+            ]
+          },
+          "distance": 9.128,
+          "instructions": [
+            {
+              "distance": 9.128,
+              "heading": 339.37,
+              "sign": 0,
+              "interval": [
+                0,
+                2
+              ],
+              "text": "Continue onto 퇴계로39길",
+              "time": 6572,
+              "street_name": "퇴계로39길"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 359.5310164445916,
+              "interval": [
+                2,
+                2
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:08:30.000+00:00",
+          "arrival_time": "2025-10-19T09:08:36.572+00:00"
+        },
+        {
+          "type": "pt",
+          "departure_location": "충무로",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.99406,
+                37.56144
+              ],
+              [
+                127.0056,
+                37.55905
+              ],
+              [
+                127.01096,
+                37.55432
+              ],
+              [
+                127.01587,
+                37.54803
+              ],
+              [
+                127.01728,
+                37.54169
+              ],
+              [
+                127.02846,
+                37.52707
+              ],
+              [
+                127.02011,
+                37.51633
+              ]
+            ]
+          },
+          "distance": 0,
+          "feed_id": "gtfs_0",
+          "is_in_same_vehicle_as_previous": false,
+          "trip_headsign": "extra",
+          "travel_time": 660000,
+          "stops": [
+            {
+              "stop_id": "RS_ACC1_S-1-0321",
+              "stop_sequence": 23,
+              "stop_name": "충무로",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.99406,
+                  37.56144
+                ]
+              },
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:09:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:09:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0322",
+              "stop_sequence": 24,
+              "stop_name": "동대입구",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.0056,
+                  37.55905
+                ]
+              },
+              "arrival_time": "2025-10-19T09:10:30.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:10:30.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:11:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:11:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0323",
+              "stop_sequence": 25,
+              "stop_name": "약수",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.01096,
+                  37.55432
+                ]
+              },
+              "arrival_time": "2025-10-19T09:12:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:12:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:12:30.000+00:00",
+              "planned_departure_time": "2025-10-19T09:12:30.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0324",
+              "stop_sequence": 26,
+              "stop_name": "금호",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.01587,
+                  37.54803
+                ]
+              },
+              "arrival_time": "2025-10-19T09:13:30.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:13:30.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:14:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:14:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0325",
+              "stop_sequence": 27,
+              "stop_name": "옥수",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.01728,
+                  37.54169
+                ]
+              },
+              "arrival_time": "2025-10-19T09:15:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:15:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:15:30.000+00:00",
+              "planned_departure_time": "2025-10-19T09:15:30.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0326",
+              "stop_sequence": 28,
+              "stop_name": "압구정",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02846,
+                  37.52707
+                ]
+              },
+              "arrival_time": "2025-10-19T09:17:30.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:17:30.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:18:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:18:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0327",
+              "stop_sequence": 29,
+              "stop_name": "신사",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02011,
+                  37.51633
+                ]
+              },
+              "arrival_time": "2025-10-19T09:20:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:20:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_cancelled": false
+            }
+          ],
+          "trip_id": "RR_ACC1_S-1-03-1D_Ord132",
+          "route_id": "RR_ACC1_S-1-03-1D",
+          "arrival_time": "2025-10-19T09:20:00.000+00:00",
+          "departure_time": "2025-10-19T09:09:00.000+00:00"
+        },
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                127.020087,
+                37.516261
+              ],
+              [
+                127.019831,
+                37.516156
+              ],
+              [
+                127.019629,
+                37.516154
+              ]
+            ]
+          },
+          "distance": 43.209,
+          "instructions": [
+            {
+              "distance": 43.209,
+              "heading": 242.72,
+              "sign": 0,
+              "interval": [
+                0,
+                2
+              ],
+              "text": "Continue onto 도산대로",
+              "time": 31110,
+              "street_name": "도산대로"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 269.38756653665916,
+              "interval": [
+                2,
+                2
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:20:00.000+00:00",
+          "arrival_time": "2025-10-19T09:20:31.110+00:00"
+        },
+        {
+          "type": "pt",
+          "departure_location": "신사",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                127.01954,
+                37.51611
+              ],
+              [
+                127.02172,
+                37.51033
+              ],
+              [
+                127.02495,
+                37.50356
+              ],
+              [
+                127.02812,
+                37.49685
+              ]
+            ]
+          },
+          "distance": 0,
+          "feed_id": "gtfs_0",
+          "is_in_same_vehicle_as_previous": false,
+          "trip_headsign": "extra",
+          "travel_time": 300000,
+          "stops": [
+            {
+              "stop_id": "RS_ACC1_S-1-4304",
+              "stop_sequence": 1,
+              "stop_name": "신사",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.01954,
+                  37.51611
+                ]
+              },
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:23:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:23:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-4305",
+              "stop_sequence": 2,
+              "stop_name": "논현",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02172,
+                  37.51033
+                ]
+              },
+              "arrival_time": "2025-10-19T09:24:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:24:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:24:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:24:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-4306",
+              "stop_sequence": 3,
+              "stop_name": "신논현",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02495,
+                  37.50356
+                ]
+              },
+              "arrival_time": "2025-10-19T09:26:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:26:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:26:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:26:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-4307",
+              "stop_sequence": 4,
+              "stop_name": "강남",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02812,
+                  37.49685
+                ]
+              },
+              "arrival_time": "2025-10-19T09:28:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:28:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_cancelled": false
+            }
+          ],
+          "trip_id": "RR_ACC1_S-1-SB-1D_Ord107",
+          "route_id": "RR_ACC1_S-1-SB-1D",
+          "arrival_time": "2025-10-19T09:28:00.000+00:00",
+          "departure_time": "2025-10-19T09:23:00.000+00:00"
+        },
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                127.028099,
+                37.496691
+              ],
+              [
+                127.027915,
+                37.497065
+              ],
+              [
+                127.027723,
+                37.497454
+              ],
+              [
+                127.027531,
+                37.497866
+              ],
+              [
+                127.027606,
+                37.497887
+              ]
+            ]
+          },
+          "distance": 146.9904236606806,
+          "instructions": [
+            {
+              "street_ref": "41",
+              "distance": 139.931,
+              "heading": 338.6,
+              "sign": 0,
+              "interval": [
+                0,
+                3
+              ],
+              "text": "Continue onto 강남대로",
+              "time": 100751,
+              "street_name": "강남대로"
+            },
+            {
+              "street_ref": "90",
+              "distance": 7.059,
+              "sign": 2,
+              "interval": [
+                3,
+                4
+              ],
+              "text": "Turn right onto 서초대로",
+              "time": 5083,
+              "street_name": "서초대로"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 69.90658058391173,
+              "interval": [
+                4,
+                4
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:28:00.000+00:00",
+          "arrival_time": "2025-10-19T09:29:45.834+00:00"
+        }
+      ],
+      "points_encoded": false,
+      "bbox": [
+        126.970393,
+        37.496691,
+        127.02846,
+        37.56144
+      ],
+      "points": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            126.97112,
+            37.555063
+          ],
+          [
+            126.971196,
+            37.555062
+          ],
+          [
+            126.971257,
+            37.555064
+          ],
+          [
+            126.971314,
+            37.555017
+          ],
+          [
+            126.971411,
+            37.554938
+          ],
+          [
+            126.971575,
+            37.554806
+          ],
+          [
+            126.971639,
+            37.554792
+          ],
+          [
+            126.971851,
+            37.554798
+          ],
+          [
+            126.971925,
+            37.554798
+          ],
+          [
+            126.971963,
+            37.554801
+          ],
+          [
+            126.971985,
+            37.554801
+          ],
+          [
+            126.972001,
+            37.554717
+          ],
+          [
+            126.972046,
+            37.554636
+          ],
+          [
+            126.97211,
+            37.554587
+          ],
+          [
+            126.972202,
+            37.554532
+          ],
+          [
+            126.972259,
+            37.554508
+          ],
+          [
+            126.972424,
+            37.554444
+          ],
+          [
+            126.972572,
+            37.554269
+          ],
+          [
+            126.97265,
+            37.55311
+          ],
+          [
+            126.97265,
+            37.55311
+          ],
+          [
+            126.97825,
+            37.55851
+          ],
+          [
+            126.98633,
+            37.56099
+          ],
+          [
+            126.99422,
+            37.56124
+          ],
+          [
+            126.994209,
+            37.561298
+          ],
+          [
+            126.994185,
+            37.561347
+          ],
+          [
+            126.99406,
+            37.56144
+          ],
+          [
+            126.99406,
+            37.56144
+          ],
+          [
+            127.0056,
+            37.55905
+          ],
+          [
+            127.01096,
+            37.55432
+          ],
+          [
+            127.01587,
+            37.54803
+          ],
+          [
+            127.01728,
+            37.54169
+          ],
+          [
+            127.02846,
+            37.52707
+          ],
+          [
+            127.02011,
+            37.51633
+          ],
+          [
+            127.020087,
+            37.516261
+          ],
+          [
+            127.019831,
+            37.516156
+          ],
+          [
+            127.01954,
+            37.51611
+          ],
+          [
+            127.01954,
+            37.51611
+          ],
+          [
+            127.02172,
+            37.51033
+          ],
+          [
+            127.02495,
+            37.50356
+          ],
+          [
+            127.02812,
+            37.49685
+          ],
+          [
+            127.028099,
+            37.496691
+          ],
+          [
+            127.027915,
+            37.497065
+          ],
+          [
+            127.027723,
+            37.497454
+          ],
+          [
+            127.027531,
+            37.497866
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      },
+      "instructions": [
+        {
+          "distance": 122.117,
+          "heading": 89.08,
+          "sign": 0,
+          "interval": [
+            0,
+            7
+          ],
+          "text": "Continue",
+          "time": 87925,
+          "street_name": ""
+        },
+        {
+          "distance": 18.69,
+          "sign": -1,
+          "interval": [
+            7,
+            8
+          ],
+          "text": "Turn slight left",
+          "time": 22428,
+          "street_name": ""
+        },
+        {
+          "distance": 9.912,
+          "sign": 0,
+          "interval": [
+            8,
+            10
+          ],
+          "text": "Continue onto 서울역광장",
+          "time": 7137,
+          "street_name": "서울역광장"
+        },
+        {
+          "distance": 1.957,
+          "sign": 0,
+          "interval": [
+            10,
+            11
+          ],
+          "text": "Continue",
+          "time": 1409,
+          "street_name": ""
+        },
+        {
+          "distance": 19.328,
+          "sign": 2,
+          "interval": [
+            11,
+            13
+          ],
+          "text": "Turn right",
+          "time": 13916,
+          "street_name": ""
+        },
+        {
+          "distance": 63.292,
+          "sign": -7,
+          "interval": [
+            13,
+            18
+          ],
+          "text": "Keep left",
+          "time": 45570,
+          "street_name": ""
+        },
+        {
+          "distance": 62.051,
+          "sign": 1,
+          "interval": [
+            18,
+            19
+          ],
+          "text": "Turn slight right onto 한강대로",
+          "time": 44677,
+          "street_name": "한강대로"
+        },
+        {
+          "distance": 0,
+          "sign": 101,
+          "interval": [
+            19,
+            23
+          ],
+          "text": "Pt_start_trip",
+          "time": 270000,
+          "street_name": "extra"
+        },
+        {
+          "distance": 0,
+          "sign": 103,
+          "interval": [
+            23,
+            24
+          ],
+          "text": "Pt_end_trip",
+          "time": 0,
+          "street_name": "충무로"
+        },
+        {
+          "distance": 9.128,
+          "heading": 339.37,
+          "sign": 0,
+          "interval": [
+            24,
+            26
+          ],
+          "text": "Continue onto 퇴계로39길",
+          "time": 6572,
+          "street_name": "퇴계로39길"
+        },
+        {
+          "distance": 0,
+          "sign": 101,
+          "interval": [
+            26,
+            33
+          ],
+          "text": "Pt_start_trip",
+          "time": 660000,
+          "street_name": "extra"
+        },
+        {
+          "distance": 0,
+          "sign": 103,
+          "interval": [
+            33,
+            34
+          ],
+          "text": "Pt_end_trip",
+          "time": 0,
+          "street_name": "신사"
+        },
+        {
+          "distance": 43.209,
+          "heading": 242.72,
+          "sign": 0,
+          "interval": [
+            34,
+            36
+          ],
+          "text": "Continue onto 도산대로",
+          "time": 31110,
+          "street_name": "도산대로"
+        },
+        {
+          "distance": 0,
+          "sign": 101,
+          "interval": [
+            36,
+            40
+          ],
+          "text": "Pt_start_trip",
+          "time": 300000,
+          "street_name": "extra"
+        },
+        {
+          "distance": 0,
+          "sign": 103,
+          "interval": [
+            40,
+            41
+          ],
+          "text": "Pt_end_trip",
+          "time": 0,
+          "street_name": "강남"
+        },
+        {
+          "street_ref": "41",
+          "distance": 139.931,
+          "heading": 338.6,
+          "sign": 0,
+          "interval": [
+            41,
+            44
+          ],
+          "text": "Continue onto 강남대로",
+          "time": 100751,
+          "street_name": "강남대로"
+        },
+        {
+          "street_ref": "90",
+          "distance": 7.059,
+          "sign": 2,
+          "interval": [
+            44,
+            45
+          ],
+          "text": "Turn right onto 서초대로",
+          "time": 5083,
+          "street_name": "서초대로"
+        },
+        {
+          "distance": 0,
+          "sign": 4,
+          "last_heading": 69.90658058391173,
+          "interval": [
+            45,
+            45
+          ],
+          "text": "Arrive at destination",
+          "time": 0,
+          "street_name": ""
+        }
+      ],
+      "details": {},
+      "ascend": 0,
+      "descend": 0,
+      "snapped_waypoints": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      }
+    },
+    {
+      "distance": 544.446,
+      "weight": 2025635,
+      "time": 2025635,
+      "transfers": 1,
+      "legs": [
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.970393,
+                37.555054
+              ],
+              [
+                126.97112,
+                37.555063
+              ],
+              [
+                126.971196,
+                37.555062
+              ],
+              [
+                126.971257,
+                37.555064
+              ],
+              [
+                126.971314,
+                37.555017
+              ],
+              [
+                126.971411,
+                37.554938
+              ],
+              [
+                126.971575,
+                37.554806
+              ],
+              [
+                126.971639,
+                37.554792
+              ],
+              [
+                126.971851,
+                37.554798
+              ],
+              [
+                126.971925,
+                37.554798
+              ],
+              [
+                126.971963,
+                37.554801
+              ],
+              [
+                126.971955,
+                37.555194
+              ]
+            ]
+          },
+          "distance": 194.44733640793112,
+          "instructions": [
+            {
+              "distance": 122.117,
+              "heading": 89.08,
+              "sign": 0,
+              "interval": [
+                0,
+                7
+              ],
+              "text": "Continue",
+              "time": 87925,
+              "street_name": ""
+            },
+            {
+              "distance": 18.69,
+              "sign": -1,
+              "interval": [
+                7,
+                8
+              ],
+              "text": "Turn slight left",
+              "time": 22428,
+              "street_name": ""
+            },
+            {
+              "distance": 9.912,
+              "sign": 0,
+              "interval": [
+                8,
+                10
+              ],
+              "text": "Continue onto 서울역광장",
+              "time": 7137,
+              "street_name": "서울역광장"
+            },
+            {
+              "distance": 43.728,
+              "sign": -2,
+              "interval": [
+                10,
+                11
+              ],
+              "text": "Turn left onto 서울역광장",
+              "time": 31484,
+              "street_name": "서울역광장"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 359.0669206305356,
+              "interval": [
+                11,
+                11
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:01:01.026+00:00",
+          "arrival_time": "2025-10-19T09:03:30.000+00:00"
+        },
+        {
+          "type": "pt",
+          "departure_location": "서울역",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.9721,
+                37.55587
+              ],
+              [
+                126.97712,
+                37.56571
+              ],
+              [
+                126.98292,
+                37.57016
+              ]
+            ]
+          },
+          "distance": 0,
+          "feed_id": "gtfs_0",
+          "is_in_same_vehicle_as_previous": false,
+          "trip_headsign": "extra",
+          "travel_time": 270000,
+          "stops": [
+            {
+              "stop_id": "RS_ACC1_S-1-0150",
+              "stop_sequence": 44,
+              "stop_name": "서울역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.9721,
+                  37.55587
+                ]
+              },
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:03:30.000+00:00",
+              "planned_departure_time": "2025-10-19T09:03:30.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0151",
+              "stop_sequence": 45,
+              "stop_name": "시청",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.97712,
+                  37.56571
+                ]
+              },
+              "arrival_time": "2025-10-19T09:05:30.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:05:30.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:06:00.000+00:00",
+              "planned_departure_time": "2025-10-19T09:06:00.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "RS_ACC1_S-1-0152",
+              "stop_sequence": 46,
+              "stop_name": "종각",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98292,
+                  37.57016
+                ]
+              },
+              "arrival_time": "2025-10-19T09:08:00.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:08:00.000+00:00",
+              "arrival_cancelled": false,
+              "departure_cancelled": false
+            }
+          ],
+          "trip_id": "RR_ACC1_S-1-01-5U_Ord017",
+          "route_id": "RR_ACC1_S-1-01-5U",
+          "arrival_time": "2025-10-19T09:08:00.000+00:00",
+          "departure_time": "2025-10-19T09:03:30.000+00:00"
+        },
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.98296,
+                37.570158
+              ],
+              [
+                126.982793,
+                37.57015
+              ],
+              [
+                126.982235,
+                37.57013
+              ],
+              [
+                126.981206,
+                37.570131
+              ]
+            ]
+          },
+          "distance": 154.673,
+          "instructions": [
+            {
+              "street_ref": "6",
+              "distance": 154.673,
+              "heading": 266.55,
+              "sign": 0,
+              "interval": [
+                0,
+                3
+              ],
+              "text": "Continue onto 종로",
+              "time": 111365,
+              "street_name": "종로"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 270.11522293647533,
+              "interval": [
+                3,
+                3
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:08:00.000+00:00",
+          "arrival_time": "2025-10-19T09:09:51.365+00:00"
+        },
+        {
+          "type": "pt",
+          "departure_location": "종로1가",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.98107,
+                37.57015
+              ],
+              [
+                126.98554,
+                37.57014
+              ],
+              [
+                126.98761,
+                37.56858
+              ],
+              [
+                126.98753,
+                37.56498
+              ],
+              [
+                126.99217,
+                37.55741
+              ],
+              [
+                127.00573,
+                37.53549
+              ],
+              [
+                127.02006,
+                37.51414
+              ],
+              [
+                127.02303,
+                37.50723
+              ],
+              [
+                127.02544,
+                37.50182
+              ],
+              [
+                127.0284,
+                37.49604
+              ]
+            ]
+          },
+          "distance": 0,
+          "feed_id": "gtfs_0",
+          "is_in_same_vehicle_as_previous": false,
+          "trip_headsign": "extra",
+          "travel_time": 1290000,
+          "stops": [
+            {
+              "stop_id": "BS_1100_100000386",
+              "stop_sequence": 23,
+              "stop_name": "종로1가",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98107,
+                  37.57015
+                ]
+              },
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:09:55.000+00:00",
+              "planned_departure_time": "2025-10-19T09:09:55.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_100000388",
+              "stop_sequence": 24,
+              "stop_name": "종로2가",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98554,
+                  37.57014
+                ]
+              },
+              "arrival_time": "2025-10-19T09:11:08.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:11:08.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:11:18.000+00:00",
+              "planned_departure_time": "2025-10-19T09:11:18.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_100000004",
+              "stop_sequence": 25,
+              "stop_name": "종로2가.삼일교",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98761,
+                  37.56858
+                ]
+              },
+              "arrival_time": "2025-10-19T09:12:23.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:12:23.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:12:33.000+00:00",
+              "planned_departure_time": "2025-10-19T09:12:33.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_101000001",
+              "stop_sequence": 26,
+              "stop_name": "남대문세무서.서울백병원",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98753,
+                  37.56498
+                ]
+              },
+              "arrival_time": "2025-10-19T09:14:05.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:14:05.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:14:15.000+00:00",
+              "planned_departure_time": "2025-10-19T09:14:15.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_101000328",
+              "stop_sequence": 27,
+              "stop_name": "남산1호터널",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.99217,
+                  37.55741
+                ]
+              },
+              "arrival_time": "2025-10-19T09:15:52.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:15:52.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:16:02.000+00:00",
+              "planned_departure_time": "2025-10-19T09:16:02.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000071",
+              "stop_sequence": 28,
+              "stop_name": "순천향대학병원.한남오거리",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.00573,
+                  37.53549
+                ]
+              },
+              "arrival_time": "2025-10-19T09:20:16.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:20:16.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:20:26.000+00:00",
+              "planned_departure_time": "2025-10-19T09:20:26.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000015",
+              "stop_sequence": 29,
+              "stop_name": "신사역.푸른저축은행",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02006,
+                  37.51414
+                ]
+              },
+              "arrival_time": "2025-10-19T09:24:39.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:24:39.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:24:49.000+00:00",
+              "planned_departure_time": "2025-10-19T09:24:49.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000013",
+              "stop_sequence": 30,
+              "stop_name": "논현역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02303,
+                  37.50723
+                ]
+              },
+              "arrival_time": "2025-10-19T09:27:06.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:27:06.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:27:16.000+00:00",
+              "planned_departure_time": "2025-10-19T09:27:16.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000011",
+              "stop_sequence": 31,
+              "stop_name": "지하철2호선강남역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02544,
+                  37.50182
+                ]
+              },
+              "arrival_time": "2025-10-19T09:28:53.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:28:53.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:29:03.000+00:00",
+              "planned_departure_time": "2025-10-19T09:29:03.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000009",
+              "stop_sequence": 32,
+              "stop_name": "신분당선강남역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.0284,
+                  37.49604
+                ]
+              },
+              "arrival_time": "2025-10-19T09:31:25.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:31:25.000+00:00",
+              "arrival_cancelled": false,
+              "departure_cancelled": false
+            }
+          ],
+          "trip_id": "BR_1100_123000010_Ord096",
+          "route_id": "BR_1100_123000010",
+          "arrival_time": "2025-10-19T09:31:25.000+00:00",
+          "departure_time": "2025-10-19T09:09:55.000+00:00"
+        },
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                127.028293,
+                37.496284
+              ],
+              [
+                127.028099,
+                37.496691
+              ],
+              [
+                127.027915,
+                37.497065
+              ],
+              [
+                127.027723,
+                37.497454
+              ],
+              [
+                127.027531,
+                37.497866
+              ],
+              [
+                127.027606,
+                37.497887
+              ]
+            ]
+          },
+          "distance": 195.3254236606806,
+          "instructions": [
+            {
+              "street_ref": "41",
+              "distance": 188.266,
+              "heading": 339.33,
+              "sign": 0,
+              "interval": [
+                0,
+                4
+              ],
+              "text": "Continue onto 강남대로",
+              "time": 135552,
+              "street_name": "강남대로"
+            },
+            {
+              "street_ref": "90",
+              "distance": 7.059,
+              "sign": 2,
+              "interval": [
+                4,
+                5
+              ],
+              "text": "Turn right onto 서초대로",
+              "time": 5083,
+              "street_name": "서초대로"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 69.90658058391173,
+              "interval": [
+                5,
+                5
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:31:25.000+00:00",
+          "arrival_time": "2025-10-19T09:33:45.635+00:00"
+        }
+      ],
+      "points_encoded": false,
+      "bbox": [
+        126.970393,
+        37.49604,
+        127.0284,
+        37.57016
+      ],
+      "points": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            126.97112,
+            37.555063
+          ],
+          [
+            126.971196,
+            37.555062
+          ],
+          [
+            126.971257,
+            37.555064
+          ],
+          [
+            126.971314,
+            37.555017
+          ],
+          [
+            126.971411,
+            37.554938
+          ],
+          [
+            126.971575,
+            37.554806
+          ],
+          [
+            126.971639,
+            37.554792
+          ],
+          [
+            126.971851,
+            37.554798
+          ],
+          [
+            126.971925,
+            37.554798
+          ],
+          [
+            126.971963,
+            37.554801
+          ],
+          [
+            126.9721,
+            37.55587
+          ],
+          [
+            126.9721,
+            37.55587
+          ],
+          [
+            126.97712,
+            37.56571
+          ],
+          [
+            126.98292,
+            37.57016
+          ],
+          [
+            126.98296,
+            37.570158
+          ],
+          [
+            126.982793,
+            37.57015
+          ],
+          [
+            126.982235,
+            37.57013
+          ],
+          [
+            126.98107,
+            37.57015
+          ],
+          [
+            126.98107,
+            37.57015
+          ],
+          [
+            126.98554,
+            37.57014
+          ],
+          [
+            126.98761,
+            37.56858
+          ],
+          [
+            126.98753,
+            37.56498
+          ],
+          [
+            126.99217,
+            37.55741
+          ],
+          [
+            127.00573,
+            37.53549
+          ],
+          [
+            127.02006,
+            37.51414
+          ],
+          [
+            127.02303,
+            37.50723
+          ],
+          [
+            127.02544,
+            37.50182
+          ],
+          [
+            127.0284,
+            37.49604
+          ],
+          [
+            127.028293,
+            37.496284
+          ],
+          [
+            127.028099,
+            37.496691
+          ],
+          [
+            127.027915,
+            37.497065
+          ],
+          [
+            127.027723,
+            37.497454
+          ],
+          [
+            127.027531,
+            37.497866
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      },
+      "instructions": [
+        {
+          "distance": 122.117,
+          "heading": 89.08,
+          "sign": 0,
+          "interval": [
+            0,
+            7
+          ],
+          "text": "Continue",
+          "time": 87925,
+          "street_name": ""
+        },
+        {
+          "distance": 18.69,
+          "sign": -1,
+          "interval": [
+            7,
+            8
+          ],
+          "text": "Turn slight left",
+          "time": 22428,
+          "street_name": ""
+        },
+        {
+          "distance": 9.912,
+          "sign": 0,
+          "interval": [
+            8,
+            10
+          ],
+          "text": "Continue onto 서울역광장",
+          "time": 7137,
+          "street_name": "서울역광장"
+        },
+        {
+          "distance": 43.728,
+          "sign": -2,
+          "interval": [
+            10,
+            11
+          ],
+          "text": "Turn left onto 서울역광장",
+          "time": 31484,
+          "street_name": "서울역광장"
+        },
+        {
+          "distance": 0,
+          "sign": 101,
+          "interval": [
+            11,
+            14
+          ],
+          "text": "Pt_start_trip",
+          "time": 270000,
+          "street_name": "extra"
+        },
+        {
+          "distance": 0,
+          "sign": 103,
+          "interval": [
+            14,
+            15
+          ],
+          "text": "Pt_end_trip",
+          "time": 0,
+          "street_name": "종각"
+        },
+        {
+          "street_ref": "6",
+          "distance": 154.673,
+          "heading": 266.55,
+          "sign": 0,
+          "interval": [
+            15,
+            18
+          ],
+          "text": "Continue onto 종로",
+          "time": 111365,
+          "street_name": "종로"
+        },
+        {
+          "distance": 0,
+          "sign": 101,
+          "interval": [
+            18,
+            28
+          ],
+          "text": "Pt_start_trip",
+          "time": 1290000,
+          "street_name": "extra"
+        },
+        {
+          "distance": 0,
+          "sign": 103,
+          "interval": [
+            28,
+            29
+          ],
+          "text": "Pt_end_trip",
+          "time": 0,
+          "street_name": "신분당선강남역"
+        },
+        {
+          "street_ref": "41",
+          "distance": 188.266,
+          "heading": 339.33,
+          "sign": 0,
+          "interval": [
+            29,
+            33
+          ],
+          "text": "Continue onto 강남대로",
+          "time": 135552,
+          "street_name": "강남대로"
+        },
+        {
+          "street_ref": "90",
+          "distance": 7.059,
+          "sign": 2,
+          "interval": [
+            33,
+            34
+          ],
+          "text": "Turn right onto 서초대로",
+          "time": 5083,
+          "street_name": "서초대로"
+        },
+        {
+          "distance": 0,
+          "sign": 4,
+          "last_heading": 69.90658058391173,
+          "interval": [
+            34,
+            34
+          ],
+          "text": "Arrive at destination",
+          "time": 0,
+          "street_name": ""
+        }
+      ],
+      "details": {},
+      "ascend": 0,
+      "descend": 0,
+      "snapped_waypoints": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      }
+    },
+    {
+      "distance": 454.143,
+      "weight": 2341635,
+      "time": 2341635,
+      "transfers": 0,
+      "legs": [
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.970393,
+                37.555054
+              ],
+              [
+                126.97112,
+                37.555063
+              ],
+              [
+                126.971196,
+                37.555062
+              ],
+              [
+                126.971257,
+                37.555064
+              ],
+              [
+                126.971314,
+                37.555017
+              ],
+              [
+                126.971411,
+                37.554938
+              ],
+              [
+                126.971575,
+                37.554806
+              ],
+              [
+                126.971639,
+                37.554792
+              ],
+              [
+                126.971851,
+                37.554798
+              ],
+              [
+                126.971925,
+                37.554798
+              ],
+              [
+                126.971963,
+                37.554801
+              ],
+              [
+                126.971985,
+                37.554801
+              ],
+              [
+                126.972012,
+                37.554801
+              ],
+              [
+                126.972068,
+                37.5548
+              ],
+              [
+                126.972117,
+                37.554801
+              ],
+              [
+                126.972153,
+                37.554802
+              ],
+              [
+                126.972189,
+                37.554803
+              ],
+              [
+                126.972225,
+                37.554804
+              ],
+              [
+                126.972509,
+                37.554806
+              ],
+              [
+                126.972598,
+                37.554807
+              ],
+              [
+                126.9726,
+                37.555093
+              ],
+              [
+                126.972637,
+                37.555093
+              ],
+              [
+                126.972679,
+                37.555094
+              ],
+              [
+                126.972712,
+                37.555096
+              ],
+              [
+                126.972768,
+                37.555096
+              ],
+              [
+                126.972831,
+                37.555098
+              ]
+            ]
+          },
+          "distance": 258.8173364079311,
+          "instructions": [
+            {
+              "distance": 122.117,
+              "heading": 89.08,
+              "sign": 0,
+              "interval": [
+                0,
+                7
+              ],
+              "text": "Continue",
+              "time": 87925,
+              "street_name": ""
+            },
+            {
+              "distance": 18.69,
+              "sign": -1,
+              "interval": [
+                7,
+                8
+              ],
+              "text": "Turn slight left",
+              "time": 22428,
+              "street_name": ""
+            },
+            {
+              "distance": 9.912,
+              "sign": 0,
+              "interval": [
+                8,
+                10
+              ],
+              "text": "Continue onto 서울역광장",
+              "time": 7137,
+              "street_name": "서울역광장"
+            },
+            {
+              "distance": 55.97,
+              "sign": 0,
+              "interval": [
+                10,
+                19
+              ],
+              "text": "Continue",
+              "time": 40298,
+              "street_name": ""
+            },
+            {
+              "distance": 31.78,
+              "sign": -2,
+              "interval": [
+                19,
+                20
+              ],
+              "text": "Turn left",
+              "time": 22882,
+              "street_name": ""
+            },
+            {
+              "distance": 20.348,
+              "sign": 2,
+              "interval": [
+                20,
+                25
+              ],
+              "text": "Turn right",
+              "time": 14650,
+              "street_name": ""
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 88.49333145795565,
+              "interval": [
+                25,
+                25
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:08:11.680+00:00",
+          "arrival_time": "2025-10-19T09:11:27.000+00:00"
+        },
+        {
+          "type": "pt",
+          "departure_location": "서울역버스환승센터",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.97276,
+                37.55539
+              ],
+              [
+                126.97363,
+                37.558
+              ],
+              [
+                126.97567,
+                37.55856
+              ],
+              [
+                126.97663,
+                37.5562
+              ],
+              [
+                126.98113,
+                37.55204
+              ],
+              [
+                126.98417,
+                37.5484
+              ],
+              [
+                126.98563,
+                37.54626
+              ],
+              [
+                126.99073,
+                37.54467
+              ],
+              [
+                126.99292,
+                37.5425
+              ],
+              [
+                126.99731,
+                37.54089
+              ],
+              [
+                127.00318,
+                37.54117
+              ],
+              [
+                127.00573,
+                37.53549
+              ],
+              [
+                127.02006,
+                37.51414
+              ],
+              [
+                127.02303,
+                37.50723
+              ],
+              [
+                127.02544,
+                37.50182
+              ],
+              [
+                127.0284,
+                37.49604
+              ]
+            ]
+          },
+          "distance": 0,
+          "feed_id": "gtfs_0",
+          "is_in_same_vehicle_as_previous": false,
+          "trip_headsign": "extra",
+          "travel_time": 1514000,
+          "stops": [
+            {
+              "stop_id": "BS_1100_101000005",
+              "stop_sequence": 58,
+              "stop_name": "서울역버스환승센터",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.97276,
+                  37.55539
+                ]
+              },
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:11:27.000+00:00",
+              "planned_departure_time": "2025-10-19T09:11:27.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_101000028",
+              "stop_sequence": 59,
+              "stop_name": "숭례문",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.97363,
+                  37.558
+                ]
+              },
+              "arrival_time": "2025-10-19T09:13:03.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:13:03.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:13:13.000+00:00",
+              "planned_departure_time": "2025-10-19T09:13:13.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_101000030",
+              "stop_sequence": 60,
+              "stop_name": "숭례문남산방향",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.97567,
+                  37.55856
+                ]
+              },
+              "arrival_time": "2025-10-19T09:14:25.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:14:25.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:14:35.000+00:00",
+              "planned_departure_time": "2025-10-19T09:14:35.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_101000266",
+              "stop_sequence": 61,
+              "stop_name": "힐튼호텔",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.97663,
+                  37.5562
+                ]
+              },
+              "arrival_time": "2025-10-19T09:15:32.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:15:32.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:15:42.000+00:00",
+              "planned_departure_time": "2025-10-19T09:15:42.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000074",
+              "stop_sequence": 62,
+              "stop_name": "남산도서관.용산도서관",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98113,
+                  37.55204
+                ]
+              },
+              "arrival_time": "2025-10-19T09:16:38.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:16:38.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:16:48.000+00:00",
+              "planned_departure_time": "2025-10-19T09:16:48.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000076",
+              "stop_sequence": 63,
+              "stop_name": "후암약수터",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98417,
+                  37.5484
+                ]
+              },
+              "arrival_time": "2025-10-19T09:17:45.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:17:45.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:17:55.000+00:00",
+              "planned_departure_time": "2025-10-19T09:17:55.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000078",
+              "stop_sequence": 64,
+              "stop_name": "보성여중고입구",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.98563,
+                  37.54626
+                ]
+              },
+              "arrival_time": "2025-10-19T09:18:43.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:18:43.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:18:53.000+00:00",
+              "planned_departure_time": "2025-10-19T09:18:53.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000249",
+              "stop_sequence": 65,
+              "stop_name": "용암초등학교.이태원2동주민센터",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.99073,
+                  37.54467
+                ]
+              },
+              "arrival_time": "2025-10-19T09:20:08.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:20:08.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:20:18.000+00:00",
+              "planned_departure_time": "2025-10-19T09:20:18.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000080",
+              "stop_sequence": 66,
+              "stop_name": "남산체육관",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.99292,
+                  37.5425
+                ]
+              },
+              "arrival_time": "2025-10-19T09:21:02.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:21:02.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:21:12.000+00:00",
+              "planned_departure_time": "2025-10-19T09:21:12.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000082",
+              "stop_sequence": 67,
+              "stop_name": "하얏트호텔",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  126.99731,
+                  37.54089
+                ]
+              },
+              "arrival_time": "2025-10-19T09:21:40.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:21:40.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:21:50.000+00:00",
+              "planned_departure_time": "2025-10-19T09:21:50.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000067",
+              "stop_sequence": 68,
+              "stop_name": "서울시중부기술교육원.블루스퀘어",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.00318,
+                  37.54117
+                ]
+              },
+              "arrival_time": "2025-10-19T09:23:51.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:23:51.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:24:01.000+00:00",
+              "planned_departure_time": "2025-10-19T09:24:01.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_102000071",
+              "stop_sequence": 69,
+              "stop_name": "순천향대학병원.한남오거리",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.00573,
+                  37.53549
+                ]
+              },
+              "arrival_time": "2025-10-19T09:25:28.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:25:28.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:25:38.000+00:00",
+              "planned_departure_time": "2025-10-19T09:25:38.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000015",
+              "stop_sequence": 70,
+              "stop_name": "신사역.푸른저축은행",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02006,
+                  37.51414
+                ]
+              },
+              "arrival_time": "2025-10-19T09:29:51.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:29:51.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:30:01.000+00:00",
+              "planned_departure_time": "2025-10-19T09:30:01.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000013",
+              "stop_sequence": 71,
+              "stop_name": "논현역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02303,
+                  37.50723
+                ]
+              },
+              "arrival_time": "2025-10-19T09:32:20.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:32:20.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:32:30.000+00:00",
+              "planned_departure_time": "2025-10-19T09:32:30.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000011",
+              "stop_sequence": 72,
+              "stop_name": "지하철2호선강남역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.02544,
+                  37.50182
+                ]
+              },
+              "arrival_time": "2025-10-19T09:34:09.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:34:09.000+00:00",
+              "arrival_cancelled": false,
+              "departure_time": "2025-10-19T09:34:19.000+00:00",
+              "planned_departure_time": "2025-10-19T09:34:19.000+00:00",
+              "departure_cancelled": false
+            },
+            {
+              "stop_id": "BS_1100_121000009",
+              "stop_sequence": 73,
+              "stop_name": "신분당선강남역",
+              "geometry": {
+                "type": "Point",
+                "coordinates": [
+                  127.0284,
+                  37.49604
+                ]
+              },
+              "arrival_time": "2025-10-19T09:36:41.000+00:00",
+              "planned_arrival_time": "2025-10-19T09:36:41.000+00:00",
+              "arrival_cancelled": false,
+              "departure_cancelled": false
+            }
+          ],
+          "trip_id": "BR_1100_100100063_Ord092",
+          "route_id": "BR_1100_100100063",
+          "arrival_time": "2025-10-19T09:36:41.000+00:00",
+          "departure_time": "2025-10-19T09:11:27.000+00:00"
+        },
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                127.028293,
+                37.496284
+              ],
+              [
+                127.028099,
+                37.496691
+              ],
+              [
+                127.027915,
+                37.497065
+              ],
+              [
+                127.027723,
+                37.497454
+              ],
+              [
+                127.027531,
+                37.497866
+              ],
+              [
+                127.027606,
+                37.497887
+              ]
+            ]
+          },
+          "distance": 195.3254236606806,
+          "instructions": [
+            {
+              "street_ref": "41",
+              "distance": 188.266,
+              "heading": 339.33,
+              "sign": 0,
+              "interval": [
+                0,
+                4
+              ],
+              "text": "Continue onto 강남대로",
+              "time": 135552,
+              "street_name": "강남대로"
+            },
+            {
+              "street_ref": "90",
+              "distance": 7.059,
+              "sign": 2,
+              "interval": [
+                4,
+                5
+              ],
+              "text": "Turn right onto 서초대로",
+              "time": 5083,
+              "street_name": "서초대로"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 69.90658058391173,
+              "interval": [
+                5,
+                5
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:36:41.000+00:00",
+          "arrival_time": "2025-10-19T09:39:01.635+00:00"
+        }
+      ],
+      "points_encoded": false,
+      "bbox": [
+        126.970393,
+        37.49604,
+        127.0284,
+        37.55856
+      ],
+      "points": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            126.97112,
+            37.555063
+          ],
+          [
+            126.971196,
+            37.555062
+          ],
+          [
+            126.971257,
+            37.555064
+          ],
+          [
+            126.971314,
+            37.555017
+          ],
+          [
+            126.971411,
+            37.554938
+          ],
+          [
+            126.971575,
+            37.554806
+          ],
+          [
+            126.971639,
+            37.554792
+          ],
+          [
+            126.971851,
+            37.554798
+          ],
+          [
+            126.971925,
+            37.554798
+          ],
+          [
+            126.971963,
+            37.554801
+          ],
+          [
+            126.971985,
+            37.554801
+          ],
+          [
+            126.972012,
+            37.554801
+          ],
+          [
+            126.972068,
+            37.5548
+          ],
+          [
+            126.972117,
+            37.554801
+          ],
+          [
+            126.972153,
+            37.554802
+          ],
+          [
+            126.972189,
+            37.554803
+          ],
+          [
+            126.972225,
+            37.554804
+          ],
+          [
+            126.972509,
+            37.554806
+          ],
+          [
+            126.972598,
+            37.554807
+          ],
+          [
+            126.9726,
+            37.555093
+          ],
+          [
+            126.972637,
+            37.555093
+          ],
+          [
+            126.972679,
+            37.555094
+          ],
+          [
+            126.972712,
+            37.555096
+          ],
+          [
+            126.972768,
+            37.555096
+          ],
+          [
+            126.97276,
+            37.55539
+          ],
+          [
+            126.97276,
+            37.55539
+          ],
+          [
+            126.97363,
+            37.558
+          ],
+          [
+            126.97567,
+            37.55856
+          ],
+          [
+            126.97663,
+            37.5562
+          ],
+          [
+            126.98113,
+            37.55204
+          ],
+          [
+            126.98417,
+            37.5484
+          ],
+          [
+            126.98563,
+            37.54626
+          ],
+          [
+            126.99073,
+            37.54467
+          ],
+          [
+            126.99292,
+            37.5425
+          ],
+          [
+            126.99731,
+            37.54089
+          ],
+          [
+            127.00318,
+            37.54117
+          ],
+          [
+            127.00573,
+            37.53549
+          ],
+          [
+            127.02006,
+            37.51414
+          ],
+          [
+            127.02303,
+            37.50723
+          ],
+          [
+            127.02544,
+            37.50182
+          ],
+          [
+            127.0284,
+            37.49604
+          ],
+          [
+            127.028293,
+            37.496284
+          ],
+          [
+            127.028099,
+            37.496691
+          ],
+          [
+            127.027915,
+            37.497065
+          ],
+          [
+            127.027723,
+            37.497454
+          ],
+          [
+            127.027531,
+            37.497866
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      },
+      "instructions": [
+        {
+          "distance": 122.117,
+          "heading": 89.08,
+          "sign": 0,
+          "interval": [
+            0,
+            7
+          ],
+          "text": "Continue",
+          "time": 87925,
+          "street_name": ""
+        },
+        {
+          "distance": 18.69,
+          "sign": -1,
+          "interval": [
+            7,
+            8
+          ],
+          "text": "Turn slight left",
+          "time": 22428,
+          "street_name": ""
+        },
+        {
+          "distance": 9.912,
+          "sign": 0,
+          "interval": [
+            8,
+            10
+          ],
+          "text": "Continue onto 서울역광장",
+          "time": 7137,
+          "street_name": "서울역광장"
+        },
+        {
+          "distance": 55.97,
+          "sign": 0,
+          "interval": [
+            10,
+            19
+          ],
+          "text": "Continue",
+          "time": 40298,
+          "street_name": ""
+        },
+        {
+          "distance": 31.78,
+          "sign": -2,
+          "interval": [
+            19,
+            20
+          ],
+          "text": "Turn left",
+          "time": 22882,
+          "street_name": ""
+        },
+        {
+          "distance": 20.348,
+          "sign": 2,
+          "interval": [
+            20,
+            25
+          ],
+          "text": "Turn right",
+          "time": 14650,
+          "street_name": ""
+        },
+        {
+          "distance": 0,
+          "sign": 101,
+          "interval": [
+            25,
+            41
+          ],
+          "text": "Pt_start_trip",
+          "time": 1514000,
+          "street_name": "extra"
+        },
+        {
+          "distance": 0,
+          "sign": 103,
+          "interval": [
+            41,
+            42
+          ],
+          "text": "Pt_end_trip",
+          "time": 0,
+          "street_name": "신분당선강남역"
+        },
+        {
+          "street_ref": "41",
+          "distance": 188.266,
+          "heading": 339.33,
+          "sign": 0,
+          "interval": [
+            42,
+            46
+          ],
+          "text": "Continue onto 강남대로",
+          "time": 135552,
+          "street_name": "강남대로"
+        },
+        {
+          "street_ref": "90",
+          "distance": 7.059,
+          "sign": 2,
+          "interval": [
+            46,
+            47
+          ],
+          "text": "Turn right onto 서초대로",
+          "time": 5083,
+          "street_name": "서초대로"
+        },
+        {
+          "distance": 0,
+          "sign": 4,
+          "last_heading": 69.90658058391173,
+          "interval": [
+            47,
+            47
+          ],
+          "text": "Arrive at destination",
+          "time": 0,
+          "street_name": ""
+        }
+      ],
+      "details": {},
+      "ascend": 0,
+      "descend": 0,
+      "snapped_waypoints": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      }
+    },
+    {
+      "distance": 9291.009,
+      "weight": 6718054,
+      "time": 6718054,
+      "transfers": -1,
+      "legs": [
+        {
+          "type": "walk",
+          "departure_location": "Walk",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                126.970393,
+                37.555054
+              ],
+              [
+                126.97112,
+                37.555063
+              ],
+              [
+                126.971196,
+                37.555062
+              ],
+              [
+                126.971257,
+                37.555064
+              ],
+              [
+                126.971314,
+                37.555017
+              ],
+              [
+                126.971411,
+                37.554938
+              ],
+              [
+                126.971575,
+                37.554806
+              ],
+              [
+                126.971639,
+                37.554792
+              ],
+              [
+                126.971851,
+                37.554798
+              ],
+              [
+                126.971925,
+                37.554798
+              ],
+              [
+                126.971963,
+                37.554801
+              ],
+              [
+                126.971985,
+                37.554801
+              ],
+              [
+                126.972012,
+                37.554801
+              ],
+              [
+                126.972068,
+                37.5548
+              ],
+              [
+                126.972117,
+                37.554801
+              ],
+              [
+                126.972153,
+                37.554802
+              ],
+              [
+                126.972189,
+                37.554803
+              ],
+              [
+                126.972225,
+                37.554804
+              ],
+              [
+                126.972509,
+                37.554806
+              ],
+              [
+                126.972656,
+                37.554345
+              ],
+              [
+                126.972681,
+                37.554274
+              ],
+              [
+                126.972728,
+                37.554228
+              ],
+              [
+                126.972913,
+                37.554132
+              ],
+              [
+                126.973031,
+                37.554086
+              ],
+              [
+                126.973259,
+                37.554001
+              ],
+              [
+                126.97367,
+                37.55383
+              ],
+              [
+                126.973938,
+                37.553701
+              ],
+              [
+                126.974186,
+                37.553654
+              ],
+              [
+                126.974318,
+                37.553607
+              ],
+              [
+                126.974416,
+                37.553587
+              ],
+              [
+                126.974857,
+                37.553527
+              ],
+              [
+                126.975248,
+                37.553472
+              ],
+              [
+                126.975637,
+                37.553419
+              ],
+              [
+                126.975896,
+                37.553374
+              ],
+              [
+                126.975987,
+                37.55332
+              ],
+              [
+                126.97615,
+                37.55325
+              ],
+              [
+                126.976303,
+                37.553171
+              ],
+              [
+                126.976459,
+                37.553089
+              ],
+              [
+                126.97652,
+                37.55303
+              ],
+              [
+                126.9766,
+                37.552873
+              ],
+              [
+                126.97664,
+                37.55277
+              ],
+              [
+                126.9767,
+                37.55248
+              ],
+              [
+                126.976776,
+                37.552201
+              ],
+              [
+                126.976875,
+                37.551823
+              ],
+              [
+                126.976904,
+                37.551711
+              ],
+              [
+                126.977035,
+                37.551212
+              ],
+              [
+                126.977105,
+                37.550947
+              ],
+              [
+                126.977263,
+                37.550351
+              ],
+              [
+                126.977306,
+                37.550196
+              ],
+              [
+                126.977489,
+                37.550129
+              ],
+              [
+                126.977867,
+                37.549974
+              ],
+              [
+                126.978046,
+                37.549914
+              ],
+              [
+                126.978658,
+                37.549689
+              ],
+              [
+                126.978859,
+                37.549615
+              ],
+              [
+                126.979099,
+                37.549527
+              ],
+              [
+                126.979466,
+                37.549392
+              ],
+              [
+                126.979601,
+                37.549352
+              ],
+              [
+                126.97966,
+                37.549335
+              ],
+              [
+                126.979993,
+                37.549238
+              ],
+              [
+                126.9801,
+                37.549208
+              ],
+              [
+                126.980324,
+                37.54915
+              ],
+              [
+                126.980737,
+                37.549045
+              ],
+              [
+                126.981351,
+                37.54888
+              ],
+              [
+                126.981432,
+                37.548852
+              ],
+              [
+                126.982024,
+                37.548725
+              ],
+              [
+                126.982204,
+                37.548688
+              ],
+              [
+                126.983076,
+                37.54845
+              ],
+              [
+                126.983215,
+                37.548328
+              ],
+              [
+                126.983651,
+                37.548394
+              ],
+              [
+                126.983867,
+                37.548178
+              ],
+              [
+                126.98403,
+                37.547974
+              ],
+              [
+                126.984048,
+                37.547914
+              ],
+              [
+                126.984181,
+                37.54747
+              ],
+              [
+                126.9841,
+                37.547142
+              ],
+              [
+                126.984125,
+                37.546957
+              ],
+              [
+                126.984186,
+                37.546847
+              ],
+              [
+                126.984558,
+                37.546522
+              ],
+              [
+                126.984803,
+                37.546234
+              ],
+              [
+                126.985013,
+                37.546042
+              ],
+              [
+                126.985296,
+                37.545845
+              ],
+              [
+                126.985514,
+                37.545791
+              ],
+              [
+                126.985624,
+                37.545742
+              ],
+              [
+                126.985914,
+                37.545746
+              ],
+              [
+                126.986376,
+                37.545792
+              ],
+              [
+                126.986623,
+                37.545688
+              ],
+              [
+                126.98675,
+                37.545647
+              ],
+              [
+                126.986841,
+                37.545598
+              ],
+              [
+                126.986938,
+                37.54553
+              ],
+              [
+                126.987123,
+                37.545498
+              ],
+              [
+                126.987119,
+                37.545539
+              ],
+              [
+                126.987138,
+                37.545639
+              ],
+              [
+                126.987175,
+                37.545686
+              ],
+              [
+                126.987266,
+                37.545772
+              ],
+              [
+                126.987393,
+                37.546041
+              ],
+              [
+                126.987589,
+                37.54603
+              ],
+              [
+                126.987695,
+                37.546025
+              ],
+              [
+                126.987808,
+                37.54604
+              ],
+              [
+                126.988605,
+                37.546218
+              ],
+              [
+                126.988766,
+                37.546235
+              ],
+              [
+                126.988939,
+                37.546236
+              ],
+              [
+                126.989075,
+                37.546202
+              ],
+              [
+                126.989259,
+                37.546142
+              ],
+              [
+                126.989525,
+                37.54603
+              ],
+              [
+                126.99021,
+                37.545626
+              ],
+              [
+                126.990508,
+                37.545364
+              ],
+              [
+                126.99057,
+                37.545283
+              ],
+              [
+                126.99095,
+                37.544616
+              ],
+              [
+                126.991171,
+                37.544551
+              ],
+              [
+                126.991279,
+                37.544507
+              ],
+              [
+                126.991417,
+                37.544463
+              ],
+              [
+                126.99155,
+                37.544387
+              ],
+              [
+                126.99173,
+                37.544243
+              ],
+              [
+                126.99181,
+                37.544198
+              ],
+              [
+                126.991937,
+                37.544153
+              ],
+              [
+                126.992403,
+                37.544119
+              ],
+              [
+                126.99252,
+                37.544135
+              ],
+              [
+                126.992666,
+                37.544115
+              ],
+              [
+                126.992801,
+                37.544053
+              ],
+              [
+                126.992936,
+                37.544029
+              ],
+              [
+                126.993083,
+                37.544036
+              ],
+              [
+                126.993126,
+                37.543983
+              ],
+              [
+                126.99312,
+                37.54393
+              ],
+              [
+                126.993087,
+                37.543808
+              ],
+              [
+                126.993102,
+                37.543741
+              ],
+              [
+                126.993146,
+                37.543695
+              ],
+              [
+                126.993165,
+                37.543704
+              ],
+              [
+                126.993282,
+                37.543707
+              ],
+              [
+                126.993378,
+                37.54369
+              ],
+              [
+                126.993511,
+                37.543661
+              ],
+              [
+                126.993843,
+                37.543552
+              ],
+              [
+                126.993972,
+                37.54351
+              ],
+              [
+                126.99406,
+                37.543464
+              ],
+              [
+                126.99413,
+                37.543399
+              ],
+              [
+                126.99417,
+                37.543317
+              ],
+              [
+                126.994294,
+                37.543276
+              ],
+              [
+                126.994362,
+                37.543198
+              ],
+              [
+                126.994391,
+                37.543095
+              ],
+              [
+                126.994436,
+                37.543014
+              ],
+              [
+                126.994519,
+                37.542994
+              ],
+              [
+                126.994647,
+                37.542879
+              ],
+              [
+                126.994755,
+                37.542784
+              ],
+              [
+                126.995027,
+                37.54259
+              ],
+              [
+                126.995081,
+                37.542521
+              ],
+              [
+                126.995209,
+                37.542359
+              ],
+              [
+                126.995248,
+                37.542267
+              ],
+              [
+                126.995289,
+                37.542107
+              ],
+              [
+                126.995578,
+                37.541971
+              ],
+              [
+                126.99617,
+                37.541617
+              ],
+              [
+                126.996368,
+                37.541491
+              ],
+              [
+                126.996698,
+                37.541272
+              ],
+              [
+                126.996763,
+                37.541208
+              ],
+              [
+                126.996825,
+                37.541112
+              ],
+              [
+                126.997294,
+                37.541013
+              ],
+              [
+                126.997492,
+                37.540964
+              ],
+              [
+                126.997774,
+                37.540921
+              ],
+              [
+                126.997994,
+                37.540928
+              ],
+              [
+                126.998176,
+                37.540956
+              ],
+              [
+                126.998333,
+                37.540998
+              ],
+              [
+                126.998499,
+                37.541053
+              ],
+              [
+                126.998595,
+                37.540978
+              ],
+              [
+                126.999028,
+                37.540931
+              ],
+              [
+                126.999106,
+                37.540884
+              ],
+              [
+                126.999106,
+                37.540778
+              ],
+              [
+                126.999178,
+                37.540693
+              ],
+              [
+                126.999227,
+                37.540457
+              ],
+              [
+                126.999355,
+                37.540357
+              ],
+              [
+                126.99952,
+                37.540269
+              ],
+              [
+                126.999663,
+                37.540139
+              ],
+              [
+                126.999908,
+                37.539846
+              ],
+              [
+                127.000108,
+                37.53971
+              ],
+              [
+                127.000431,
+                37.539566
+              ],
+              [
+                127.000682,
+                37.53954
+              ],
+              [
+                127.000786,
+                37.539474
+              ],
+              [
+                127.000801,
+                37.539389
+              ],
+              [
+                127.000738,
+                37.539283
+              ],
+              [
+                127.00067,
+                37.539166
+              ],
+              [
+                127.000441,
+                37.538909
+              ],
+              [
+                127.000416,
+                37.538826
+              ],
+              [
+                127.000413,
+                37.538755
+              ],
+              [
+                127.000831,
+                37.538668
+              ],
+              [
+                127.001144,
+                37.538756
+              ],
+              [
+                127.001293,
+                37.539111
+              ],
+              [
+                127.001599,
+                37.539108
+              ],
+              [
+                127.00157,
+                37.538662
+              ],
+              [
+                127.001469,
+                37.538334
+              ],
+              [
+                127.001605,
+                37.538291
+              ],
+              [
+                127.001665,
+                37.538426
+              ],
+              [
+                127.001728,
+                37.538412
+              ],
+              [
+                127.00221,
+                37.538307
+              ],
+              [
+                127.002438,
+                37.538258
+              ],
+              [
+                127.002452,
+                37.538201
+              ],
+              [
+                127.0026,
+                37.537864
+              ],
+              [
+                127.002858,
+                37.53745
+              ],
+              [
+                127.002882,
+                37.537445
+              ],
+              [
+                127.003282,
+                37.537551
+              ],
+              [
+                127.003659,
+                37.537654
+              ],
+              [
+                127.003819,
+                37.537574
+              ],
+              [
+                127.004016,
+                37.537555
+              ],
+              [
+                127.004531,
+                37.537349
+              ],
+              [
+                127.004718,
+                37.537298
+              ],
+              [
+                127.004936,
+                37.536966
+              ],
+              [
+                127.005087,
+                37.536657
+              ],
+              [
+                127.005193,
+                37.53643
+              ],
+              [
+                127.005759,
+                37.535702
+              ],
+              [
+                127.006283,
+                37.534972
+              ],
+              [
+                127.006432,
+                37.534765
+              ],
+              [
+                127.00676,
+                37.534293
+              ],
+              [
+                127.007012,
+                37.533936
+              ],
+              [
+                127.007323,
+                37.533519
+              ],
+              [
+                127.007636,
+                37.533639
+              ],
+              [
+                127.007765,
+                37.533461
+              ],
+              [
+                127.007881,
+                37.533324
+              ],
+              [
+                127.007925,
+                37.533265
+              ],
+              [
+                127.00797,
+                37.533213
+              ],
+              [
+                127.00878,
+                37.532186
+              ],
+              [
+                127.008918,
+                37.531859
+              ],
+              [
+                127.009634,
+                37.530909
+              ],
+              [
+                127.009819,
+                37.530692
+              ],
+              [
+                127.009925,
+                37.530568
+              ],
+              [
+                127.010181,
+                37.530303
+              ],
+              [
+                127.011255,
+                37.529123
+              ],
+              [
+                127.011826,
+                37.528531
+              ],
+              [
+                127.012407,
+                37.527888
+              ],
+              [
+                127.013413,
+                37.52686
+              ],
+              [
+                127.014651,
+                37.525533
+              ],
+              [
+                127.015393,
+                37.524695
+              ],
+              [
+                127.016745,
+                37.523205
+              ],
+              [
+                127.016819,
+                37.523122
+              ],
+              [
+                127.017555,
+                37.522357
+              ],
+              [
+                127.017681,
+                37.522218
+              ],
+              [
+                127.017796,
+                37.522046
+              ],
+              [
+                127.017911,
+                37.521621
+              ],
+              [
+                127.019046,
+                37.517993
+              ],
+              [
+                127.019133,
+                37.517752
+              ],
+              [
+                127.019422,
+                37.516956
+              ],
+              [
+                127.019515,
+                37.516617
+              ],
+              [
+                127.019581,
+                37.516412
+              ],
+              [
+                127.019629,
+                37.516154
+              ],
+              [
+                127.019749,
+                37.515644
+              ],
+              [
+                127.019772,
+                37.51554
+              ],
+              [
+                127.019803,
+                37.515419
+              ],
+              [
+                127.020102,
+                37.514607
+              ],
+              [
+                127.020322,
+                37.51382
+              ],
+              [
+                127.020326,
+                37.513805
+              ],
+              [
+                127.020355,
+                37.51371
+              ],
+              [
+                127.020544,
+                37.513114
+              ],
+              [
+                127.020622,
+                37.512851
+              ],
+              [
+                127.021006,
+                37.511974
+              ],
+              [
+                127.021386,
+                37.511172
+              ],
+              [
+                127.021435,
+                37.511081
+              ],
+              [
+                127.021659,
+                37.510609
+              ],
+              [
+                127.022127,
+                37.509641
+              ],
+              [
+                127.022615,
+                37.508648
+              ],
+              [
+                127.023181,
+                37.507449
+              ],
+              [
+                127.023327,
+                37.507172
+              ],
+              [
+                127.023376,
+                37.507074
+              ],
+              [
+                127.023693,
+                37.506515
+              ],
+              [
+                127.02397,
+                37.505917
+              ],
+              [
+                127.02408,
+                37.505596
+              ],
+              [
+                127.024222,
+                37.505264
+              ],
+              [
+                127.024301,
+                37.505101
+              ],
+              [
+                127.024496,
+                37.504698
+              ],
+              [
+                127.024603,
+                37.504499
+              ],
+              [
+                127.024727,
+                37.504301
+              ],
+              [
+                127.024893,
+                37.503945
+              ],
+              [
+                127.025536,
+                37.502648
+              ],
+              [
+                127.025849,
+                37.501976
+              ],
+              [
+                127.026036,
+                37.501639
+              ],
+              [
+                127.026236,
+                37.501224
+              ],
+              [
+                127.026297,
+                37.501057
+              ],
+              [
+                127.026582,
+                37.500409
+              ],
+              [
+                127.026838,
+                37.499876
+              ],
+              [
+                127.026968,
+                37.499602
+              ],
+              [
+                127.026993,
+                37.499549
+              ],
+              [
+                127.027488,
+                37.498496
+              ],
+              [
+                127.027641,
+                37.498169
+              ],
+              [
+                127.027681,
+                37.498048
+              ],
+              [
+                127.02773,
+                37.497923
+              ],
+              [
+                127.027606,
+                37.497887
+              ]
+            ]
+          },
+          "distance": 9291.00929251084,
+          "instructions": [
+            {
+              "distance": 122.117,
+              "heading": 89.08,
+              "sign": 0,
+              "interval": [
+                0,
+                7
+              ],
+              "text": "Continue",
+              "time": 87925,
+              "street_name": ""
+            },
+            {
+              "distance": 18.69,
+              "sign": -1,
+              "interval": [
+                7,
+                8
+              ],
+              "text": "Turn slight left",
+              "time": 22428,
+              "street_name": ""
+            },
+            {
+              "distance": 9.912,
+              "sign": 0,
+              "interval": [
+                8,
+                10
+              ],
+              "text": "Continue onto 서울역광장",
+              "time": 7137,
+              "street_name": "서울역광장"
+            },
+            {
+              "distance": 48.142,
+              "sign": 0,
+              "interval": [
+                10,
+                18
+              ],
+              "text": "Continue",
+              "time": 34662,
+              "street_name": ""
+            },
+            {
+              "distance": 366.307,
+              "sign": 2,
+              "interval": [
+                18,
+                33
+              ],
+              "text": "Turn right onto 후암로",
+              "time": 263741,
+              "street_name": "후암로"
+            },
+            {
+              "distance": 390.419,
+              "sign": 7,
+              "interval": [
+                33,
+                48
+              ],
+              "text": "Keep right onto 후암로",
+              "time": 281102,
+              "street_name": "후암로"
+            },
+            {
+              "distance": 72.459,
+              "sign": -2,
+              "interval": [
+                48,
+                51
+              ],
+              "text": "Turn left onto 후암로28길",
+              "time": 52170,
+              "street_name": "후암로28길"
+            },
+            {
+              "distance": 473.182,
+              "sign": 0,
+              "interval": [
+                51,
+                66
+              ],
+              "text": "Continue onto 후암로28길",
+              "time": 340691,
+              "street_name": "후암로28길"
+            },
+            {
+              "distance": 18.325,
+              "sign": 1,
+              "interval": [
+                66,
+                67
+              ],
+              "text": "Turn slight right onto 두텁바위로58길",
+              "time": 13194,
+              "street_name": "두텁바위로58길"
+            },
+            {
+              "distance": 39.188,
+              "sign": -2,
+              "interval": [
+                67,
+                68
+              ],
+              "text": "Turn left onto 두텁바위로58길",
+              "time": 28215,
+              "street_name": "두텁바위로58길"
+            },
+            {
+              "distance": 30.659,
+              "sign": 2,
+              "interval": [
+                68,
+                69
+              ],
+              "text": "Turn right onto 두텁바위로60길",
+              "time": 22074,
+              "street_name": "두텁바위로60길"
+            },
+            {
+              "distance": 304.603,
+              "sign": 0,
+              "interval": [
+                69,
+                79
+              ],
+              "text": "Continue onto 신흥로20길",
+              "time": 219315,
+              "street_name": "신흥로20길"
+            },
+            {
+              "distance": 31.234,
+              "sign": -7,
+              "interval": [
+                79,
+                81
+              ],
+              "text": "Keep left onto 신흥로",
+              "time": 22488,
+              "street_name": "신흥로"
+            },
+            {
+              "distance": 141.173,
+              "sign": -7,
+              "interval": [
+                81,
+                88
+              ],
+              "text": "Keep left onto 신흥로18길",
+              "time": 101644,
+              "street_name": "신흥로18길"
+            },
+            {
+              "distance": 66.369,
+              "sign": -3,
+              "interval": [
+                88,
+                93
+              ],
+              "text": "Turn sharp left onto 소월로26길",
+              "time": 47786,
+              "street_name": "소월로26길"
+            },
+            {
+              "distance": 402.549,
+              "sign": 2,
+              "interval": [
+                93,
+                106
+              ],
+              "text": "Turn right onto 소월로",
+              "time": 289835,
+              "street_name": "소월로"
+            },
+            {
+              "distance": 20.733,
+              "sign": -7,
+              "interval": [
+                106,
+                107
+              ],
+              "text": "Keep left",
+              "time": 14928,
+              "street_name": ""
+            },
+            {
+              "distance": 185.393,
+              "sign": 7,
+              "interval": [
+                107,
+                119
+              ],
+              "text": "Keep right",
+              "time": 133483,
+              "street_name": ""
+            },
+            {
+              "distance": 40.747,
+              "sign": 2,
+              "interval": [
+                119,
+                124
+              ],
+              "text": "Turn right",
+              "time": 48896,
+              "street_name": ""
+            },
+            {
+              "distance": 105.702,
+              "sign": -2,
+              "interval": [
+                124,
+                133
+              ],
+              "text": "Turn left",
+              "time": 76106,
+              "street_name": ""
+            },
+            {
+              "distance": 11.776,
+              "sign": -2,
+              "interval": [
+                133,
+                134
+              ],
+              "text": "Turn left",
+              "time": 8479,
+              "street_name": ""
+            },
+            {
+              "distance": 32.14,
+              "sign": 7,
+              "interval": [
+                134,
+                137
+              ],
+              "text": "Keep right",
+              "time": 23140,
+              "street_name": ""
+            },
+            {
+              "distance": 130.405,
+              "sign": -2,
+              "interval": [
+                137,
+                145
+              ],
+              "text": "Turn left",
+              "time": 93891,
+              "street_name": ""
+            },
+            {
+              "distance": 176.455,
+              "sign": -2,
+              "interval": [
+                145,
+                151
+              ],
+              "text": "Turn left onto 소월로",
+              "time": 127048,
+              "street_name": "소월로"
+            },
+            {
+              "distance": 152.635,
+              "sign": -2,
+              "interval": [
+                151,
+                158
+              ],
+              "text": "Turn left onto 소월로",
+              "time": 109898,
+              "street_name": "소월로"
+            },
+            {
+              "distance": 515.797,
+              "sign": 2,
+              "interval": [
+                158,
+                182
+              ],
+              "text": "Turn right",
+              "time": 371374,
+              "street_name": ""
+            },
+            {
+              "distance": 87.245,
+              "sign": 2,
+              "interval": [
+                182,
+                184
+              ],
+              "text": "Turn right",
+              "time": 62816,
+              "street_name": ""
+            },
+            {
+              "distance": 12.906,
+              "sign": -2,
+              "interval": [
+                184,
+                185
+              ],
+              "text": "Turn left onto 이태원로55길",
+              "time": 9292,
+              "street_name": "이태원로55길"
+            },
+            {
+              "distance": 15.867,
+              "sign": -2,
+              "interval": [
+                185,
+                186
+              ],
+              "text": "Turn left onto 이태원로",
+              "time": 11424,
+              "street_name": "이태원로"
+            },
+            {
+              "distance": 70.671,
+              "sign": 2,
+              "interval": [
+                186,
+                189
+              ],
+              "text": "Turn right onto 이태원로",
+              "time": 50883,
+              "street_name": "이태원로"
+            },
+            {
+              "distance": 171.991,
+              "sign": 2,
+              "interval": [
+                189,
+                195
+              ],
+              "text": "Turn right onto 한남대로27가길",
+              "time": 123833,
+              "street_name": "한남대로27가길"
+            },
+            {
+              "distance": 102.477,
+              "sign": 2,
+              "interval": [
+                195,
+                199
+              ],
+              "text": "Turn right onto 한남대로27길",
+              "time": 73784,
+              "street_name": "한남대로27길"
+            },
+            {
+              "street_ref": "41",
+              "distance": 78.515,
+              "sign": 1,
+              "interval": [
+                199,
+                201
+              ],
+              "text": "Turn slight right onto 한남대로",
+              "time": 56531,
+              "street_name": "한남대로"
+            },
+            {
+              "distance": 401.227,
+              "sign": 7,
+              "interval": [
+                201,
+                208
+              ],
+              "text": "Keep right",
+              "time": 288883,
+              "street_name": ""
+            },
+            {
+              "distance": 30.619,
+              "sign": -2,
+              "interval": [
+                208,
+                209
+              ],
+              "text": "Turn left",
+              "time": 22046,
+              "street_name": ""
+            },
+            {
+              "distance": 4400.699,
+              "sign": 2,
+              "interval": [
+                209,
+                277
+              ],
+              "text": "Turn right onto 한남대로",
+              "time": 3168502,
+              "street_name": "한남대로"
+            },
+            {
+              "street_ref": "90",
+              "distance": 11.681,
+              "sign": 2,
+              "interval": [
+                277,
+                278
+              ],
+              "text": "Turn right onto 서초대로",
+              "time": 8410,
+              "street_name": "서초대로"
+            },
+            {
+              "distance": 0,
+              "sign": 4,
+              "last_heading": 249.90700150221116,
+              "interval": [
+                278,
+                278
+              ],
+              "text": "Arrive at destination",
+              "time": 0,
+              "street_name": ""
+            }
+          ],
+          "details": {},
+          "departure_time": "2025-10-19T09:00:00.000+00:00",
+          "arrival_time": "2025-10-19T10:51:58.054+00:00"
+        }
+      ],
+      "points_encoded": false,
+      "bbox": [
+        126.970393,
+        37.497887,
+        127.02773,
+        37.555064
+      ],
+      "points": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            126.97112,
+            37.555063
+          ],
+          [
+            126.971196,
+            37.555062
+          ],
+          [
+            126.971257,
+            37.555064
+          ],
+          [
+            126.971314,
+            37.555017
+          ],
+          [
+            126.971411,
+            37.554938
+          ],
+          [
+            126.971575,
+            37.554806
+          ],
+          [
+            126.971639,
+            37.554792
+          ],
+          [
+            126.971851,
+            37.554798
+          ],
+          [
+            126.971925,
+            37.554798
+          ],
+          [
+            126.971963,
+            37.554801
+          ],
+          [
+            126.971985,
+            37.554801
+          ],
+          [
+            126.972012,
+            37.554801
+          ],
+          [
+            126.972068,
+            37.5548
+          ],
+          [
+            126.972117,
+            37.554801
+          ],
+          [
+            126.972153,
+            37.554802
+          ],
+          [
+            126.972189,
+            37.554803
+          ],
+          [
+            126.972225,
+            37.554804
+          ],
+          [
+            126.972509,
+            37.554806
+          ],
+          [
+            126.972656,
+            37.554345
+          ],
+          [
+            126.972681,
+            37.554274
+          ],
+          [
+            126.972728,
+            37.554228
+          ],
+          [
+            126.972913,
+            37.554132
+          ],
+          [
+            126.973031,
+            37.554086
+          ],
+          [
+            126.973259,
+            37.554001
+          ],
+          [
+            126.97367,
+            37.55383
+          ],
+          [
+            126.973938,
+            37.553701
+          ],
+          [
+            126.974186,
+            37.553654
+          ],
+          [
+            126.974318,
+            37.553607
+          ],
+          [
+            126.974416,
+            37.553587
+          ],
+          [
+            126.974857,
+            37.553527
+          ],
+          [
+            126.975248,
+            37.553472
+          ],
+          [
+            126.975637,
+            37.553419
+          ],
+          [
+            126.975896,
+            37.553374
+          ],
+          [
+            126.975987,
+            37.55332
+          ],
+          [
+            126.97615,
+            37.55325
+          ],
+          [
+            126.976303,
+            37.553171
+          ],
+          [
+            126.976459,
+            37.553089
+          ],
+          [
+            126.97652,
+            37.55303
+          ],
+          [
+            126.9766,
+            37.552873
+          ],
+          [
+            126.97664,
+            37.55277
+          ],
+          [
+            126.9767,
+            37.55248
+          ],
+          [
+            126.976776,
+            37.552201
+          ],
+          [
+            126.976875,
+            37.551823
+          ],
+          [
+            126.976904,
+            37.551711
+          ],
+          [
+            126.977035,
+            37.551212
+          ],
+          [
+            126.977105,
+            37.550947
+          ],
+          [
+            126.977263,
+            37.550351
+          ],
+          [
+            126.977306,
+            37.550196
+          ],
+          [
+            126.977489,
+            37.550129
+          ],
+          [
+            126.977867,
+            37.549974
+          ],
+          [
+            126.978046,
+            37.549914
+          ],
+          [
+            126.978658,
+            37.549689
+          ],
+          [
+            126.978859,
+            37.549615
+          ],
+          [
+            126.979099,
+            37.549527
+          ],
+          [
+            126.979466,
+            37.549392
+          ],
+          [
+            126.979601,
+            37.549352
+          ],
+          [
+            126.97966,
+            37.549335
+          ],
+          [
+            126.979993,
+            37.549238
+          ],
+          [
+            126.9801,
+            37.549208
+          ],
+          [
+            126.980324,
+            37.54915
+          ],
+          [
+            126.980737,
+            37.549045
+          ],
+          [
+            126.981351,
+            37.54888
+          ],
+          [
+            126.981432,
+            37.548852
+          ],
+          [
+            126.982024,
+            37.548725
+          ],
+          [
+            126.982204,
+            37.548688
+          ],
+          [
+            126.983076,
+            37.54845
+          ],
+          [
+            126.983215,
+            37.548328
+          ],
+          [
+            126.983651,
+            37.548394
+          ],
+          [
+            126.983867,
+            37.548178
+          ],
+          [
+            126.98403,
+            37.547974
+          ],
+          [
+            126.984048,
+            37.547914
+          ],
+          [
+            126.984181,
+            37.54747
+          ],
+          [
+            126.9841,
+            37.547142
+          ],
+          [
+            126.984125,
+            37.546957
+          ],
+          [
+            126.984186,
+            37.546847
+          ],
+          [
+            126.984558,
+            37.546522
+          ],
+          [
+            126.984803,
+            37.546234
+          ],
+          [
+            126.985013,
+            37.546042
+          ],
+          [
+            126.985296,
+            37.545845
+          ],
+          [
+            126.985514,
+            37.545791
+          ],
+          [
+            126.985624,
+            37.545742
+          ],
+          [
+            126.985914,
+            37.545746
+          ],
+          [
+            126.986376,
+            37.545792
+          ],
+          [
+            126.986623,
+            37.545688
+          ],
+          [
+            126.98675,
+            37.545647
+          ],
+          [
+            126.986841,
+            37.545598
+          ],
+          [
+            126.986938,
+            37.54553
+          ],
+          [
+            126.987123,
+            37.545498
+          ],
+          [
+            126.987119,
+            37.545539
+          ],
+          [
+            126.987138,
+            37.545639
+          ],
+          [
+            126.987175,
+            37.545686
+          ],
+          [
+            126.987266,
+            37.545772
+          ],
+          [
+            126.987393,
+            37.546041
+          ],
+          [
+            126.987589,
+            37.54603
+          ],
+          [
+            126.987695,
+            37.546025
+          ],
+          [
+            126.987808,
+            37.54604
+          ],
+          [
+            126.988605,
+            37.546218
+          ],
+          [
+            126.988766,
+            37.546235
+          ],
+          [
+            126.988939,
+            37.546236
+          ],
+          [
+            126.989075,
+            37.546202
+          ],
+          [
+            126.989259,
+            37.546142
+          ],
+          [
+            126.989525,
+            37.54603
+          ],
+          [
+            126.99021,
+            37.545626
+          ],
+          [
+            126.990508,
+            37.545364
+          ],
+          [
+            126.99057,
+            37.545283
+          ],
+          [
+            126.99095,
+            37.544616
+          ],
+          [
+            126.991171,
+            37.544551
+          ],
+          [
+            126.991279,
+            37.544507
+          ],
+          [
+            126.991417,
+            37.544463
+          ],
+          [
+            126.99155,
+            37.544387
+          ],
+          [
+            126.99173,
+            37.544243
+          ],
+          [
+            126.99181,
+            37.544198
+          ],
+          [
+            126.991937,
+            37.544153
+          ],
+          [
+            126.992403,
+            37.544119
+          ],
+          [
+            126.99252,
+            37.544135
+          ],
+          [
+            126.992666,
+            37.544115
+          ],
+          [
+            126.992801,
+            37.544053
+          ],
+          [
+            126.992936,
+            37.544029
+          ],
+          [
+            126.993083,
+            37.544036
+          ],
+          [
+            126.993126,
+            37.543983
+          ],
+          [
+            126.99312,
+            37.54393
+          ],
+          [
+            126.993087,
+            37.543808
+          ],
+          [
+            126.993102,
+            37.543741
+          ],
+          [
+            126.993146,
+            37.543695
+          ],
+          [
+            126.993165,
+            37.543704
+          ],
+          [
+            126.993282,
+            37.543707
+          ],
+          [
+            126.993378,
+            37.54369
+          ],
+          [
+            126.993511,
+            37.543661
+          ],
+          [
+            126.993843,
+            37.543552
+          ],
+          [
+            126.993972,
+            37.54351
+          ],
+          [
+            126.99406,
+            37.543464
+          ],
+          [
+            126.99413,
+            37.543399
+          ],
+          [
+            126.99417,
+            37.543317
+          ],
+          [
+            126.994294,
+            37.543276
+          ],
+          [
+            126.994362,
+            37.543198
+          ],
+          [
+            126.994391,
+            37.543095
+          ],
+          [
+            126.994436,
+            37.543014
+          ],
+          [
+            126.994519,
+            37.542994
+          ],
+          [
+            126.994647,
+            37.542879
+          ],
+          [
+            126.994755,
+            37.542784
+          ],
+          [
+            126.995027,
+            37.54259
+          ],
+          [
+            126.995081,
+            37.542521
+          ],
+          [
+            126.995209,
+            37.542359
+          ],
+          [
+            126.995248,
+            37.542267
+          ],
+          [
+            126.995289,
+            37.542107
+          ],
+          [
+            126.995578,
+            37.541971
+          ],
+          [
+            126.99617,
+            37.541617
+          ],
+          [
+            126.996368,
+            37.541491
+          ],
+          [
+            126.996698,
+            37.541272
+          ],
+          [
+            126.996763,
+            37.541208
+          ],
+          [
+            126.996825,
+            37.541112
+          ],
+          [
+            126.997294,
+            37.541013
+          ],
+          [
+            126.997492,
+            37.540964
+          ],
+          [
+            126.997774,
+            37.540921
+          ],
+          [
+            126.997994,
+            37.540928
+          ],
+          [
+            126.998176,
+            37.540956
+          ],
+          [
+            126.998333,
+            37.540998
+          ],
+          [
+            126.998499,
+            37.541053
+          ],
+          [
+            126.998595,
+            37.540978
+          ],
+          [
+            126.999028,
+            37.540931
+          ],
+          [
+            126.999106,
+            37.540884
+          ],
+          [
+            126.999106,
+            37.540778
+          ],
+          [
+            126.999178,
+            37.540693
+          ],
+          [
+            126.999227,
+            37.540457
+          ],
+          [
+            126.999355,
+            37.540357
+          ],
+          [
+            126.99952,
+            37.540269
+          ],
+          [
+            126.999663,
+            37.540139
+          ],
+          [
+            126.999908,
+            37.539846
+          ],
+          [
+            127.000108,
+            37.53971
+          ],
+          [
+            127.000431,
+            37.539566
+          ],
+          [
+            127.000682,
+            37.53954
+          ],
+          [
+            127.000786,
+            37.539474
+          ],
+          [
+            127.000801,
+            37.539389
+          ],
+          [
+            127.000738,
+            37.539283
+          ],
+          [
+            127.00067,
+            37.539166
+          ],
+          [
+            127.000441,
+            37.538909
+          ],
+          [
+            127.000416,
+            37.538826
+          ],
+          [
+            127.000413,
+            37.538755
+          ],
+          [
+            127.000831,
+            37.538668
+          ],
+          [
+            127.001144,
+            37.538756
+          ],
+          [
+            127.001293,
+            37.539111
+          ],
+          [
+            127.001599,
+            37.539108
+          ],
+          [
+            127.00157,
+            37.538662
+          ],
+          [
+            127.001469,
+            37.538334
+          ],
+          [
+            127.001605,
+            37.538291
+          ],
+          [
+            127.001665,
+            37.538426
+          ],
+          [
+            127.001728,
+            37.538412
+          ],
+          [
+            127.00221,
+            37.538307
+          ],
+          [
+            127.002438,
+            37.538258
+          ],
+          [
+            127.002452,
+            37.538201
+          ],
+          [
+            127.0026,
+            37.537864
+          ],
+          [
+            127.002858,
+            37.53745
+          ],
+          [
+            127.002882,
+            37.537445
+          ],
+          [
+            127.003282,
+            37.537551
+          ],
+          [
+            127.003659,
+            37.537654
+          ],
+          [
+            127.003819,
+            37.537574
+          ],
+          [
+            127.004016,
+            37.537555
+          ],
+          [
+            127.004531,
+            37.537349
+          ],
+          [
+            127.004718,
+            37.537298
+          ],
+          [
+            127.004936,
+            37.536966
+          ],
+          [
+            127.005087,
+            37.536657
+          ],
+          [
+            127.005193,
+            37.53643
+          ],
+          [
+            127.005759,
+            37.535702
+          ],
+          [
+            127.006283,
+            37.534972
+          ],
+          [
+            127.006432,
+            37.534765
+          ],
+          [
+            127.00676,
+            37.534293
+          ],
+          [
+            127.007012,
+            37.533936
+          ],
+          [
+            127.007323,
+            37.533519
+          ],
+          [
+            127.007636,
+            37.533639
+          ],
+          [
+            127.007765,
+            37.533461
+          ],
+          [
+            127.007881,
+            37.533324
+          ],
+          [
+            127.007925,
+            37.533265
+          ],
+          [
+            127.00797,
+            37.533213
+          ],
+          [
+            127.00878,
+            37.532186
+          ],
+          [
+            127.008918,
+            37.531859
+          ],
+          [
+            127.009634,
+            37.530909
+          ],
+          [
+            127.009819,
+            37.530692
+          ],
+          [
+            127.009925,
+            37.530568
+          ],
+          [
+            127.010181,
+            37.530303
+          ],
+          [
+            127.011255,
+            37.529123
+          ],
+          [
+            127.011826,
+            37.528531
+          ],
+          [
+            127.012407,
+            37.527888
+          ],
+          [
+            127.013413,
+            37.52686
+          ],
+          [
+            127.014651,
+            37.525533
+          ],
+          [
+            127.015393,
+            37.524695
+          ],
+          [
+            127.016745,
+            37.523205
+          ],
+          [
+            127.016819,
+            37.523122
+          ],
+          [
+            127.017555,
+            37.522357
+          ],
+          [
+            127.017681,
+            37.522218
+          ],
+          [
+            127.017796,
+            37.522046
+          ],
+          [
+            127.017911,
+            37.521621
+          ],
+          [
+            127.019046,
+            37.517993
+          ],
+          [
+            127.019133,
+            37.517752
+          ],
+          [
+            127.019422,
+            37.516956
+          ],
+          [
+            127.019515,
+            37.516617
+          ],
+          [
+            127.019581,
+            37.516412
+          ],
+          [
+            127.019629,
+            37.516154
+          ],
+          [
+            127.019749,
+            37.515644
+          ],
+          [
+            127.019772,
+            37.51554
+          ],
+          [
+            127.019803,
+            37.515419
+          ],
+          [
+            127.020102,
+            37.514607
+          ],
+          [
+            127.020322,
+            37.51382
+          ],
+          [
+            127.020326,
+            37.513805
+          ],
+          [
+            127.020355,
+            37.51371
+          ],
+          [
+            127.020544,
+            37.513114
+          ],
+          [
+            127.020622,
+            37.512851
+          ],
+          [
+            127.021006,
+            37.511974
+          ],
+          [
+            127.021386,
+            37.511172
+          ],
+          [
+            127.021435,
+            37.511081
+          ],
+          [
+            127.021659,
+            37.510609
+          ],
+          [
+            127.022127,
+            37.509641
+          ],
+          [
+            127.022615,
+            37.508648
+          ],
+          [
+            127.023181,
+            37.507449
+          ],
+          [
+            127.023327,
+            37.507172
+          ],
+          [
+            127.023376,
+            37.507074
+          ],
+          [
+            127.023693,
+            37.506515
+          ],
+          [
+            127.02397,
+            37.505917
+          ],
+          [
+            127.02408,
+            37.505596
+          ],
+          [
+            127.024222,
+            37.505264
+          ],
+          [
+            127.024301,
+            37.505101
+          ],
+          [
+            127.024496,
+            37.504698
+          ],
+          [
+            127.024603,
+            37.504499
+          ],
+          [
+            127.024727,
+            37.504301
+          ],
+          [
+            127.024893,
+            37.503945
+          ],
+          [
+            127.025536,
+            37.502648
+          ],
+          [
+            127.025849,
+            37.501976
+          ],
+          [
+            127.026036,
+            37.501639
+          ],
+          [
+            127.026236,
+            37.501224
+          ],
+          [
+            127.026297,
+            37.501057
+          ],
+          [
+            127.026582,
+            37.500409
+          ],
+          [
+            127.026838,
+            37.499876
+          ],
+          [
+            127.026968,
+            37.499602
+          ],
+          [
+            127.026993,
+            37.499549
+          ],
+          [
+            127.027488,
+            37.498496
+          ],
+          [
+            127.027641,
+            37.498169
+          ],
+          [
+            127.027681,
+            37.498048
+          ],
+          [
+            127.02773,
+            37.497923
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      },
+      "instructions": [
+        {
+          "distance": 122.117,
+          "heading": 89.08,
+          "sign": 0,
+          "interval": [
+            0,
+            7
+          ],
+          "text": "Continue",
+          "time": 87925,
+          "street_name": ""
+        },
+        {
+          "distance": 18.69,
+          "sign": -1,
+          "interval": [
+            7,
+            8
+          ],
+          "text": "Turn slight left",
+          "time": 22428,
+          "street_name": ""
+        },
+        {
+          "distance": 9.912,
+          "sign": 0,
+          "interval": [
+            8,
+            10
+          ],
+          "text": "Continue onto 서울역광장",
+          "time": 7137,
+          "street_name": "서울역광장"
+        },
+        {
+          "distance": 48.142,
+          "sign": 0,
+          "interval": [
+            10,
+            18
+          ],
+          "text": "Continue",
+          "time": 34662,
+          "street_name": ""
+        },
+        {
+          "distance": 366.307,
+          "sign": 2,
+          "interval": [
+            18,
+            33
+          ],
+          "text": "Turn right onto 후암로",
+          "time": 263741,
+          "street_name": "후암로"
+        },
+        {
+          "distance": 390.419,
+          "sign": 7,
+          "interval": [
+            33,
+            48
+          ],
+          "text": "Keep right onto 후암로",
+          "time": 281102,
+          "street_name": "후암로"
+        },
+        {
+          "distance": 72.459,
+          "sign": -2,
+          "interval": [
+            48,
+            51
+          ],
+          "text": "Turn left onto 후암로28길",
+          "time": 52170,
+          "street_name": "후암로28길"
+        },
+        {
+          "distance": 473.182,
+          "sign": 0,
+          "interval": [
+            51,
+            66
+          ],
+          "text": "Continue onto 후암로28길",
+          "time": 340691,
+          "street_name": "후암로28길"
+        },
+        {
+          "distance": 18.325,
+          "sign": 1,
+          "interval": [
+            66,
+            67
+          ],
+          "text": "Turn slight right onto 두텁바위로58길",
+          "time": 13194,
+          "street_name": "두텁바위로58길"
+        },
+        {
+          "distance": 39.188,
+          "sign": -2,
+          "interval": [
+            67,
+            68
+          ],
+          "text": "Turn left onto 두텁바위로58길",
+          "time": 28215,
+          "street_name": "두텁바위로58길"
+        },
+        {
+          "distance": 30.659,
+          "sign": 2,
+          "interval": [
+            68,
+            69
+          ],
+          "text": "Turn right onto 두텁바위로60길",
+          "time": 22074,
+          "street_name": "두텁바위로60길"
+        },
+        {
+          "distance": 304.603,
+          "sign": 0,
+          "interval": [
+            69,
+            79
+          ],
+          "text": "Continue onto 신흥로20길",
+          "time": 219315,
+          "street_name": "신흥로20길"
+        },
+        {
+          "distance": 31.234,
+          "sign": -7,
+          "interval": [
+            79,
+            81
+          ],
+          "text": "Keep left onto 신흥로",
+          "time": 22488,
+          "street_name": "신흥로"
+        },
+        {
+          "distance": 141.173,
+          "sign": -7,
+          "interval": [
+            81,
+            88
+          ],
+          "text": "Keep left onto 신흥로18길",
+          "time": 101644,
+          "street_name": "신흥로18길"
+        },
+        {
+          "distance": 66.369,
+          "sign": -3,
+          "interval": [
+            88,
+            93
+          ],
+          "text": "Turn sharp left onto 소월로26길",
+          "time": 47786,
+          "street_name": "소월로26길"
+        },
+        {
+          "distance": 402.549,
+          "sign": 2,
+          "interval": [
+            93,
+            106
+          ],
+          "text": "Turn right onto 소월로",
+          "time": 289835,
+          "street_name": "소월로"
+        },
+        {
+          "distance": 20.733,
+          "sign": -7,
+          "interval": [
+            106,
+            107
+          ],
+          "text": "Keep left",
+          "time": 14928,
+          "street_name": ""
+        },
+        {
+          "distance": 185.393,
+          "sign": 7,
+          "interval": [
+            107,
+            119
+          ],
+          "text": "Keep right",
+          "time": 133483,
+          "street_name": ""
+        },
+        {
+          "distance": 40.747,
+          "sign": 2,
+          "interval": [
+            119,
+            124
+          ],
+          "text": "Turn right",
+          "time": 48896,
+          "street_name": ""
+        },
+        {
+          "distance": 105.702,
+          "sign": -2,
+          "interval": [
+            124,
+            133
+          ],
+          "text": "Turn left",
+          "time": 76106,
+          "street_name": ""
+        },
+        {
+          "distance": 11.776,
+          "sign": -2,
+          "interval": [
+            133,
+            134
+          ],
+          "text": "Turn left",
+          "time": 8479,
+          "street_name": ""
+        },
+        {
+          "distance": 32.14,
+          "sign": 7,
+          "interval": [
+            134,
+            137
+          ],
+          "text": "Keep right",
+          "time": 23140,
+          "street_name": ""
+        },
+        {
+          "distance": 130.405,
+          "sign": -2,
+          "interval": [
+            137,
+            145
+          ],
+          "text": "Turn left",
+          "time": 93891,
+          "street_name": ""
+        },
+        {
+          "distance": 176.455,
+          "sign": -2,
+          "interval": [
+            145,
+            151
+          ],
+          "text": "Turn left onto 소월로",
+          "time": 127048,
+          "street_name": "소월로"
+        },
+        {
+          "distance": 152.635,
+          "sign": -2,
+          "interval": [
+            151,
+            158
+          ],
+          "text": "Turn left onto 소월로",
+          "time": 109898,
+          "street_name": "소월로"
+        },
+        {
+          "distance": 515.797,
+          "sign": 2,
+          "interval": [
+            158,
+            182
+          ],
+          "text": "Turn right",
+          "time": 371374,
+          "street_name": ""
+        },
+        {
+          "distance": 87.245,
+          "sign": 2,
+          "interval": [
+            182,
+            184
+          ],
+          "text": "Turn right",
+          "time": 62816,
+          "street_name": ""
+        },
+        {
+          "distance": 12.906,
+          "sign": -2,
+          "interval": [
+            184,
+            185
+          ],
+          "text": "Turn left onto 이태원로55길",
+          "time": 9292,
+          "street_name": "이태원로55길"
+        },
+        {
+          "distance": 15.867,
+          "sign": -2,
+          "interval": [
+            185,
+            186
+          ],
+          "text": "Turn left onto 이태원로",
+          "time": 11424,
+          "street_name": "이태원로"
+        },
+        {
+          "distance": 70.671,
+          "sign": 2,
+          "interval": [
+            186,
+            189
+          ],
+          "text": "Turn right onto 이태원로",
+          "time": 50883,
+          "street_name": "이태원로"
+        },
+        {
+          "distance": 171.991,
+          "sign": 2,
+          "interval": [
+            189,
+            195
+          ],
+          "text": "Turn right onto 한남대로27가길",
+          "time": 123833,
+          "street_name": "한남대로27가길"
+        },
+        {
+          "distance": 102.477,
+          "sign": 2,
+          "interval": [
+            195,
+            199
+          ],
+          "text": "Turn right onto 한남대로27길",
+          "time": 73784,
+          "street_name": "한남대로27길"
+        },
+        {
+          "street_ref": "41",
+          "distance": 78.515,
+          "sign": 1,
+          "interval": [
+            199,
+            201
+          ],
+          "text": "Turn slight right onto 한남대로",
+          "time": 56531,
+          "street_name": "한남대로"
+        },
+        {
+          "distance": 401.227,
+          "sign": 7,
+          "interval": [
+            201,
+            208
+          ],
+          "text": "Keep right",
+          "time": 288883,
+          "street_name": ""
+        },
+        {
+          "distance": 30.619,
+          "sign": -2,
+          "interval": [
+            208,
+            209
+          ],
+          "text": "Turn left",
+          "time": 22046,
+          "street_name": ""
+        },
+        {
+          "distance": 4400.699,
+          "sign": 2,
+          "interval": [
+            209,
+            277
+          ],
+          "text": "Turn right onto 한남대로",
+          "time": 3168502,
+          "street_name": "한남대로"
+        },
+        {
+          "street_ref": "90",
+          "distance": 11.681,
+          "sign": 2,
+          "interval": [
+            277,
+            278
+          ],
+          "text": "Turn right onto 서초대로",
+          "time": 8410,
+          "street_name": "서초대로"
+        },
+        {
+          "distance": 0,
+          "sign": 4,
+          "last_heading": 249.90700150221116,
+          "interval": [
+            278,
+            278
+          ],
+          "text": "Arrive at destination",
+          "time": 0,
+          "street_name": ""
+        }
+      ],
+      "details": {},
+      "ascend": 0,
+      "descend": 0,
+      "snapped_waypoints": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            126.970393,
+            37.555054
+          ],
+          [
+            127.027606,
+            37.497887
+          ]
+        ]
+      }
+    }
+  ],
+  "contextual_info": {
+    "지하철2호선강남역": [
+      {
+        "name": "카카오프렌즈 강남플래그십",
+        "category": "상점"
+      },
+      {
+        "name": "카카오프렌즈 강남플래그십",
+        "category": "상점"
+      },
+      {
+        "name": "CGV 강남",
+        "category": "영화관"
+      },
+      {
+        "name": "CGV 강남",
+        "category": "영화관"
+      }
+    ],
+    "명동": [
+      {
+        "name": "명동교자 본점",
+        "category": "맛집"
+      }
+    ],
+    "남대문세무서.서울백병원": [
+      {
+        "name": "명동교자 본점",
+        "category": "맛집"
+      }
+    ],
+    "신분당선강남역": [
+      {
+        "name": "CGV 강남",
+        "category": "영화관"
+      },
+      {
+        "name": "CGV 강남",
+        "category": "영화관"
+      }
+    ],
+    "종로1가": [
+      {
+        "name": "교보문고 광화문점",
+        "category": "서점"
+      },
+      {
+        "name": "교보문고 광화문점",
+        "category": "서점"
+      },
+      {
+        "name": "교보문고 광화문점",
+        "category": "서점"
+      }
+    ],
+    "강남": [
+      {
+        "name": "카카오프렌즈 강남플래그십",
+        "category": "상점"
+      },
+      {
+        "name": "카카오프렌즈 강남플래그십",
+        "category": "상점"
+      },
+      {
+        "name": "CGV 강남",
+        "category": "영화관"
+      },
+      {
+        "name": "CGV 강남",
+        "category": "영화관"
+      }
+    ],
+    "시청": [
+      {
+        "name": "덕수궁",
+        "category": "관광지"
+      },
+      {
+        "name": "덕수궁",
+        "category": "관광지"
+      }
+    ],
+    "신논현": [
+      {
+        "name": "카카오프렌즈 강남플래그십",
+        "category": "상점"
+      },
+      {
+        "name": "카카오프렌즈 강남플래그십",
+        "category": "상점"
+      }
+    ],
+    "종각": [
+      {
+        "name": "교보문고 광화문점",
+        "category": "서점"
+      }
+    ]
+  }
+}
