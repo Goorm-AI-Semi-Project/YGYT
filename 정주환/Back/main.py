@@ -14,6 +14,8 @@ from pydantic import BaseModel, Field
 # final_scorer.py에서 로직 함수들을 임포트합니다.
 import RecommendationAlgorithm.final_scorer as final_scorer
 
+import json
+
 # --- 1. 설정: GraphHopper 및 Neo4j 정보 ---
 GRAPH_HOPPER_API_URL = "http://localhost:8989/route"
 GRAPH_HOPPER_HEALTH_CHECK_URL = "http://localhost:8989/info"
