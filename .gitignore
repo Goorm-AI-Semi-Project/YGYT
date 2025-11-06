@@ -8,3 +8,5 @@
 정주환/.env
 정주환/Back/.env
 *.csv
+*.json
+정주환/chatbot/.env
