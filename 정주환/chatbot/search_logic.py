@@ -44,7 +44,17 @@ def build_filters_from_profile(user_filter_dict):
       db_pre_filter_list.append({"high_level_category": value})
       
     elif key in DB_FILTER_KEYS:
-      db_pre_filter_list.append({key: value})
+      # 'O' -> "True" (문자열)
+      # 'X' -> "False" (문자열)
+      # 'budget_range' ('중' 등)은 그대로 사용
+      if value == 'O':
+        filter_value = "True"
+      elif value == 'X':
+        filter_value = "False"
+      else:
+        filter_value = value # ('중', '고' 등)
+      
+      db_pre_filter_list.append({key: filter_value})
       
   db_pre_filter = {"$and": db_pre_filter_list} if db_pre_filter_list else {}
   

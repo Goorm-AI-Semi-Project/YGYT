@@ -163,7 +163,8 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
         elif isinstance(value, list):
           processed_meta_item[key] = ",".join(map(str, value))
         else:
-          processed_meta_item[key] = value
+          # (True -> "True", False -> "False", 123 -> "123")
+          processed_meta_item[key] = str(value)
       processed_metadatas.append(processed_meta_item)
 
     print(f"  > 'restaurants' DB에 {len(ids_list)}개 적재 중 (배치)...")
