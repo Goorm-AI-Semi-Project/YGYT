@@ -120,64 +120,109 @@ async def get_recommendations(request: RecommendationRequest):
         total_count=len(results)
     )
 
-# --- 3. (신규) Gradio 챗봇 UI ---
+# --- 3. (신규) Gradio 챗봇 UI --- 
 
 with gr.Blocks(theme=gr.themes.Soft()) as gradio_app:
-    gr.Markdown("# 🤖 뚜벅이 여행자를 위한 챗봇 (v2)")
-    gr.Markdown("AI가 14가지 프로필(출발 위치 포함)을 수집하고, '이동 마찰 점수'가 포함된 맞춤 식당을 추천합니다.")
-    
-    with gr.Row():
-        with gr.Column(scale=2):
-            # 1. (Gradio용) 보이지 않는 상태(State) 변수
-            llm_history_state = gr.State(value=[]) 
-            profile_state = gr.State(value=config.PROFILE_TEMPLATE.copy())
-            is_completed_state = gr.State(value=False)
+    gr.Markdown("# 길따라 맛따라")
+    gr.Markdown("AI가 13가지 프로필 정보를 수집하고, 완료되면 맞춤 식당을 추천합니다.")
 
-            # 2. 채팅창
-            chatbot = gr.Chatbot(
-                label="서베이 챗봇", 
-                height=700, 
-                show_copy_button=True,
-                type='messages'
+    # 🌐 언어 설정 (UI만, 아직 로직은 사용 X)
+    with gr.Group():
+        gr.Markdown("### 🌐 언어 설정")
+        with gr.Row():
+            lang_radio = gr.Radio(
+                ["한국어 KR", "English US", "日本語 JP", "中文 CN"],
+                label="사용 언어 선택",
+                value="한국어 KR",
+                interactive=True
             )
-            
-            # 3. 사용자 입력
-            msg_textbox = gr.Textbox(
-                label="답변 입력", 
-                placeholder="여기에 답변을 입력하고 Enter를 누르세요..."
-            )
-        
-        with gr.Column(scale=1):
-            gr.Markdown("### 🌟 맞춤 추천 결과")
-            # (결과가 표시될 영역)
-            recommendation_output = gr.Markdown(
-                label="추천 결과",
-                value="...프로필 설문이 완료되면 여기에 추천 결과가 표시됩니다...",
-                visible=True # (항상 보이도록 수정)
-            )
+
+    # ── Gradio State 변수들 ─────────────────────────────
+    llm_history_state = gr.State(value=[])
+    profile_state = gr.State(value=config.PROFILE_TEMPLATE.copy())
+    is_completed_state = gr.State(value=False)
+    # 하이브리드 검색용 프로필 Row (네가 만든 user_profile_row_state)
+    user_profile_row_state = gr.State(value=None)
+
+    with gr.Tabs():
+        # [탭 1] 음식 탐색
+        with gr.TabItem("🍽 음식 탐색"):
+            with gr.Column():
+                chatbot = gr.Chatbot(
+                    label="서베이 챗봇",
+                    height=700,
+                    show_copy_button=True,
+                    type="messages",
+                )
+
+                msg_textbox = gr.Textbox(
+                    label="답변 입력",
+                    placeholder="여기에 답변을 입력하고 Enter를 누르세요...",
+                )
+
+                # 챗봇 아래 맞춤 추천 결과 탭
+                with gr.Tabs():
+                    with gr.TabItem("🌟 맞춤 추천 결과"):
+                        topk_slider = gr.Slider(
+                            minimum=1,
+                            maximum=30,
+                            value=5,
+                            step=1,
+                            label="표시 개수 (Top-K)",
+                        )
+                        recommendation_output = gr.Markdown(
+                            label="추천 결과",
+                            value="...프로필 설문이 완료되면 여기에 추천 결과가 표시됩니다...",
+                            visible=False,
+                        )
+
+        # [탭 2] 설정
+        with gr.TabItem("⚙️ 설정"):
+            with gr.Column():
+                gr.Markdown("### ⚙️ 앱 설정 (예시)")
+                gr.Markdown(
+                    "- 이 탭에는 나중에 벡터 DB 리셋, 디버그 옵션, 모델 선택 등을 넣을 수 있습니다.\n"
+                    "- 현재는 UI 틀만 만들어 둔 상태입니다."
+                )
+                rebuild_btn = gr.Button("🔁 벡터 DB 다시 빌드 (예시)")
+                debug_checkbox = gr.Checkbox(label="디버그 로그 출력 (예시)", value=False)
 
     # --- 4. (★핵심★) Gradio 이벤트 핸들러 연결 ---
-    
+
     # (A) 앱이 처음 로드될 때
     gradio_app.load(
-        fn=gradio_callbacks.start_chat, # (일반 함수)
+        fn=gradio_callbacks.start_chat,  # 반드시 5개 값 리턴하도록 구현
         inputs=None,
-        outputs=[chatbot, llm_history_state, profile_state, is_completed_state]
+        outputs=[
+            chatbot,
+            llm_history_state,
+            profile_state,
+            is_completed_state,
+            user_profile_row_state,
+        ],
     )
-    
+
     # (B) 사용자가 Enter(submit)를 누를 때
-    
     async def chat_survey_handler(
-        message: str, 
-        gradio_history: List[Dict], 
-        llm_history: List[Dict], 
-        current_profile: Dict, 
-        is_completed: bool
-    ) -> Tuple[List[Dict], List[Dict], Dict, bool, gr.update]:
+        message: str,
+        gradio_history: List[Dict],
+        llm_history: List[Dict],
+        current_profile: Dict,
+        is_completed: bool,
+        topk_value: int,
+        user_profile_row: Dict,
+    ) -> Tuple[
+        List[Dict],  # chatbot history
+        List[Dict],  # llm_history_state
+        Dict,        # profile_state
+        bool,        # is_completed_state
+        gr.update,   # recommendation_output
+        Dict,        # user_profile_row_state
+    ]:
         """
-        app_main.py에 정의된 로컬 핸들러.
-        Gradio의 입력을 받아, 'app.state'의 자원을
-        gradio_callbacks.chat_survey 함수에 '주입(inject)'합니다.
+        Gradio에서 넘어온 입력 + 상태 + Top-K 값을
+        gradio_callbacks.chat_survey에 넘겨주는 핸들러.
+        (app.state의 http_client, GRAPH_HOPPER_URL도 같이 주입)
         """
         return await gradio_callbacks.chat_survey(
             message=message,
@@ -185,45 +230,70 @@ with gr.Blocks(theme=gr.themes.Soft()) as gradio_app:
             llm_history=llm_history,
             current_profile=current_profile,
             is_completed=is_completed,
-            # --- (★) app.state의 자원 주입 (★) ---
+            topk_value=topk_value,
+            user_profile_row_state=user_profile_row,
             http_client=app.state.http_client,
-            graphhopper_url=config.GRAPH_HOPPER_API_URL
+            graphhopper_url=config.GRAPH_HOPPER_API_URL,
         )
 
     msg_textbox.submit(
-        fn=chat_survey_handler, # (★) (비동기 로컬 핸들러)
+        fn=chat_survey_handler,
         inputs=[
-            msg_textbox, chatbot, llm_history_state, 
-            profile_state, is_completed_state
+            msg_textbox,
+            chatbot,
+            llm_history_state,
+            profile_state,
+            is_completed_state,
+            topk_slider,
+            user_profile_row_state,
         ],
         outputs=[
-            chatbot, llm_history_state, profile_state, 
-            is_completed_state, recommendation_output
-        ]
+            chatbot,
+            llm_history_state,
+            profile_state,
+            is_completed_state,
+            recommendation_output,
+            user_profile_row_state,
+        ],
     )
-    
+
     # (C) Enter 누른 후 텍스트박스 비우기
     msg_textbox.submit(lambda: "", inputs=None, outputs=msg_textbox)
 
-# --- 5. FastAPI 앱에 Gradio UI 마운트 ---
+    # (D) Top-K 슬라이더 변경 시 추천 재계산
+    def update_recommendations_with_topk_handler(topk_value: int, user_profile_row: Dict):
+        """
+        Top-K 값이 바뀔 때마다, 현재 user_profile_row_state를 기반으로
+        추천 결과만 다시 계산해서 Markdown을 업데이트.
+        (실제 로직은 gradio_callbacks.update_recommendations_with_topk 에 구현)
+        """
+        return gradio_callbacks.update_recommendations_with_topk(
+            topk_value=topk_value,
+            user_profile_row_state=user_profile_row,
+        )
+
+    topk_slider.change(
+        fn=update_recommendations_with_topk_handler,
+        inputs=[topk_slider, user_profile_row_state],
+        outputs=recommendation_output,
+    )
+
+# --- 5. FastAPI 앱에 Gradio UI 마운트 --- 
 app = gr.mount_gradio_app(
-    app, 
-    gradio_app, 
+    app,
+    gradio_app,
     path="/chatbot",
-    # (Gradio의 정적 파일(CSS/JS)을 FastAPI가 올바르게 서빙하도록 수정)
-    # (Gradio 4.x 이상 및 FastAPI 0.100+ 이상에서 권장)
     app_kwargs={
         "title": "Gradio App on FastAPI",
         "description": "Gradio app is mounted at /chatbot",
-    }
+    },
 )
 
-# --- 6. 서버 실행 ---
+# --- 6. 서버 실행 --- 
 if __name__ == "__main__":
-    # (GraphHopper가 8989, FastAPI/Gradio가 8080을 사용)
     uvicorn.run(
-        "app_main:app", 
-        host="127.0.0.1", 
-        port=8080, 
-        reload=True
+        "app_main:app",
+        host="127.0.0.1",
+        port=8080,
+        reload=True,
     )
