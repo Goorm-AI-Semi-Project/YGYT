@@ -187,7 +187,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as gradio_app:
                 rebuild_btn = gr.Button("🔁 벡터 DB 다시 빌드 (예시)")
                 debug_checkbox = gr.Checkbox(label="디버그 로그 출력 (예시)", value=False)
 
-    # --- 4. (★핵심★) Gradio 이벤트 핸들러 연결 ---
+    # --- 4.  Gradio 이벤트 핸들러 연결 ---
 
     # (A) 앱이 처음 로드될 때
     gradio_app.load(
@@ -198,7 +198,7 @@ with gr.Blocks(theme=gr.themes.Soft()) as gradio_app:
             llm_history_state,
             profile_state,
             is_completed_state,
-            user_profile_row_state,
+            user_profile_row_state, 
         ],
     )
 

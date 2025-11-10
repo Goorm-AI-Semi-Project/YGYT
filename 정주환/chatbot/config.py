@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 # --- 1/4: Global Variables (전역 변수 및 설정) ---
 # (data/ 폴더 경로 적용)
 RESTAURANT_DB_FILE = "data/restaurant_summaries_output_ALL.csv"
@@ -11,7 +12,7 @@ MENU_DB_FILE = "data/20251017_TOTAL_MENU.csv"
 PROFILE_DB_FILE = "data/user_profiles_for_hybrid_search.csv"
 MOCK_USER_RATINGS_FILE = "data/recommendation_results_with_ratings.csv"
 RESTAURANT_DB_SCORING_FILE = "data/blueribbon_scores_only_reviewed.csv" # (기존 main.py에서 사용)
-
+RAG_REQUEST_N_RESULTS = 50 # (1단계 RAG 검색 시 가져올 초기 후보군 개수)
 DB_PERSISTENT_PATH = "./restaurant_db"
 
 RESTAURANT_COLLECTION_NAME = "restaurants"

@@ -135,3 +135,20 @@ def generate_rag_query(user_profile_summary):
   except Exception as e:
     print(f"  > [오류] 쿼리 재작성 실패: {e}")
     return user_profile_summary[:150]
+  
+  
+def generate_profile_summary_html(profile_data: dict) -> str:
+    """
+    (신규 헬퍼 1)
+    Gradio 챗봇 UI가 사용할 HTML 요약본만 반환합니다.
+    """
+    chat_message_html, _ = generate_profile_summary(profile_data)
+    return chat_message_html
+
+def generate_profile_summary_text_only(profile_data: dict) -> str:
+    """
+    (신규 헬퍼 2)
+    1단계 RAG 쿼리가 사용할 순수 텍스트 요약본만 반환합니다.
+    """
+    _, raw_summary_text = generate_profile_summary(profile_data)
+    return raw_summary_text

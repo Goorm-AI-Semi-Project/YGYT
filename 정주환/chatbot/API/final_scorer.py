@@ -5,6 +5,10 @@ import asyncio # 비동기 처리를 위해 asyncio 추가
 from typing import List, Dict, Any
 import httpx # requests 대신 httpx.AsyncClient를 main.py에서 전달받아 사용
 
+class GraphHopperDownError(Exception):
+    """GraphHopper 서버가 다운되었거나 모든 요청이 실패했을 때 발생하는 전용 오류"""
+    pass
+
 # --- 기획자가 설정하는 가중치 (Weights) ---
 # 기획 의도: "뚜벅이 경험이 가장 중요하고, 그다음이 외국인 친화도"
 WEIGHTS = {
@@ -64,49 +68,36 @@ def calculate_travel_friction_score(path_data: dict) -> float:
 async def get_best_travel_score_async(
     restaurant: pd.Series, 
     user_start_location: str, 
-    async_http_client: httpx.AsyncClient, 
+    async_http_client: httpx.AsyncClient,
     graphhopper_url: str
 ) -> float:
-    """
-    [비동기 API 호출] main.py에서 전달받은 http 클라이언트를 사용하여
-    GraphHopper API를 호출하고 가장 좋은 '이동 마찰 점수'를 반환합니다.
-    """
+    """ (수정) GraphHopper API를 비동기로 호출 (try-except 제거) """
     
-    # --- 1. API 호출 준비 ---
+    from_coords = user_start_location
     to_coords = f"{restaurant['Y좌표']},{restaurant['X좌표']}"
     
     params = [
-        ('point', user_start_location),
+        ('point', from_coords),
         ('point', to_coords),
         ('profile', 'pt'),
-        ('pt.earliest_departure_time', '2023-01-01T09:00:00Z'), # 예시 시간 (main.py에서와 동일하게)
+        ('pt.earliest_departure_time', "2024-01-01T09:00:00Z"), # (고정된 표준시)
         ('algorithm', 'alternative_route'),
         ('alternative_route.max_paths', '3')
     ]
-
-    # --- 2. API 호출 및 경로 데이터 추출 ---
-    try:
-        # main.py에서 받은 클라이언트로 GraphHopper (localhost:8989) 직접 호출
-        response = await async_http_client.get(graphhopper_url, params=params, timeout=10)
-        response.raise_for_status() 
-        
-        data = response.json()
-        route_plans = data.get('paths', []) # GraphHopper 원본 응답은 'paths'
-
-    except (httpx.RequestError, json.JSONDecodeError) as e:
-        print(f"Error: GraphHopper API 요청 실패 (ID: {restaurant.name}): {e}")
-        return 0.0
-
-    # --- 3. 점수 계산 (기존 로직 재사용) ---
-    if not route_plans:
-        return 0.0
-
-    all_path_scores = []
-    for path in route_plans:
-        score = calculate_travel_friction_score(path)
-        all_path_scores.append(score)
     
-    best_score = max(all_path_scores)
+    # try-except 블록 삭제
+    # (httpx.RequestError 등이 발생하면 asyncio.gather가 잡도록 둡니다)
+    response = await async_http_client.get(graphhopper_url, params=params, timeout=10.0)
+    response.raise_for_status() # (4xx, 5xx 오류 시 예외 발생)
+    data = response.json()
+    route_plans = data.get('paths', [])
+    
+    if not route_plans:
+        return 0.0 # (경로 없음)
+
+    all_path_scores = [calculate_travel_friction_score(path) for path in route_plans]
+    best_score = max(all_path_scores) if all_path_scores else 0.0
+    
     return best_score
 
 def get_price_match_score(restaurant_price: str, user_price_prefs: List[str]) -> int:
@@ -132,78 +123,87 @@ async def calculate_final_scores_async(
     async_http_client: httpx.AsyncClient,
     graphhopper_url: str
 ) -> pd.DataFrame:
+    """ 
+    (대폭 수정) 
+    1. 후보군 DF에 4가지 점수를 계산 (비동기 GraphHopper 호출 포함)
+    2. 모든 GraphHopper 호출 실패 시 GraphHopperDownError 발생
     """
-    (비동기) 후보 DataFrame을 입력받아,
-    150개의 이동 마찰 점수 계산을 '동시에' 실행하고 최종 정렬하여 반환합니다.
-    """
     
-    print(f"--- 최종 점수 계산 시작 (후보군: {len(candidate_df)}개) ---")
+    # --- 1/4. 이동 마찰 점수 (비동기) ---
+    print(f"1/4. 이동 마찰 점수 계산 중 (API 동시 호출)...")
     
-    df = candidate_df.copy()
+    tasks = [
+        get_best_travel_score_async(
+            restaurant, 
+            user_start_location, 
+            async_http_client, 
+            graphhopper_url
+        ) 
+        for _, restaurant in candidate_df.iterrows()
+    ]
     
-    # 가중치
-    W = WEIGHTS
+    # [ ★★★ 3. asyncio.gather 수정 (예외 처리) ★★★ ]
+    # return_exceptions=True : 개별 작업이 실패해도 중단하지 않고, 결과 리스트에 Exception 객체를 포함
+    results = await asyncio.gather(*tasks, return_exceptions=True)
     
-    # 1. Travel_Friction (이동 마찰 점수) 계산 (비동기 동시 처리)
-    print("1/4. 이동 마찰 점수 계산 중 (API 동시 호출)...")
+    travel_scores = []
+    any_failures = False
     
-    # 150개의 API 호출 작업을 리스트로 만듭니다.
-    tasks = []
-    for index, row in df.iterrows():
-        tasks.append(
-            get_best_travel_score_async(
-                row, 
-                user_start_location, 
-                async_http_client, 
-                graphhopper_url
-            )
-        )
+    for i, res in enumerate(results):
+        if isinstance(res, float):
+            travel_scores.append(res)
+        else:
+            # (res는 Exception 객체)
+            restaurant_id = candidate_df.index[i] # (ID는 .index에 있음)
+            print(f"Error: GraphHopper API 요청 실패 (ID: {restaurant_id}): {res}")
+            travel_scores.append(0.0)
+            any_failures = True
+            
+    # [ ★★★ 4. 서버 다운 감지 로직 추가 ★★★ ]
+    # (모든 점수가 0점이고, 그 중 하나라도 실패(Exception)가 있었다면 -> 서버 다운으로 간주)
+    if any_failures and all(s == 0.0 for s in travel_scores) and not candidate_df.empty:
+        print("[치명적 오류] GraphHopper 서버가 다운되었거나 모든 요청이 실패했습니다. Fallback을 위해 오류를 발생시킵니다.")
+        raise GraphHopperDownError("GraphHopper server is unreachable or all requests failed.")
+        
+    candidate_df['score_travel'] = travel_scores
     
-    # asyncio.gather를 사용해 150개 API 호출을 '동시에' 실행
-    travel_scores = await asyncio.gather(*tasks)
+    # ... (이하 2, 3, 4번 점수 계산 및 final_score 계산 로직은 기존과 동일) ...
     
-    df['score_travel'] = travel_scores
+    # --- 2/4. 외국인 친화도 점수 (미리 계산됨) ---
+    print("2/4. 외국인 친화도 점수 계산 중...")
+    candidate_df['score_friendliness'] = candidate_df['avg_friendliness']
     
-    # 2. Foreigner_Friendliness (외국인 친화도)
-    # (이미 계산된 'avg_friendliness' 값을 그대로 사용)
-    print("2/4. 외국인 친화도 점수 할당 중...")
-    df['score_friendliness'] = df['avg_friendliness']
+    # --- 3/4. 품질 점수 (미리 계산됨) ---
+    print("3/4. 품질 점수 계산 중...")
+    candidate_df['score_quality'] = candidate_df['avg_quality']
     
-    # 3. Quality_Score (품질 점수)
-    # (이미 계산된 'avg_quality' 값을 그대로 사용)
-    print("3/4. 품질 점수 할당 중...")
-    df['score_quality'] = df['avg_quality']
-    
-    # 4. Price_Match (가격 일치도)
-    print("4/4. 가격 일치도 점수 계산 중...")
-    # 'price' 컬럼이 원본 CSV에 있다고 가정합니다.
-    # 만약 컬럼명이 다르면 'price_col_name'을 수정해주세요.
-    # (제공해주신 헤더에 'price'가 없으므로, 경고가 출력되고 0점으로 처리될 것입니다)
-    price_col_name = 'price' 
-    if price_col_name not in df.columns:
-        print(f"  [경고] '{price_col_name}' 컬럼을 찾을 수 없습니다. 가격 일치도 점수를 0으로 처리합니다.")
-        df['score_price'] = 0
+    # --- 4/4. 가격 일치도 ---
+    print("4/4. 가격 일치도 계산 중...")
+    if not user_price_prefs:
+        candidate_df['score_price'] = 0.0
     else:
-        df['score_price'] = df[price_col_name].apply(
-            lambda price_str: get_price_match_score(price_str, user_price_prefs)
-        )
+        # 'price' 컬럼이 없거나, NaN인 경우를 대비하여 .get(col, default) 사용 안 함
+        def get_price_score(row):
+            if 'price' not in row or pd.isna(row['price']):
+                return 0.0
+            # (참고) 'price' 컬럼은 '$' 또는 '$$' 형태여야 함
+            if row['price'] in user_price_prefs:
+                return 1.0
+            return 0.0
+            
+        candidate_df['score_price'] = candidate_df.apply(get_price_score, axis=1)
+
+    # --- 최종 점수 합산 ---
+    print("--- 최종 점수 합산 및 정렬 중 ---")
+    weights = WEIGHTS
     
-    # --- 최종 점수 (Final_Score) 계산 ---
-    print("--- 모든 점수 집계 완료. Final_Score 계산 중... ---")
-    
-    df['final_score'] = (
-        df['score_travel'] * W['travel'] +
-        df['score_friendliness'] * W['friendliness'] +
-        df['score_quality'] * W['quality'] +
-        df['score_price'] * W['price']
+    candidate_df['final_score'] = (
+        (candidate_df['score_travel'] * weights['travel']) +
+        (candidate_df['score_friendliness'] * weights['friendliness']) +
+        (candidate_df['score_quality'] * weights['quality']) +
+        (candidate_df['score_price'] * weights['price'])
     )
     
-    # 점수가 높은 순서대로 정렬
-    df_sorted = df.sort_values(by='final_score', ascending=False)
+    final_scored_df = candidate_df.sort_values(by='final_score', ascending=False)
     
-    print("--- 최종 점수 계산 및 정렬 완료 ---")
-    
-    # 로그 기록을 위해 모든 피처가 포함된 DataFrame을 반환
-    return df_sorted
-
-
+    return final_scored_df
