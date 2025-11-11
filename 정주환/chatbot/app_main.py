@@ -131,19 +131,18 @@ GRADIO_CSS = PROFILE_VIEW_CSS + """
 .controls-right{display:flex;gap:8px}
 """
 
-with gr.Blocks(theme=gr.themes.Soft(), css=GRADIO_CSS) as gradio_app:
-    gr.Markdown("# 길따라 맛따라")
+with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as gradio_app:
+    gr.Markdown("## 거긴어떄")
     gr.Markdown("AI가 13가지 프로필 정보를 수집하고, 완료되면 맞춤 식당을 추천합니다.")
 
     with gr.Group():
-        gr.Markdown("### 🌐 언어 설정")
+        #gr.Markdown("### 🌐 언어 설정")
         with gr.Row():
             lang_radio = gr.Radio(
                 ["한국어 KR", "English US", "日本語 JP", "中文 CN"],
-                label="사용 언어 선택",
+                label="🌐 사용 언어 선택",
                 value="한국어 KR",
                 interactive=True,
-            )
 
     # States
     llm_history_state = gr.State(value=[])
