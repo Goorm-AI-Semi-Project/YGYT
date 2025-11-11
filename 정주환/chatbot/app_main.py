@@ -132,7 +132,7 @@ GRADIO_CSS = PROFILE_VIEW_CSS + """
 """
 
 with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as gradio_app:
-    gr.Markdown("## 거긴어떄")
+    gr.Markdown("## 거긴어때")
     gr.Markdown("AI가 13가지 프로필 정보를 수집하고, 완료되면 맞춤 식당을 추천합니다.")
 
     with gr.Group():
