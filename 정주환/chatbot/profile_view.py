@@ -204,10 +204,42 @@ def render_profile_card(p_raw: dict) -> str:
 </div>
 """
 
+# profile_view.py 파일의 가장 아랫부분을 수정합니다.
+
+# profile_view.py 파일의 가장 아랫부분을 수정합니다.
+
 PROFILE_VIEW_CSS = """
-.profile-card{border-radius:14px;padding:16px;background:#0b1020;border:1px solid #223}
-.pc-title{font-weight:700;margin-bottom:8px}
-.pc-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.chip{border:1px solid #334;padding:2px 8px;border-radius:999px;font-size:12px;opacity:.9}
-.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profile-card{
+  border-radius: 14px;
+  padding: 16px;
+  background: #FFFFFF; /* 흰색 배경 */
+  border: 1px solid #E5E7EB; /* 밝은 회색 테두리 */
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  color: #111827; /* ★ 카드 내부의 기본 텍스트 색상을 어둡게 변경 */
+}
+.pc-title{
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #000000; /* ★ 제목을 완전한 검은색으로 변경 */
+}
+.pc-chips{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.chip{
+  border: 1px solid #D1D5DB; 
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #1F2937; /* ★ 칩 텍스트 색상을 더 어둡게 변경 */
+  background: #F9FAFB; 
+}
+.pc-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  color: #111827; /* ★ 그리드 텍스트 색상을 어둡게 변경 */
+}
 """
