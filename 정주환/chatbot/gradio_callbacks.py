@@ -158,7 +158,7 @@ async def _run_recommendation_flow(
     try:
         # --- 1단계: RAG + 필터 메타데이터 생성 ---
         print("--- 1단계: RAG + 점수제 후보군 생성 시작 ---")
-        gr.Info("--- 1단계: 1차 RAG 후보군 생성 중... ---")
+        #gr.Info("--- 1단계: 1차 RAG 후보군 생성 중... ---")
 
         profile_summary = llm_utils.generate_profile_summary_text_only(profile_data)
 
@@ -195,7 +195,7 @@ async def _run_recommendation_flow(
         # --- 2단계: final_scorer 시도 ---
         try:
             print(f"--- 2단계: final_scorer 실행 (후보: {len(candidate_ids)}개) ---")
-            gr.Info(
+            #gr.Info(
                 f"--- 2단계: {len(candidate_ids)}개 후보 '뚜벅이 점수' 계산 중... (API 호출) ---"
             )
 
@@ -305,7 +305,7 @@ async def chat_survey(
 
     if profile_is_complete and not is_completed:
         print("--- 프로필 완성! 추천 로직 실행 ---")
-        gr.Info("프로필이 완성되었습니다! AI가 맞춤 식당을 추천합니다...")
+        #gr.Info("프로필이 완성되었습니다! AI가 맞춤 식당을 추천합니다...")
 
         profile_html = llm_utils.generate_profile_summary_html(updated_profile)
 
