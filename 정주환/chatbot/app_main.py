@@ -175,6 +175,7 @@ with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as 
                 label="🌐 사용 언어 선택",
                 value="한국어 KR",
                 interactive=True,
+            )
 
     # States
     llm_history_state = gr.State(value=[])
@@ -188,7 +189,7 @@ with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as 
             with gr.Group() as chat_group:
                 with gr.Column():
                     chatbot = gr.Chatbot(
-                        label="서베이 챗봇",
+                        label="한국 여행 도우미 챗봇",
                         height=700,
                         show_copy_button=True,
                         type="messages",
@@ -214,8 +215,8 @@ with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as 
                         refresh_btn = gr.Button("🔮 추천 새로고침", variant="secondary")
                         back_btn    = gr.Button("✏️ 프로필 수정",  variant="secondary")
 
-                recommendation_output = gr.Markdown(label=None, value="")
-
+                recommendation_output = gr.HTML(label=None, value="") # (수정)
+                
         with gr.TabItem("⚙️ 설정"):
             with gr.Column():
                 gr.Markdown("### ⚙️ 앱 설정 (예시)")
