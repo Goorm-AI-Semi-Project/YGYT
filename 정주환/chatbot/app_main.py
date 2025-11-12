@@ -126,9 +126,41 @@ async def get_recommendations(request: RecommendationRequest):
 
 # ========= 4) Gradio UI =========
 GRADIO_CSS = PROFILE_VIEW_CSS + """
+/* (★★★ 앱 메인 CSS ★★★) */
 .controls-bar{display:flex;align-items:center;gap:12px;margin:8px 0}
 .controls-left{flex:1;min-width:280px}
 .controls-right{display:flex;gap:8px}
+
+/* (★★★ 1. Charlie님이 요청한 신규 CSS 추가 ★★★) */
+/* Custom CSS for visual fidelity */
+.border-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px; /* rounded-lg */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  padding: 1rem; /* p-4 */
+  margin-bottom: 1rem; /* space-y-4 */
+}
+
+/* 음식 추천 아이템 내부의 테두리 스타일 */
+.border-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem; /* p-3 */
+  margin-bottom: 0.75rem; /* space-y-3 */
+}
+
+/* 작은 텍스트 + 배경 (음식 탐색 탭의 태그) */
+.text-xs-bg {
+  font-size: 0.75rem; /* text-xs */
+  background-color: #f3f4f6; /* bg-gray-100 */
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin-right: 4px; /* (태그 간 간격) */
+  margin-bottom: 4px; /* (태그 줄바꿈 시 간격) */
+  white-space: nowrap;
+  display: inline-block;
+}
+/* (★★★ 신규 CSS 끝 ★★★) */
 """
 
 with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as gradio_app:
