@@ -195,9 +195,7 @@ async def _run_recommendation_flow(
         # --- 2단계: final_scorer 시도 ---
         try:
             print(f"--- 2단계: final_scorer 실행 (후보: {len(candidate_ids)}개) ---")
-            #gr.Info(
-                f"--- 2단계: {len(candidate_ids)}개 후보 '뚜벅이 점수' 계산 중... (API 호출) ---"
-            )
+            #gr.Info(f"--- 2단계: {len(candidate_ids)}개 후보 '뚜벅이 점수' 계산 중... (API 호출) ---")
 
             candidate_df = data_loader.get_restaurants_by_ids(candidate_ids)
             if candidate_df.empty:
