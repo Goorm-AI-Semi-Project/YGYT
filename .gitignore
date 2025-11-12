@@ -10,3 +10,6 @@
 *.csv
 *.json
 정주환/chatbot/.env
+정주환/APIserver/__pycache__
+정주환/APIserver/.env
+정주환/APIserver/API/__pycache__
