@@ -160,6 +160,46 @@ GRADIO_CSS = PROFILE_VIEW_CSS + """
   white-space: nowrap;
   display: inline-block;
 }
+
+/* (★★★ 2. gr.HTML 내부에서 버튼 스타일을 적용하기 위한 CSS 추가 ★★★) */
+/* Gradio의 .gr-button-primary, .gr-button-secondary, .gr-button-sm 스타일을 복제 */
+
+.html-button {
+  text-decoration: none; /* 링크 밑줄 제거 */
+  display: inline-block;
+  padding: 0.25rem 0.5rem; /* sm: py-1 px-2 */
+  font-size: 0.875rem; /* sm: text-sm */
+  font-weight: 500; /* medium */
+  border-radius: 0.375rem; /* rounded-md */
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+/* Primary Button (상세 보기) */
+.html-button-primary {
+  background-color: #ff7600; /* gradio-orange-600 */
+  color: white;
+  border-color: #ff7600;
+}
+.html-button-primary:hover {
+  background-color: #f06e00; /* hover 어둡게 */
+  border-color: #f06e00;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Secondary Button (카카오맵) -> Kakao Yellow */
+.html-button-secondary {
+  background-color: #FEE500; /* Kakao Yellow */
+  color: #374151; /* Dark Text (gray-700) */
+  border-color: #FEE500; 
+}
+.html-button-secondary:hover {
+  background-color: #F0D900; /* Darker Yellow */
+  border-color: #F0D900;
+  color: #374151; /* Keep Dark Text */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
 /* (★★★ 신규 CSS 끝 ★★★) */
 """
 
