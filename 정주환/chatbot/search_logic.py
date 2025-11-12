@@ -119,17 +119,20 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
         # (Markdown 대신 HTML <img> 태그 사용)
         image_html_string = f'<img src="{store_image_url}" alt="{store_name} 이미지" style="width:100%; max-height:200px; object-fit:cover; border-radius: 8px; margin-bottom: 12px;">'
         
-    # 4. (링크 2종 HTML 생성)
+    # 4. (링크 2종 HTML 생성) ⬇️⬇️⬇️ 여기를 수정합니다 ⬇️⬇️⬇️
+    
     detail_link_md = ""
     if pd.notna(detail_url) and detail_url:
-      detail_link_md = f'<a href="{detail_url}" target="_blank">가게 상세정보</a>'
+      # (app_main.py에 추가한 'html-button-primary' 클래스 사용)
+      detail_link_md = f'<a href="{detail_url}" target="_blank" class="html-button html-button-primary">가게 상세정보</a>'
 
     map_link_md = ""
     if pd.notna(store_y) and pd.notna(store_x) and store_y and store_x:
       store_name_encoded = quote(store_name)
-      # (카카오맵 URL 수정 - 'https://' 추가)
       kakao_map_url = f"https://map.kakao.com/?q={store_name_encoded}&map_type=TYPE_MAP&rq={store_y},{store_x}"
-      map_link_md = f'<a href="{kakao_map_url}" target="_blank">카카오맵 길찾기</a>'
+      # (app_main.py에 추가한 'html-button-secondary' 클래스 사용)
+      map_link_md = f'<a href="{kakao_map_url}" target="_blank" class="html-button html-button-secondary">카카오맵 길찾기</a>'
+    # ⬆️⬆️⬆️ 수정 완료 ⬆️⬆️⬆️
 
     links_md = ""
     if detail_link_md and map_link_md:
@@ -156,7 +159,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
       
       # (HTML 문자열 생성 시 f-string의 들여쓰기를 피합니다)
       menu_html = textwrap.dedent(f"""
-        <details style="margin-bottom: 12px;">
+        <details open style="margin-bottom: 12px;">
           <summary style="cursor: pointer; font-weight: bold;">주요 메뉴 보기</summary>
           <ul style="margin-top: 8px;">{menu_items_html}</ul>
         </details>
@@ -186,8 +189,9 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
       
       {menu_html}
       
-      <div>
-        {links_md}
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
+        {detail_link_md}
+        {map_link_md}
       </div>
     </div>
     """
