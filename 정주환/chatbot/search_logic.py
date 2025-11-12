@@ -5,6 +5,7 @@ import ast
 from urllib.parse import quote 
 from typing import List
 from urllib.parse import urlparse, quote
+import textwrap
 
 # (data_loader에서 로드된 전역 변수를 사용)
 import data_loader as db
@@ -64,12 +65,17 @@ def build_filters_from_profile(user_filter_dict):
 def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1):
   """
   store_id_str(가게ID)을(를) 받아, 전역 변수(df_restaurants 등)를 참조하여
-  Gradio에 표시할 단일 식당의 Markdown 문자열을 반환합니다.
+  Gradio에 표시할 단일 식당의 *HTML* 문자열을 반환합니다. (CSS 클래스 사용)
   """
   
   # (전역 변수 참조)
   if db.df_restaurants is None or db.menu_groups is None:
-       return f"**[{rank_prefix} {rank_index}] ID: {store_id_str}** (DB 미로드)\n\n---\n\n"
+       # (오류 메시지도 HTML 형식으로 반환)
+       return """
+       <div class="border-item">
+         <h4>[{rank_prefix} {rank_index}] ID: {store_id_str} (DB 미로드)</h4>
+       </div>
+       """
 
   try:
     # 1. (가게 정보 조회)
@@ -88,8 +94,8 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
     except KeyError:
       store_category = 'N/A' 
 
-    # 2. (다른 사용자 평가 카운트 조회)
-    social_proof_string = "" 
+    # 2. (다른 사용자 평가 카운트 조회) - (간략하게 수정)
+    social_proof_html = "" 
     if db.df_restaurant_ratings_summary is not None and not db.df_restaurant_ratings_summary.empty:
       try:
         rating_info = db.df_restaurant_ratings_summary[
@@ -98,22 +104,22 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
         if not rating_info.empty:
           recommend_count = rating_info['추천'].iloc[0]
           non_recommend_count = rating_info['미추천'].iloc[0]
-          social_proof_string = (
-            f"**다른 사용자 평가:** 👍 {recommend_count}명 / 👎 {non_recommend_count}명\n\n"
-          )
+          # (HTML에 바로 삽입할 수 있도록 ' | ' 포함)
+          social_proof_html = f" | 👍 {recommend_count} / 👎 {non_recommend_count}"
       except Exception as e:
         print(f"[서식 오류] ID {store_id_str} 평가 카운트 조회: {e}")
 
-    # 3. (이미지 마크다운 생성)
-    image_md_string = ""
+    # 3. (이미지 HTML 생성)
+    image_html_string = ""
     no_image_filename = "img_restaruant_no_image.png"
     if pd.notna(store_image_url) and store_image_url:
       path = urlparse(store_image_url).path
       filename = os.path.basename(path)
       if filename != no_image_filename:
-        image_md_string = f"![{store_name} 이미지]({store_image_url})\n\n"
+        # (Markdown 대신 HTML <img> 태그 사용)
+        image_html_string = f'<img src="{store_image_url}" alt="{store_name} 이미지" style="width:100%; max-height:200px; object-fit:cover; border-radius: 8px; margin-bottom: 12px;">'
         
-    # 4. (신규 링크 2종 생성 (HTML 사용))
+    # 4. (링크 2종 HTML 생성)
     detail_link_md = ""
     if pd.notna(detail_url) and detail_url:
       detail_link_md = f'<a href="{detail_url}" target="_blank">가게 상세정보</a>'
@@ -121,52 +127,82 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
     map_link_md = ""
     if pd.notna(store_y) and pd.notna(store_x) and store_y and store_x:
       store_name_encoded = quote(store_name)
+      # (카카오맵 URL 수정 - 'https://' 추가)
       kakao_map_url = f"https://map.kakao.com/?q={store_name_encoded}&map_type=TYPE_MAP&rq={store_y},{store_x}"
       map_link_md = f'<a href="{kakao_map_url}" target="_blank">카카오맵 길찾기</a>'
 
     links_md = ""
     if detail_link_md and map_link_md:
-      links_md = f"{detail_link_md} | {map_link_md}\n\n"
+      links_md = f"{detail_link_md} | {map_link_md}"
     elif detail_link_md:
-      links_md = f"{detail_link_md}\n\n"
+      links_md = f"{detail_link_md}"
     elif map_link_md:
-      links_md = f"{map_link_md}\n\n"
+      links_md = f"{map_link_md}"
 
-    # 5. (메뉴 정보 조회)
-    menu_str = ""
+    # 5. (메뉴 정보 HTML 생성)
+    menu_html = ""
+    menu_items_html = "" # (<li> 태그만 담을 변수)
     try:
       menus_df = db.menu_groups.get_group(store_id_str)
       rep_menus = menus_df[menus_df['대표여부'] == 'Y'].head(3)
       if rep_menus.empty:
         rep_menus = menus_df.head(3)
       for _, menu_row in rep_menus.iterrows():
-        menu_str += f"* {menu_row['메뉴']} ({menu_row['가격원문']})\n"
-      if not menu_str:
-        menu_str = "* (메뉴 정보 없음)\n"
+        # (Markdown '*' 대신 <li> 태그 사용)
+        menu_items_html += f"<li>{menu_row['메뉴']} ({menu_row['가격원문']})</li>"
+      
+      if not menu_items_html:
+        menu_items_html = "<li>(메뉴 정보 없음)</li>"
+      
+      # (HTML 문자열 생성 시 f-string의 들여쓰기를 피합니다)
+      menu_html = textwrap.dedent(f"""
+        <details style="margin-bottom: 12px;">
+          <summary style="cursor: pointer; font-weight: bold;">주요 메뉴 보기</summary>
+          <ul style="margin-top: 8px;">{menu_items_html}</ul>
+        </details>
+      """)
+        
     except KeyError:
-      menu_str = "* (메뉴 정보 없음)\n"
+      menu_html = "" # (메뉴 정보 없으면 아예 표시 안함)
 
-    # 6. (최종 Markdown 조합)
-    output_md = (
-      f"**[{rank_prefix} {rank_index}] {store_name}**\n\n"
-      f"{image_md_string}"
-      f"{social_proof_string}"
-      f"{links_md}"
-      f"**위치:** {store_address}\n\n"
-      f"**소개:** {store_intro}\n\n"
-      f"**음식종류:** {store_category}\n\n"
-      f"**주요메뉴:**\n{menu_str}\n"
-      f"\n---\n\n"
-    )
-    return output_md
+    # 6. (카테고리 태그 생성)
+    category_tag_html = ""
+    if store_category and store_category != 'N/A':
+        # (app_main.py의 'text-xs-bg' CSS 클래스 사용)
+        category_tag_html = f'<span class="text-xs-bg">{store_category}</span>'
+
+    # 7. (최종 HTML 조합)
+    # (기존 Markdown 대신, 요청하신 UI 구조와 CSS 클래스를 사용)
+    output_html = f"""
+    <div class="border-item">
+      {image_html_string}
+      <h4 style="margin-bottom: 8px;">[{rank_prefix} {rank_index}] {store_name}</h4>
+      <div style="margin-bottom: 8px;">📍 {store_address}{social_proof_html}</div>
+      <p style="margin-bottom: 12px;">{store_intro}</p>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;">
+        {category_tag_html}
+      </div>
+      
+      {menu_html}
+      
+      <div>
+        {links_md}
+      </div>
+    </div>
+    """
+    
+    # ⬅️ 2. 최종 반환값에서 textwrap.dedent()를 호출합니다.
+    #    (f-string의 들여쓰기를 모두 제거하여 순수 HTML로 만듭니다)
+    return textwrap.dedent(output_html).strip()
     
   except KeyError as ke:
      print(f"[서식 오류] ID {store_id_str} (KeyError): {ke}")
-     return f"**[{rank_prefix} {rank_index}] ID: {store_id_str}** (상세 정보 조회 실패)\\n\\n---\n\n"
+     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] ID: {store_id_str} (상세 정보 조회 실패)</h4></div>'
   except Exception as inner_e:
      print(f"[서식 오류] ID {store_id_str} (Exception): {inner_e}")
-     return f"**[{rank_prefix} {rank_index}] ID: {store_id_str}** (상세 정보 조회 실패)\\n\\n---\n\n"
-
+     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] ID: {store_id_str} (상세 정보 조회 실패)</h4></div>'
+      
 # --- (함수 8/9 중 하나 - 15번 셀) ---
 def get_similar_user_recommendations(
     live_rag_query_text, 
