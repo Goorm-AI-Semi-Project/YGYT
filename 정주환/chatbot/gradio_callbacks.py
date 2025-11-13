@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import httpx
 from typing import Dict, Any, List, Tuple, Set
+import random
 
 # 내부 모듈 임포트
 import config
@@ -145,13 +146,21 @@ def get_start_location_coords(location_name: str) -> str:
 # Gradio 콜백
 # =========================
 
-def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict, gr.update]:
+def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict]:
     """
     채팅방이 처음 로드될 때 실행.
     app_main.py에서 6개를 받아가므로 6개를 반환한다.
     """
     try:
-        initial_profile = config.PROFILE_TEMPLATE.copy()
+        # 순서대로 질문함
+        # (기존) initial_profile = config.PROFILE_TEMPLATE.copy()
+
+        # (수정) 템플릿의 키(key) 순서를 섞어서 새로운 초기 프로필을 생성합니다.
+        profile_keys = list(config.PROFILE_TEMPLATE.keys())
+        random.shuffle(profile_keys)
+        initial_profile = {key: config.PROFILE_TEMPLATE[key] for key in profile_keys}
+        
+        print(f"[start_chat] 섞인 프로필 키 순서: {list(initial_profile.keys())}")
 
         bot_message, updated_profile = llm_utils.call_gpt4o(
             chat_messages=[], current_profile=initial_profile
@@ -174,7 +183,7 @@ def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict, gr.update]:
             updated_profile,
             False,
             initial_user_profile_row,
-            initial_reco_state,
+            #initial_reco_state,
         )
 
     except Exception as e:
@@ -192,7 +201,7 @@ def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict, gr.update]:
             config.PROFILE_TEMPLATE.copy(),
             False,
             initial_user_profile_row,
-            error_reco_state,
+            #error_reco_state,
         )
 
 
