@@ -32,9 +32,14 @@ def call_gpt4o(chat_messages, current_profile):
     response_content = response.choices[0].message.content
     response_data = json.loads(response_content)
     
-    bot_message = response_data.get("bot_response", "오류가 발생했습니다.")
-    updated_profile = response_data.get("updated_profile", current_profile)
+    bot_message = response_data.get("bot_response")
+    updated_profile = response_data.get("updated_profile", current_profile) 
     
+    if not bot_message:
+        # (콘솔에 경고 로그를 출력)
+        print(f"[경고] LLM 응답 JSON에 'bot_response' 키가 없습니다. (전체 응답: {response_content})")
+        bot_message = "오류가 발생했습니다." # (Fallback 메시지)
+
     return bot_message, updated_profile
     
   except Exception as e:
