@@ -2,7 +2,7 @@ import gradio as gr
 import json
 import pandas as pd
 import httpx
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Set
 
 # 내부 모듈 임포트
 import config
@@ -68,6 +68,59 @@ def budget_mapper(budget_str: str) -> List[str]:
     else:
         # (N/A의 경우 전체)
         return ["$", "$$", "$$$", "$$$$"]
+
+
+def calculate_evaluation_metrics(
+    live_reco_ids: List[str],
+    preprocessed_reco_ids: List[str],
+    ground_truth_set: Set[str],
+    k: int
+) -> Dict[str, Any]:
+  """
+  두 개의 추천 목록과 정답(Ground Truth) Set을 받아
+  Precision@k, Recall@k를 계산합니다.
+  """
+  
+  if not ground_truth_set:
+    print("[평가] Ground Truth가 비어있어 평가를 건너뜁니다.")
+    return {"error": "Ground Truth set is empty."}
+  
+  k_live = min(k, len(live_reco_ids))
+  k_preprocessed = min(k, len(preprocessed_reco_ids))
+
+  # 1. 추천 목록을 Set으로 변환 (K개만큼 자름)
+  live_reco_set_at_k = set(live_reco_ids[:k_live])
+  preprocessed_reco_set_at_k = set(preprocessed_reco_ids[:k_preprocessed])
+  
+  # 2. 교집합 (Hits) 계산
+  hits_live = live_reco_set_at_k.intersection(ground_truth_set)
+  hits_preprocessed = preprocessed_reco_set_at_k.intersection(ground_truth_set)
+
+  # 3. 지표 계산
+  precision_live = len(hits_live) / k_live if k_live > 0 else 0.0
+  recall_live = len(hits_live) / len(ground_truth_set)
+  
+  precision_preprocessed = len(hits_preprocessed) / k_preprocessed if k_preprocessed > 0 else 0.0
+  recall_preprocessed = len(hits_preprocessed) / len(ground_truth_set)
+
+  # 4. 결과 포맷팅
+  results = {
+    "ground_truth_size": len(ground_truth_set),
+    "k_value": k,
+    "live_recommendation": {
+      "k": k_live,
+      "hits": len(hits_live),
+      "precision_at_k": precision_live,
+      "recall_at_k": recall_live
+    },
+    "preprocessed_recommendation": {
+      "k": k_preprocessed,
+      "hits": len(hits_preprocessed),
+      "precision_at_k": precision_preprocessed,
+      "recall_at_k": recall_preprocessed
+    }
+  }
+  return results
 
 
 # (좌표 변환 헬퍼)
@@ -214,6 +267,39 @@ async def _run_recommendation_flow(
                 async_http_client=http_client,
                 graphhopper_url=graphhopper_url,
             )
+            
+            
+            try:
+              # 1. Ground Truth 가져오기
+              ground_truth_set = search_logic.get_ground_truth_for_user(
+                  live_rag_query_text=profile_summary,
+                  max_similar_users=5 
+              )
+              
+              # 2. 추천 목록 ID 가져오기
+              live_reco_ids = final_scored_df.index.astype(str).tolist()
+              
+              # (⭐️ 중요: Charlie님이 이 데이터를 profile_data에 넣어두었다고 가정)
+              preprocessed_reco_ids = profile_data.get("preprocessed_list", []) 
+              if not preprocessed_reco_ids:
+                print("[평가] 'preprocessed_list'가 프로필에 없어 평가를 건너뜁니다.")
+
+              # 3. 평가 수행 (K=5 기준)
+              evaluation_results = calculate_evaluation_metrics(
+                  live_reco_ids=live_reco_ids,
+                  preprocessed_reco_ids=preprocessed_reco_ids,
+                  ground_truth_set=ground_truth_set,
+                  k=5 # (K=5 기준으로 평가)
+              )
+              
+              # 4. 결과 출력
+              print("\n--- [추천 성능 평가 결과 (K=5)] ---")
+              print(json.dumps(evaluation_results, indent=2, ensure_ascii=False))
+              print("----------------------------------\n")
+
+            except Exception as eval_e:
+              print(f"[오류] 평가 지표 계산 중 오류 발생: {eval_e}")
+            
 
             # 슬라이더에서 다시 쓸 수 있도록 state에 저장
             user_profile_row["final_scored_df"] = final_scored_df.reset_index().to_dict(
