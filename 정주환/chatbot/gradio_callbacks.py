@@ -359,10 +359,10 @@ async def chat_survey(
     user_profile_row_state: Dict,
     http_client: httpx.AsyncClient,
     graphhopper_url: str,
-) -> Tuple[List[Dict], List[Dict], Dict, bool, gr.update, Dict]:
+):
     """
-    실제로 사용자가 채팅창에 답변을 넣을 때마다 호출되는 함수.
-    프로필이 완성되는 순간 추천 흐름을 돌리고, 그 외에는 대화만 이어간다.
+    (수정됨: 이 함수는 이제 제너레이터(generator)입니다)
+    채팅 답변을 처리하고, 프로필이 완성되면 2단계(대기/결과)로 UI를 업데이트합니다.
     """
     # 1) 사용자 메시지 기록
     gradio_history.append({"role": "user", "content": message})
@@ -377,7 +377,7 @@ async def chat_survey(
         print(f"chat_survey에서 API 호출 실패: {e}")
         error_msg = f"API 호출 중 오류가 발생했습니다: {e}"
         gradio_history.append({"role": "assistant", "content": error_msg})
-        return (
+        yield ( # (오류 상태 반환)
             gradio_history,
             llm_history,
             current_profile,
@@ -385,6 +385,7 @@ async def chat_survey(
             gr.update(),
             user_profile_row_state,
         )
+        return # (제너레이터 종료)
 
     # LLM 히스토리에 어시스턴트 응답 추가
     llm_history.append({"role": "assistant", "content": bot_message})
@@ -397,36 +398,61 @@ async def chat_survey(
     new_user_profile_row_state = user_profile_row_state
 
     if profile_is_complete and not is_completed:
-        print("--- 프로필 완성! 추천 로직 실행 ---")
-        #gr.Info("프로필이 완성되었습니다! AI가 맞춤 식당을 추천합니다...")
+        
+        # --- (A) 1차: "대기 메시지" 즉시 반환 ---
+        loading_message = "\n\n🤖 프로필 수집이 완료되었습니다! 잠시만 기다려주시면, 수집된 프로필을 기반으로 멋진 음식점을 찾아드릴게요."
+        
+        # (봇의 마지막 응답 + 로딩 메시지를 채팅창에 추가)
+        gradio_history.append({"role": "assistant", "content": f"{bot_message}{loading_message}"})
+        
+        print("--- 프로필 완성! [1/2] 대기 메시지 전송 (화면 유지) ---")
+        
+        # (★수정★) is_completed=False를 반환하여 화면을 채팅창에 머무르게 함
+        yield (
+            gradio_history,
+            llm_history,
+            updated_profile,
+            False, # ⬅️ [핵심 수정] 아직 is_completed=False 입니다.
+            gr.update(), # ⬅️ 추천창은 아직 업데이트하지 않습니다.
+            user_profile_row_state
+        )
 
-        profile_html = llm_utils.generate_profile_summary_html(updated_profile)
-
+        # --- (B) 2차: 오래 걸리는 추천 로직 실행 ---
+        print("--- 프로필 완성! [2/2] 추천 로직 실행 ---")
         recommendation_output, new_user_profile_row_state = await _run_recommendation_flow(
             updated_profile,
             http_client,
             graphhopper_url,
             top_k=topk_value,
         )
+        
+        is_completed = True # (이제 상태를 True로 변경)
 
-        final_bot_message = (
-            f"{bot_message}\n{profile_html}\n\n👇 아래에서 추천 결과를 확인하세요! 👇"
+        # --- (C) 3차: "최종 결과" 반환 ---
+        print("--- 프로필 완성! [2/2] 최종 결과 전송 (화면 전환) ---")
+        
+        # (★수정★) is_completed=True와 최종 결과를 반환하여 화면을 전환시킴
+        yield (
+            gradio_history, 
+            llm_history,
+            updated_profile,
+            True, # ⬅️ [핵심 수정] 이제 is_completed=True 입니다.
+            recommendation_output, # ⬅️ 실제 식당 HTML이 담김
+            new_user_profile_row_state
         )
-        is_completed = True
-        print(json.dumps(updated_profile, indent=2, ensure_ascii=False))
-
-    # 4) UI에 보여줄 대화 기록에 어시스턴트 응답 추가
-    gradio_history.append({"role": "assistant", "content": final_bot_message})
-
-    # 5) 6개 상태 반환 (app_main.py와 맞춤)
-    return (
-        gradio_history,
-        llm_history,
-        updated_profile,
-        is_completed,
-        recommendation_output,
-        new_user_profile_row_state,
-    )
+        
+    else:
+        # --- (프로필 미완성) ---
+        # 평소처럼 챗봇 메시지만 반환
+        gradio_history.append({"role": "assistant", "content": bot_message})
+        yield (
+            gradio_history,
+            llm_history,
+            updated_profile,
+            is_completed, # (False)
+            recommendation_output, # (gr.update())
+            new_user_profile_row_state
+        )
 
 
 def update_recommendations_with_topk(topk_value: int, user_profile_row_state: Dict):
