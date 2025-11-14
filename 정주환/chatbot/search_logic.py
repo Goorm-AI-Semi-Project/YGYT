@@ -11,6 +11,10 @@ import textwrap
 import data_loader as db
 from llm_utils import generate_rag_query
 
+import data_loader as db
+from llm_utils import generate_rag_query
+from typing import List, Set # ⬅️ Set 추가
+
 # --- (함수 7/9) ---
 def create_filter_metadata(profile_data):
   """
@@ -391,4 +395,51 @@ def get_rag_candidate_ids(
     except Exception as e:
         print(f"\n[오류] 1단계 후보군 생성 중 오류: {e}")
         return []
+      
     
+def get_ground_truth_for_user(
+    live_rag_query_text: str,
+    max_similar_users: int = 5
+) -> Set[str]:
+  """
+  현재 사용자의 RAG 쿼리를 기반으로,
+  유사 사용자들이 '추천'한 식당 ID의 *집합(Set)*을 반환합니다. (Ground Truth)
+  """
+  
+  # (data_loader.py에서 로드된 전역 DB 참조)
+  if db.profile_collection is None or db.df_all_user_ratings is None:
+    print("[Ground Truth] DB가 로드되지 않았습니다.")
+    return set()
+
+  try:
+    # 1. 유사 사용자 쿼리 (기존 로직과 동일)
+    results = db.profile_collection.query(
+      query_texts=[live_rag_query_text],
+      n_results=max_similar_users
+    )
+    
+    if not results.get('ids', [[]])[0]:
+      print("[Ground Truth] 유사 사용자를 찾지 못했습니다.")
+      return set()
+      
+    # 2. 유사 사용자의 user_id 추출
+    similar_user_ids = [meta['user_id'] for meta in results['metadatas'][0]]
+
+    # 3. 유사 사용자가 '추천'한 식당 ID 목록 조회
+    ground_truth_df = db.df_all_user_ratings[
+      (db.df_all_user_ratings['user_id'].isin(similar_user_ids)) &
+      (db.df_all_user_ratings['사용자평가'] == '추천')
+    ]
+    
+    if ground_truth_df.empty:
+      print("[Ground Truth] 유사 사용자가 '추천'한 식당이 없습니다.")
+      return set()
+
+    # 4. ID를 집합(Set)으로 반환
+    ground_truth_set = set(ground_truth_df['restaurant_id'].astype(str))
+    print(f"[Ground Truth] 유사 사용자 {len(similar_user_ids)}명으로부터 정답 {len(ground_truth_set)}개 발견")
+    return ground_truth_set
+
+  except Exception as e:
+    print(f"[오류] Ground Truth 생성 중 오류: {e}")
+    return set()

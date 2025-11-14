@@ -32,9 +32,14 @@ def call_gpt4o(chat_messages, current_profile):
     response_content = response.choices[0].message.content
     response_data = json.loads(response_content)
     
-    bot_message = response_data.get("bot_response", "오류가 발생했습니다.")
-    updated_profile = response_data.get("updated_profile", current_profile)
+    bot_message = response_data.get("bot_response")
+    updated_profile = response_data.get("updated_profile", current_profile) 
     
+    if not bot_message:
+        # (콘솔에 경고 로그를 출력)
+        print(f"[경고] LLM 응답 JSON에 'bot_response' 키가 없습니다. (전체 응답: {response_content})")
+        bot_message = "오류가 발생했습니다." # (Fallback 메시지)
+
     return bot_message, updated_profile
     
   except Exception as e:
@@ -152,3 +157,64 @@ def generate_profile_summary_text_only(profile_data: dict) -> str:
     """
     _, raw_summary_text = generate_profile_summary(profile_data)
     return raw_summary_text
+
+
+def extract_profile_from_summary(summary_text: str) -> dict:
+  """
+  [!!! 신규 추가 함수 !!!]
+  완성된 summary_text를 LLM에 전달하여,
+  14개 항목의 구조화된 프로필 JSON을 역으로 추출합니다.
+  """
+  if client is None:
+    print("[오류] extract_profile_from_summary: OpenAI 클라이언트가 없습니다.")
+    return {} # 실패 시 빈 딕셔너리 반환
+
+  # (PROFILE_TEMPLATE을 빈 딕셔너리로 사용)
+  empty_profile_json = json.dumps(PROFILE_TEMPLATE, indent=2, ensure_ascii=False)
+
+  system_prompt = f"""
+  당신은 사용자의 자기소개 텍스트(summary_text)를 읽고,
+  주어진 JSON 스키마의 14개 항목을 정확하게 추출하는 AI입니다.
+
+  [추출해야 할 JSON 스키마]
+  {empty_profile_json}
+
+  [규칙]
+  1.  자기소개 텍스트를 기반으로 14개 항목을 모두 채웁니다.
+  2.  텍스트에 명시되지 않은 항목은 'null'로 둡니다.
+  3.  'start_location'은 "현재 [장소] 에 있어" 부분에서 정확히 추출합니다.
+  4.  'budget'은 "저렴한", "중간", "고급"을 "저", "중", "고"로 매핑합니다.
+  5.  'avoid_ingredients'와 'like_ingredients'는 리스트로 추출합니다.
+  6.  *반드시* 주어진 스키마와 동일한 JSON 형식으로만 응답해야 합니다.
+  """
+
+  user_prompt = f"""
+  [사용자 자기소개 텍스트]
+  {summary_text}
+
+  [추출된 JSON 결과]
+  """
+
+  try:
+    response = client.chat.completions.create(
+      model=GPT_API_NAME,
+      messages=[
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}
+      ],
+      response_format={"type": "json_object"},
+      temperature=0.0 # (정확한 추출을 위해 0.0)
+    )
+    
+    extracted_data = json.loads(response.choices[0].message.content)
+    
+    # (14개 키가 모두 있는지 최소한으로 확인)
+    if "name" in extracted_data and "start_location" in extracted_data:
+      return extracted_data
+    else:
+      print(f"[경고] LLM이 {summary_text}에서 불완전한 JSON을 반환했습니다.")
+      return {} # (불완전하면 빈 딕셔너리 반환)
+
+  except Exception as e:
+    print(f"[오류] extract_profile_from_summary: LLM 호출/파싱 실패 - {e}")
+    return {} # (실패 시 빈 딕셔너리 반환)

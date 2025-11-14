@@ -282,7 +282,6 @@ with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as 
         outputs=[chatbot, llm_history_state, profile_state, is_completed_state, user_profile_row_state],
     )
 
-    # (B) 설문/채팅 진행
     async def chat_survey_handler(
         message: str,
         gradio_history: List[Dict],
@@ -293,14 +292,21 @@ with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as 
         user_profile_row: Dict,
         debug_on: bool
     ):
-        (
+        """
+        (수정됨: 이 함수는 이제 제너레이터입니다)
+        chat_survey 콜백이 yield하는 값들을 스트리밍으로 받아 UI를 업데이트합니다.
+        """
+        
+        # 1. (수정) `await` 대신 `async for`를 사용합니다.
+        #    gradio_callbacks.chat_survey가 (A)대기, (B)결과 2개를 yield합니다.
+        async for (
             chatbot_out,
             llm_out,
             profile_out,
             is_completed_out,
             rec_md_out,
             upr_out,
-        ) = await gradio_callbacks.chat_survey(
+        ) in gradio_callbacks.chat_survey( # ⬅️ (await 제거)
             message=message,
             gradio_history=gradio_history,
             llm_history=llm_history,
@@ -310,37 +316,44 @@ with gr.Blocks(title="거긴어때", theme=gr.themes.Soft(), css=GRADIO_CSS) as 
             user_profile_row_state=user_profile_row,
             http_client=app.state.http_client,
             graphhopper_url=config.GRAPH_HOPPER_API_URL,
-        )
-
-        # ★ 요약문 강제 주입 (fallback)
-        summary_text = _extract_summary_text(profile_out, chatbot_out, llm_out)
-        profile_for_view = dict(profile_out or {})
-        if summary_text and "summary" not in profile_for_view:
-            profile_for_view["summary"] = summary_text
-
-        # 화면 전환/카드 렌더
-        chat_group_vis   = gr.update(visible=not is_completed_out)
-        result_group_vis = gr.update(visible=is_completed_out)
-        profile_html_out = gr.update(value=render_profile_card(profile_for_view))
-
-        # 디버그 패널 값
-        norm_preview = normalize_profile(profile_for_view)
-        vis = gr.update(visible=bool(debug_on))
-        return (
-            chatbot_out, llm_out, profile_out, is_completed_out,
-            rec_md_out, upr_out,
-            chat_group_vis, result_group_vis, profile_html_out,
-            gr.update(value=profile_out, visible=bool(debug_on)),
-            gr.update(value=summary_text, visible=bool(debug_on)),
-            gr.update(value=norm_preview,  visible=bool(debug_on)),
-        )
+        ):
+            # --- (이하 로직은 yield되는 값들로 UI를 업데이트합니다) ---
+            
+            # ★ 요약문 강제 주입 (fallback)
+            summary_text = _extract_summary_text(profile_out, chatbot_out, llm_out)
+            profile_for_view = dict(profile_out or {})
+            if summary_text and "summary" not in profile_for_view:
+                profile_for_view["summary"] = summary_text
+    
+            # 화면 전환/카드 렌더
+            chat_group_vis   = gr.update(visible=not is_completed_out)
+            result_group_vis = gr.update(visible=is_completed_out)
+            profile_html_out = gr.update(value=render_profile_card(profile_for_view))
+    
+            # 디버그 패널 값
+            norm_preview = normalize_profile(profile_for_view)
+            vis = gr.update(visible=bool(debug_on))
+            
+            # 2. (수정) `return` 대신 `yield`를 사용합니다.
+            #    (Gradio에 12개 출력값을 스트리밍으로 전달)
+            yield ( 
+                chatbot_out, llm_out, profile_out, is_completed_out,
+                rec_md_out, upr_out,
+                chat_group_vis, result_group_vis, profile_html_out,
+                gr.update(value=profile_out, visible=bool(debug_on)),
+                gr.update(value=summary_text, visible=bool(debug_on)),
+                gr.update(value=norm_preview,  visible=bool(debug_on)),
+            )
+    # ⬆️⬆️⬆️ [수정 완료] ⬆️⬆️⬆️
 
     msg_textbox.submit(
-        fn=chat_survey_handler,
+        fn=chat_survey_handler, # (이 함수는 이제 제너레이터입니다)
         inputs=[msg_textbox, chatbot, llm_history_state, profile_state, is_completed_state, topk_slider, user_profile_row_state, debug_toggle],
         outputs=[chatbot, llm_history_state, profile_state, is_completed_state, recommendation_output, user_profile_row_state, chat_group, result_group, profile_html, debug_profile_json, debug_summary_text, debug_norm_json],
     )
     msg_textbox.submit(lambda: "", inputs=None, outputs=msg_textbox)
+    
+    
 
     # (C) Top-K 변경 시 추천만 갱신
     def update_recommendations_with_topk_handler(topk_value: int, user_profile_row: Dict):

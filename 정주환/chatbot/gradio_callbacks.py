@@ -2,7 +2,8 @@ import gradio as gr
 import json
 import pandas as pd
 import httpx
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Set
+import random
 
 # 내부 모듈 임포트
 import config
@@ -70,6 +71,59 @@ def budget_mapper(budget_str: str) -> List[str]:
         return ["$", "$$", "$$$", "$$$$"]
 
 
+def calculate_evaluation_metrics(
+    live_reco_ids: List[str],
+    preprocessed_reco_ids: List[str],
+    ground_truth_set: Set[str],
+    k: int
+) -> Dict[str, Any]:
+  """
+  두 개의 추천 목록과 정답(Ground Truth) Set을 받아
+  Precision@k, Recall@k를 계산합니다.
+  """
+  
+  if not ground_truth_set:
+    print("[평가] Ground Truth가 비어있어 평가를 건너뜁니다.")
+    return {"error": "Ground Truth set is empty."}
+  
+  k_live = min(k, len(live_reco_ids))
+  k_preprocessed = min(k, len(preprocessed_reco_ids))
+
+  # 1. 추천 목록을 Set으로 변환 (K개만큼 자름)
+  live_reco_set_at_k = set(live_reco_ids[:k_live])
+  preprocessed_reco_set_at_k = set(preprocessed_reco_ids[:k_preprocessed])
+  
+  # 2. 교집합 (Hits) 계산
+  hits_live = live_reco_set_at_k.intersection(ground_truth_set)
+  hits_preprocessed = preprocessed_reco_set_at_k.intersection(ground_truth_set)
+
+  # 3. 지표 계산
+  precision_live = len(hits_live) / k_live if k_live > 0 else 0.0
+  recall_live = len(hits_live) / len(ground_truth_set)
+  
+  precision_preprocessed = len(hits_preprocessed) / k_preprocessed if k_preprocessed > 0 else 0.0
+  recall_preprocessed = len(hits_preprocessed) / len(ground_truth_set)
+
+  # 4. 결과 포맷팅
+  results = {
+    "ground_truth_size": len(ground_truth_set),
+    "k_value": k,
+    "live_recommendation": {
+      "k": k_live,
+      "hits": len(hits_live),
+      "precision_at_k": precision_live,
+      "recall_at_k": recall_live
+    },
+    "preprocessed_recommendation": {
+      "k": k_preprocessed,
+      "hits": len(hits_preprocessed),
+      "precision_at_k": precision_preprocessed,
+      "recall_at_k": recall_preprocessed
+    }
+  }
+  return results
+
+
 # (좌표 변환 헬퍼)
 # (실제 서비스에서는 이 부분을 DB나 API로 대체해야 합니다)
 LOCATION_COORDS = {
@@ -92,13 +146,21 @@ def get_start_location_coords(location_name: str) -> str:
 # Gradio 콜백
 # =========================
 
-def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict, gr.update]:
+def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict]:
     """
     채팅방이 처음 로드될 때 실행.
     app_main.py에서 6개를 받아가므로 6개를 반환한다.
     """
     try:
-        initial_profile = config.PROFILE_TEMPLATE.copy()
+        # 순서대로 질문함
+        # (기존) initial_profile = config.PROFILE_TEMPLATE.copy()
+
+        # (수정) 템플릿의 키(key) 순서를 섞어서 새로운 초기 프로필을 생성합니다.
+        profile_keys = list(config.PROFILE_TEMPLATE.keys())
+        random.shuffle(profile_keys)
+        initial_profile = {key: config.PROFILE_TEMPLATE[key] for key in profile_keys}
+        
+        print(f"[start_chat] 섞인 프로필 키 순서: {list(initial_profile.keys())}")
 
         bot_message, updated_profile = llm_utils.call_gpt4o(
             chat_messages=[], current_profile=initial_profile
@@ -121,7 +183,7 @@ def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict, gr.update]:
             updated_profile,
             False,
             initial_user_profile_row,
-            initial_reco_state,
+            #initial_reco_state,
         )
 
     except Exception as e:
@@ -139,7 +201,7 @@ def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict, gr.update]:
             config.PROFILE_TEMPLATE.copy(),
             False,
             initial_user_profile_row,
-            error_reco_state,
+            #error_reco_state,
         )
 
 
@@ -214,6 +276,39 @@ async def _run_recommendation_flow(
                 async_http_client=http_client,
                 graphhopper_url=graphhopper_url,
             )
+            
+            
+            try:
+              # 1. Ground Truth 가져오기
+              ground_truth_set = search_logic.get_ground_truth_for_user(
+                  live_rag_query_text=profile_summary,
+                  max_similar_users=5 
+              )
+              
+              # 2. 추천 목록 ID 가져오기
+              live_reco_ids = final_scored_df.index.astype(str).tolist()
+              
+              # (⭐️ 중요: Charlie님이 이 데이터를 profile_data에 넣어두었다고 가정)
+              preprocessed_reco_ids = profile_data.get("preprocessed_list", []) 
+              if not preprocessed_reco_ids:
+                print("[평가] 'preprocessed_list'가 프로필에 없어 평가를 건너뜁니다.")
+
+              # 3. 평가 수행 (K=5 기준)
+              evaluation_results = calculate_evaluation_metrics(
+                  live_reco_ids=live_reco_ids,
+                  preprocessed_reco_ids=preprocessed_reco_ids,
+                  ground_truth_set=ground_truth_set,
+                  k=5 # (K=5 기준으로 평가)
+              )
+              
+              # 4. 결과 출력
+              print("\n--- [추천 성능 평가 결과 (K=5)] ---")
+              print(json.dumps(evaluation_results, indent=2, ensure_ascii=False))
+              print("----------------------------------\n")
+
+            except Exception as eval_e:
+              print(f"[오류] 평가 지표 계산 중 오류 발생: {eval_e}")
+            
 
             # 슬라이더에서 다시 쓸 수 있도록 state에 저장
             user_profile_row["final_scored_df"] = final_scored_df.reset_index().to_dict(
@@ -264,10 +359,10 @@ async def chat_survey(
     user_profile_row_state: Dict,
     http_client: httpx.AsyncClient,
     graphhopper_url: str,
-) -> Tuple[List[Dict], List[Dict], Dict, bool, gr.update, Dict]:
+):
     """
-    실제로 사용자가 채팅창에 답변을 넣을 때마다 호출되는 함수.
-    프로필이 완성되는 순간 추천 흐름을 돌리고, 그 외에는 대화만 이어간다.
+    (수정됨: 이 함수는 이제 제너레이터(generator)입니다)
+    채팅 답변을 처리하고, 프로필이 완성되면 2단계(대기/결과)로 UI를 업데이트합니다.
     """
     # 1) 사용자 메시지 기록
     gradio_history.append({"role": "user", "content": message})
@@ -282,7 +377,7 @@ async def chat_survey(
         print(f"chat_survey에서 API 호출 실패: {e}")
         error_msg = f"API 호출 중 오류가 발생했습니다: {e}"
         gradio_history.append({"role": "assistant", "content": error_msg})
-        return (
+        yield ( # (오류 상태 반환)
             gradio_history,
             llm_history,
             current_profile,
@@ -290,6 +385,7 @@ async def chat_survey(
             gr.update(),
             user_profile_row_state,
         )
+        return # (제너레이터 종료)
 
     # LLM 히스토리에 어시스턴트 응답 추가
     llm_history.append({"role": "assistant", "content": bot_message})
@@ -302,36 +398,61 @@ async def chat_survey(
     new_user_profile_row_state = user_profile_row_state
 
     if profile_is_complete and not is_completed:
-        print("--- 프로필 완성! 추천 로직 실행 ---")
-        #gr.Info("프로필이 완성되었습니다! AI가 맞춤 식당을 추천합니다...")
+        
+        # --- (A) 1차: "대기 메시지" 즉시 반환 ---
+        loading_message = "\n\n🤖 프로필 수집이 완료되었습니다! 잠시만 기다려주시면, 수집된 프로필을 기반으로 멋진 음식점을 찾아드릴게요."
+        
+        # (봇의 마지막 응답 + 로딩 메시지를 채팅창에 추가)
+        gradio_history.append({"role": "assistant", "content": f"{bot_message}{loading_message}"})
+        
+        print("--- 프로필 완성! [1/2] 대기 메시지 전송 (화면 유지) ---")
+        
+        # (★수정★) is_completed=False를 반환하여 화면을 채팅창에 머무르게 함
+        yield (
+            gradio_history,
+            llm_history,
+            updated_profile,
+            False, # ⬅️ [핵심 수정] 아직 is_completed=False 입니다.
+            gr.update(), # ⬅️ 추천창은 아직 업데이트하지 않습니다.
+            user_profile_row_state
+        )
 
-        profile_html = llm_utils.generate_profile_summary_html(updated_profile)
-
+        # --- (B) 2차: 오래 걸리는 추천 로직 실행 ---
+        print("--- 프로필 완성! [2/2] 추천 로직 실행 ---")
         recommendation_output, new_user_profile_row_state = await _run_recommendation_flow(
             updated_profile,
             http_client,
             graphhopper_url,
             top_k=topk_value,
         )
+        
+        is_completed = True # (이제 상태를 True로 변경)
 
-        final_bot_message = (
-            f"{bot_message}\n{profile_html}\n\n👇 아래에서 추천 결과를 확인하세요! 👇"
+        # --- (C) 3차: "최종 결과" 반환 ---
+        print("--- 프로필 완성! [2/2] 최종 결과 전송 (화면 전환) ---")
+        
+        # (★수정★) is_completed=True와 최종 결과를 반환하여 화면을 전환시킴
+        yield (
+            gradio_history, 
+            llm_history,
+            updated_profile,
+            True, # ⬅️ [핵심 수정] 이제 is_completed=True 입니다.
+            recommendation_output, # ⬅️ 실제 식당 HTML이 담김
+            new_user_profile_row_state
         )
-        is_completed = True
-        print(json.dumps(updated_profile, indent=2, ensure_ascii=False))
-
-    # 4) UI에 보여줄 대화 기록에 어시스턴트 응답 추가
-    gradio_history.append({"role": "assistant", "content": final_bot_message})
-
-    # 5) 6개 상태 반환 (app_main.py와 맞춤)
-    return (
-        gradio_history,
-        llm_history,
-        updated_profile,
-        is_completed,
-        recommendation_output,
-        new_user_profile_row_state,
-    )
+        
+    else:
+        # --- (프로필 미완성) ---
+        # 평소처럼 챗봇 메시지만 반환
+        gradio_history.append({"role": "assistant", "content": bot_message})
+        yield (
+            gradio_history,
+            llm_history,
+            updated_profile,
+            is_completed, # (False)
+            recommendation_output, # (gr.update())
+            new_user_profile_row_state
+        )
 
 
 def update_recommendations_with_topk(topk_value: int, user_profile_row_state: Dict):
