@@ -6,6 +6,7 @@ import json
 from contextlib import asynccontextmanager
 from typing import List, Dict, Any, Optional
 import pandas as pd
+from deep_translator import GoogleTranslator
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -25,6 +26,10 @@ from models import RecommendationRequest, RecommendationResponse
 
 # --- Pydantic Models ---
 
+class ChatInitRequest(BaseModel):
+    """채팅 초기화 요청"""
+    language: str = "ko"
+
 class ChatInitResponse(BaseModel):
     """채팅 초기화 응답"""
     bot_message: str
@@ -36,6 +41,7 @@ class ChatMessageRequest(BaseModel):
     message: str
     llm_history: List[Dict[str, str]] = []
     profile: Dict[str, Any] = {}
+    language: str = "ko"
 
 class ChatMessageResponse(BaseModel):
     """채팅 메시지 응답"""
@@ -53,6 +59,39 @@ class RecommendationGenerateResponse(BaseModel):
     restaurants: List[Dict[str, Any]]
     total_count: int
     user_profile_summary: str
+
+class TranslateRequest(BaseModel):
+    """번역 요청"""
+    text: str
+    target_language: str  # 'en', 'ja', 'zh'
+
+class TranslateResponse(BaseModel):
+    """번역 응답"""
+    translated_text: str
+    original_text: str
+    target_language: str
+
+# --- 헬퍼 함수 ---
+
+def translate_text(text: str, target_lang: str) -> str:
+    """텍스트 번역 함수"""
+    if not text or target_lang == 'ko':
+        return text
+
+    try:
+        # deep-translator 사용
+        lang_map = {
+            'en': 'english',
+            'ja': 'japanese',
+            'zh': 'chinese (simplified)'
+        }
+
+        target_language = lang_map.get(target_lang, 'english')
+        translated = GoogleTranslator(source='korean', target=target_language).translate(text)
+        return translated
+    except Exception as e:
+        print(f"번역 오류: {e}")
+        return text  # 번역 실패 시 원본 반환
 
 # --- 헬퍼 함수 ---
 
@@ -162,17 +201,18 @@ async def root():
     }
 
 @app.post("/api/chat/init", response_model=ChatInitResponse, tags=["Chat Survey"])
-async def init_chat():
+async def init_chat(request: ChatInitRequest):
     """
     채팅 세션 초기화 - AI가 첫 인사 및 설문 시작
     """
     try:
         initial_profile = config.PROFILE_TEMPLATE.copy()
 
-        # GPT-4에게 첫 인사 요청
+        # GPT-4에게 첫 인사 요청 (언어 파라미터 전달)
         bot_message, updated_profile = llm_utils.call_gpt4o(
             chat_messages=[],
-            current_profile=initial_profile
+            current_profile=initial_profile,
+            language=request.language
         )
 
         return ChatInitResponse(
@@ -195,10 +235,11 @@ async def send_chat_message(request: ChatMessageRequest):
             {"role": "user", "content": request.message}
         ]
 
-        # GPT-4에게 응답 요청
+        # GPT-4에게 응답 요청 (언어 파라미터 전달)
         bot_message, updated_profile = llm_utils.call_gpt4o(
             chat_messages=updated_llm_history,
-            current_profile=request.profile
+            current_profile=request.profile,
+            language=request.language
         )
 
         # LLM 히스토리에 봇 응답 추가
@@ -370,6 +411,22 @@ async def get_restaurant_detail(restaurant_id: str):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"식당 정보 조회 실패: {str(e)}")
+
+@app.post("/api/translate", response_model=TranslateResponse, tags=["Translation"])
+async def translate_api(request: TranslateRequest):
+    """
+    텍스트 번역 API
+    한국어 -> 영어/일본어/중국어
+    """
+    try:
+        translated = translate_text(request.text, request.target_language)
+        return TranslateResponse(
+            translated_text=translated,
+            original_text=request.text,
+            target_language=request.target_language
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"번역 실패: {str(e)}")
 
 # --- 서버 실행 ---
 if __name__ == "__main__":

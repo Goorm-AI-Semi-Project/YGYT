@@ -1,15 +1,45 @@
 import json
 from config import client, GPT_API_NAME, SYSTEM_PROMPT, PROFILE_TEMPLATE
 
+# 언어별 시스템 프롬프트 및 에러 메시지
+LANGUAGE_PROMPTS = {
+    "ko": {
+        "system_instruction": "당신은 친절한 식당 추천 AI입니다. 한국어로 대답하세요.",
+        "api_key_error": "죄송합니다. OpenAI API 키가 설정되지 않았습니다.",
+        "api_error": "죄송합니다. 챗봇 응답 생성 중 오류가 발생했습니다"
+    },
+    "en": {
+        "system_instruction": "You are a friendly restaurant recommendation AI. Answer in English.",
+        "api_key_error": "Sorry. OpenAI API key is not set.",
+        "api_error": "Sorry. An error occurred while generating chatbot response"
+    },
+    "ja": {
+        "system_instruction": "あなたは親切なレストラン推薦AIです。日本語で答えてください。",
+        "api_key_error": "申し訳ございません。OpenAI APIキーが設定されていません。",
+        "api_error": "申し訳ございません。チャットボット応答の生成中にエラーが発生しました"
+    },
+    "zh": {
+        "system_instruction": "你是一个友好的餐厅推荐AI。用中文回答。",
+        "api_key_error": "抱歉。OpenAI API密钥未设置。",
+        "api_error": "抱歉。生成聊天机器人响应时发生错误"
+    }
+}
+
 # --- (함수 4/9) ---
-def call_gpt4o(chat_messages, current_profile):
+def call_gpt4o(chat_messages, current_profile, language="ko"):
   """(메인) gpt-4.1-mini API를 호출하고 JSON 응답을 파싱하는 함수"""
-  
+
+  lang_prompts = LANGUAGE_PROMPTS.get(language, LANGUAGE_PROMPTS["ko"])
+
   if client is None:
-      return "죄송합니다. OpenAI API 키가 설정되지 않았습니다.", current_profile
-      
+      return lang_prompts["api_key_error"], current_profile
+
   system_message_with_profile = f"""
   {SYSTEM_PROMPT}
+
+  [언어 설정]
+  {lang_prompts["system_instruction"]}
+
   [현재까지 수집된 프로필]
   {json.dumps(current_profile, indent=2, ensure_ascii=False)}
   [대화 기록]
@@ -39,7 +69,7 @@ def call_gpt4o(chat_messages, current_profile):
     
   except Exception as e:
     print(f"API 호출 또는 JSON 파싱 오류: {e}")
-    error_message = f"죄송합니다. 챗봇 응답 생성 중 오류가 발생했습니다: {e}"
+    error_message = f"{lang_prompts['api_error']}: {e}"
     return error_message, current_profile
 
 # --- (함수 6/9) ---
