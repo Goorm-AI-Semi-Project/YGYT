@@ -236,9 +236,17 @@ async def _run_recommendation_flow(
             "final_scored_df": None,
         }
 
-        candidate_ids = search_logic.get_rag_candidate_ids(
+        candidate_results = search_logic.get_rag_candidate_ids(
             user_profile_row, n_results=config.RAG_REQUEST_N_RESULTS
         )
+        
+        # (ID 리스트와 점수 맵을 즉시 분리)
+        if not candidate_results:
+            candidate_ids = []
+            # (Gradio는 1단계 점수를 사용하지 않으므로 scores_map은 만들 필요 없음)
+        else:
+            candidate_ids = [item['id'] for item in candidate_results]
+
 
         if not candidate_ids:
             print("[오류] 1단계 RAG 검색 결과, 후보군 0개.")
