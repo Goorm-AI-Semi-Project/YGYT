@@ -368,99 +368,109 @@ async def chat_survey(
     http_client: httpx.AsyncClient,
     graphhopper_url: str,
 ):
-    """
-    (수정됨: 이 함수는 이제 제너레이터(generator)입니다)
-    채팅 답변을 처리하고, 프로필이 완성되면 2단계(대기/결과)로 UI를 업데이트합니다.
-    """
-    # 1) 사용자 메시지 기록
-    gradio_history.append({"role": "user", "content": message})
-    llm_history.append({"role": "user", "content": message})
+  """
+  (수정됨: 완료 조건 강화)
+  채팅 답변을 처리하고, 프로필이 완성되면 2단계(대기/결과)로 UI를 업데이트합니다.
+  """
+  # 1) 사용자 메시지 기록
+  gradio_history.append({"role": "user", "content": message})
+  llm_history.append({"role": "user", "content": message})
 
-    # 2) LLM 호출해서 다음 질문/응답 생성
-    try:
-        bot_message, updated_profile = llm_utils.call_gpt4o(
-            llm_history, current_profile
-        )
-    except Exception as e:
-        print(f"chat_survey에서 API 호출 실패: {e}")
-        error_msg = f"API 호출 중 오류가 발생했습니다: {e}"
-        gradio_history.append({"role": "assistant", "content": error_msg})
-        yield ( # (오류 상태 반환)
-            gradio_history,
-            llm_history,
-            current_profile,
-            is_completed,
-            gr.update(),
-            user_profile_row_state,
-        )
-        return # (제너레이터 종료)
+  # 2) LLM 호출해서 다음 질문/응답 생성
+  try:
+    bot_message, updated_profile = llm_utils.call_gpt4o(
+        llm_history, current_profile
+    )
+  except Exception as e:
+    print(f"chat_survey에서 API 호출 실패: {e}")
+    error_msg = f"API 호출 중 오류가 발생했습니다: {e}"
+    gradio_history.append({"role": "assistant", "content": error_msg})
+    yield ( # (오류 상태 반환)
+        gradio_history,
+        llm_history,
+        current_profile,
+        is_completed,
+        gr.update(),
+        user_profile_row_state,
+    )
+    return # (제너레이터 종료)
 
-    # LLM 히스토리에 어시스턴트 응답 추가
-    llm_history.append({"role": "assistant", "content": bot_message})
+  # LLM 히스토리에 어시스턴트 응답 추가
+  llm_history.append({"role": "assistant", "content": bot_message})
 
-    # 3) 프로필이 다 모였는지 확인
-    profile_is_complete = all(v is not None for v in updated_profile.values())
+  # 3) 프로필이 다 모였는지 확인
+  profile_is_complete = all(v is not None for v in updated_profile.values())
+  
+  # [!!! 수정 1: LLM이 '완료' 신호를 보냈는지 확인 !!!]
+  # (config.py의 Rule 5에서 정의한 "완료되었습니다" 키워드 사용)
+  llm_signals_completion = "완료되었습니다" in bot_message
 
-    final_bot_message = bot_message
-    recommendation_output = gr.update()
-    new_user_profile_row_state = user_profile_row_state
+  recommendation_output = gr.update()
+  new_user_profile_row_state = user_profile_row_state
 
-    if profile_is_complete and not is_completed:
-        
-        # --- (A) 1차: "대기 메시지" 즉시 반환 ---
-        loading_message = "\n\n🤖 프로필 수집이 완료되었습니다! 잠시만 기다려주시면, 수집된 프로필을 기반으로 멋진 음식점을 찾아드릴게요."
-        
-        # (봇의 마지막 응답 + 로딩 메시지를 채팅창에 추가)
-        gradio_history.append({"role": "assistant", "content": f"{bot_message}{loading_message}"})
-        
-        print("--- 프로필 완성! [1/2] 대기 메시지 전송 (화면 유지) ---")
-        
-        # (★수정★) is_completed=False를 반환하여 화면을 채팅창에 머무르게 함
-        yield (
-            gradio_history,
-            llm_history,
-            updated_profile,
-            False, # ⬅️ [핵심 수정] 아직 is_completed=False 입니다.
-            gr.update(), # ⬅️ 추천창은 아직 업데이트하지 않습니다.
-            user_profile_row_state
-        )
+  # [!!! 수정 2: 'llm_signals_completion'을 AND 조건으로 추가 !!!]
+  # (데이터가 완전하고) AND (LLM이 완료라고 말했을 때)
+  if profile_is_complete and llm_signals_completion and not is_completed:
+      
+    # --- (A) 1차: "대기 메시지" 즉시 반환 ---
+    
+    # (수정) 'bot_message' ("설문이 완료되었습니다...")와 
+    # 'loading_message' ("🤖 프로필 수집이...")가 중복되므로, 
+    # 'loading_message'만 사용하도록 수정합니다.
+    
+    loading_message = "\n\n🤖 프로필 수집이 완료되었습니다! 잠시만 기다려주시면, 수집된 프로필을 기반으로 멋진 음식점을 찾아드릴게요."
+    
+    # (기존) gradio_history.append({"role": "assistant", "content": f"{bot_message}{loading_message}"})
+    # (수정) LLM의 완료 메시지(bot_message) 대신, UI용 로딩 메시지만 표시합니다.
+    gradio_history.append({"role": "assistant", "content": loading_message.strip()})
+    
+    print("--- 프로필 완성! [1/2] 대기 메시지 전송 (화면 유지) ---")
+    
+    yield (
+      gradio_history,
+      llm_history,
+      updated_profile,
+      False, # ⬅️ [핵심] 아직 is_completed=False (화면 유지)
+      gr.update(), # ⬅️ 추천창은 아직 업데이트하지 않습니다.
+      user_profile_row_state
+    )
 
-        # --- (B) 2차: 오래 걸리는 추천 로직 실행 ---
-        print("--- 프로필 완성! [2/2] 추천 로직 실행 ---")
-        recommendation_output, new_user_profile_row_state = await _run_recommendation_flow(
-            updated_profile,
-            http_client,
-            graphhopper_url,
-            top_k=topk_value,
-        )
-        
-        is_completed = True # (이제 상태를 True로 변경)
+    # --- (B) 2차: 오래 걸리는 추천 로직 실행 ---
+    print("--- 프로필 완성! [2/2] 추천 로직 실행 ---")
+    recommendation_output, new_user_profile_row_state = await _run_recommendation_flow(
+      updated_profile,
+      http_client,
+      graphhopper_url,
+      top_k=topk_value,
+    )
+    
+    is_completed = True # (이제 상태를 True로 변경)
 
-        # --- (C) 3차: "최종 결과" 반환 ---
-        print("--- 프로필 완성! [2/2] 최종 결과 전송 (화면 전환) ---")
-        
-        # (★수정★) is_completed=True와 최종 결과를 반환하여 화면을 전환시킴
-        yield (
-            gradio_history, 
-            llm_history,
-            updated_profile,
-            True, # ⬅️ [핵심 수정] 이제 is_completed=True 입니다.
-            recommendation_output, # ⬅️ 실제 식당 HTML이 담김
-            new_user_profile_row_state
-        )
-        
-    else:
-        # --- (프로필 미완성) ---
-        # 평소처럼 챗봇 메시지만 반환
-        gradio_history.append({"role": "assistant", "content": bot_message})
-        yield (
-            gradio_history,
-            llm_history,
-            updated_profile,
-            is_completed, # (False)
-            recommendation_output, # (gr.update())
-            new_user_profile_row_state
-        )
+    # --- (C) 3차: "최종 결과" 반환 ---
+    print("--- 프로필 완성! [2/2] 최종 결과 전송 (화면 전환) ---")
+    
+    yield (
+      gradio_history, 
+      llm_history,
+      updated_profile,
+      True, # ⬅️ [핵심] 이제 is_completed=True (화면 전환)
+      recommendation_output, # ⬅️ 실제 식당 HTML이 담김
+      new_user_profile_row_state
+    )
+      
+  else:
+    # --- (프로필 미완성 OR LLM이 확인 질문을 한 경우) ---
+    # (예: profile_is_complete=True, llm_signals_completion=False 
+    #  -> "카테고리 확인..." 질문이 이리로 옴)
+    gradio_history.append({"role": "assistant", "content": bot_message})
+    yield (
+      gradio_history,
+      llm_history,
+      updated_profile,
+      is_completed, # (False)
+      recommendation_output, # (gr.update())
+      new_user_profile_row_state
+    )
 
 
 def update_recommendations_with_topk(topk_value: int, user_profile_row_state: Dict):
