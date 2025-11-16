@@ -313,8 +313,23 @@ def get_rag_candidate_ids(
     # 2. 쿼리 및 필터 생성
     user_rag_query = generate_rag_query(user_original_summary)
     db_pre_filter = build_filters_from_profile(user_filter_dict)
-    python_post_filter = {key: val.split(',') for key, val in user_filter_dict.items() 
-                          if key in ['main_ingredients_list', 'suitable_for'] and val != 'N/A' and val}
+    python_post_filter = {}
+    post_filter_keys = ['main_ingredients_list', 'suitable_for']
+
+    for key, val in user_filter_dict.items():
+      if key in post_filter_keys and val != 'N/A' and val:
+        if isinstance(val, str):
+          # [기존 로직] 값이 문자열이면(예: "닭고기,해산물") 쉼표로 분리
+          python_post_filter[key] = [v.strip() for v in val.split(',') if v.strip()]
+        elif isinstance(val, list):
+          # [수정] 값이 이미 리스트이면(예: ["닭고기", "해산물"]) 그대로 사용
+          python_post_filter[key] = val
+        else:
+          # (기타 예외 처리)
+          try:
+            python_post_filter[key] = [str(val)]
+          except:
+            pass # 변환 실패 시 무시
     
     print(f"  > RAG 쿼리: '{user_rag_query}'")
     print(f"  > DB 1차 필터: {db_pre_filter}")
@@ -386,11 +401,11 @@ def get_rag_candidate_ids(
             key=lambda x: (-x['filter_score'], x['rag_distance']), 
         )
         
-        # 6. ID 리스트 반환
-        final_candidate_ids = [item['id'] for item in final_results]
-        print(f"--- 1단계: RAG + 점수제 완료. 후보 ID {len(final_candidate_ids)}개 반환 ---")
+        # [!!! 수정 !!!]
+        # 6. (ID 리스트 대신) 점수가 포함된 딕셔너리 리스트 반환
+        print(f"--- 1단계: RAG + 점수제 완료. 후보 {len(final_results)}개 반환 ---")
         
-        return final_candidate_ids
+        return final_results # ⬅️ [수정] 점수 정보가 담긴 'final_results'를 반환   
 
     except Exception as e:
         print(f"\n[오류] 1단계 후보군 생성 중 오류: {e}")
