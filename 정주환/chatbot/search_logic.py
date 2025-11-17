@@ -11,8 +11,7 @@ import textwrap
 import data_loader as db
 from llm_utils import generate_rag_query
 
-import data_loader as db
-from llm_utils import generate_rag_query
+from i18n_texts import get_text
 from typing import List, Set # ⬅️ Set 추가
 
 # --- (함수 7/9) ---
@@ -66,7 +65,7 @@ def build_filters_from_profile(user_filter_dict):
   return db_pre_filter
 
 # --- (함수 8/9 중 하나 - 14번 셀) ---
-def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1):
+def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1, lang_code="KR"):
   """
   store_id_str(가게ID)을(를) 받아, 전역 변수(df_restaurants 등)를 참조하여
   Gradio에 표시할 단일 식당의 *HTML* 문자열을 반환합니다. (CSS 클래스 사용)
@@ -75,9 +74,10 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
   # (전역 변수 참조)
   if db.df_restaurants is None or db.menu_groups is None:
        # (오류 메시지도 HTML 형식으로 반환)
+       db_not_loaded_text = get_text("store_not_loaded", lang_code, store_id_str=store_id_str)
        return """
        <div class="border-item">
-         <h4>[{rank_prefix} {rank_index}] ID: {store_id_str} (DB 미로드)</h4>
+         <h4>[{rank_prefix} {rank_index}] ID: {store_id_str} {db_not_loaded_text}</h4>
        </div>
        """
 
@@ -122,21 +122,21 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
       if filename != no_image_filename:
         # (Markdown 대신 HTML <img> 태그 사용)
         image_html_string = f'<img src="{store_image_url}" alt="{store_name} 이미지" style="width:100%; max-height:200px; object-fit:cover; border-radius: 8px; margin-bottom: 12px;">'
-        
-    # 4. (링크 2종 HTML 생성) ⬇️⬇️⬇️ 여기를 수정합니다 ⬇️⬇️⬇️
     
     detail_link_md = ""
     if pd.notna(detail_url) and detail_url:
       # (app_main.py에 추가한 'html-button-primary' 클래스 사용)
-      detail_link_md = f'<a href="{detail_url}" target="_blank" class="html-button html-button-primary">가게 상세정보</a>'
+      detail_link_text = get_text("detail_link_text", lang_code)
+      detail_link_md = f'<a href="{detail_url}" target="_blank" class="html-button html-button-primary">{detail_link_text}</a>'
 
     map_link_md = ""
     if pd.notna(store_y) and pd.notna(store_x) and store_y and store_x:
       store_name_encoded = quote(store_name)
       kakao_map_url = f"https://map.kakao.com/?q={store_name_encoded}&map_type=TYPE_MAP&rq={store_y},{store_x}"
       # (app_main.py에 추가한 'html-button-secondary' 클래스 사용)
-      map_link_md = f'<a href="{kakao_map_url}" target="_blank" class="html-button html-button-secondary">카카오맵 길찾기</a>'
-    # ⬆️⬆️⬆️ 수정 완료 ⬆️⬆️⬆️
+      map_link_text = get_text("map_link_text", lang_code)
+      map_link_md = f'<a href="{kakao_map_url}" target="_blank" class="html-button html-button-secondary">{map_link_text}</a>'
+
 
     links_md = ""
     if detail_link_md and map_link_md:
@@ -159,12 +159,13 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
         menu_items_html += f"<li>{menu_row['메뉴']} ({menu_row['가격원문']})</li>"
       
       if not menu_items_html:
-        menu_items_html = "<li>(메뉴 정보 없음)</li>"
+        menu_items_html = f"<li>{get_text('menu_not_found', lang_code)}</li>"
       
       # (HTML 문자열 생성 시 f-string의 들여쓰기를 피합니다)
+      menu_summary_text = get_text("menu_summary", lang_code)
       menu_html = textwrap.dedent(f"""
         <details open style="margin-bottom: 12px;">
-          <summary style="cursor: pointer; font-weight: bold;">주요 메뉴 보기</summary>
+          <summary style="cursor: pointer; font-weight: bold;">{menu_summary_text}</summary>
           <ul style="margin-top: 8px;">{menu_items_html}</ul>
         </details>
       """)
@@ -180,11 +181,12 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
 
     # 7. (최종 HTML 조합)
     # (기존 Markdown 대신, 요청하신 UI 구조와 CSS 클래스를 사용)
+    address_html = get_text("info_address", lang_code, store_address=store_address, social_proof_html=social_proof_html)
     output_html = f"""
     <div class="border-item">
       {image_html_string}
       <h4 style="margin-bottom: 8px;">[{rank_prefix} {rank_index}] {store_name}</h4>
-      <div style="margin-bottom: 8px;">📍 {store_address}{social_proof_html}</div>
+      <div style="margin-bottom: 8px;">📍 {address_html}{social_proof_html}</div>
       <p style="margin-bottom: 12px;">{store_intro}</p>
       
       <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;">
@@ -206,17 +208,22 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1)
     
   except KeyError as ke:
      print(f"[서식 오류] ID {store_id_str} (KeyError): {ke}")
-     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] ID: {store_id_str} (상세 정보 조회 실패)</h4></div>'
+     # ⬇️ 텍스트 대체
+     not_found_text = get_text("store_not_found", lang_code, store_id_str=store_id_str)
+     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] {not_found_text}</h4></div>'
   except Exception as inner_e:
      print(f"[서식 오류] ID {store_id_str} (Exception): {inner_e}")
-     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] ID: {store_id_str} (상세 정보 조회 실패)</h4></div>'
+     # ⬇️ 텍스트 대체
+     not_found_text = get_text("store_not_found", lang_code, store_id_str=store_id_str)
+     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] {not_found_text}</h4></div>'
       
 # --- (함수 8/9 중 하나 - 15번 셀) ---
 def get_similar_user_recommendations(
     live_rag_query_text, 
     primary_reco_ids, 
     max_similar_users=1, 
-    max_new_recos=2
+    max_new_recos=2,
+    lang_code="KR"
   ):
   """
   현재 사용자의 RAG 쿼리와 기본 추천 ID 목록을 받아,
@@ -268,19 +275,23 @@ def get_similar_user_recommendations(
       return ""
       
     # 5. 최종 Markdown 문자열 생성 (구분자 포함)
+    header_text = get_text("similar_user_reco_header", lang_code)
     output_secondary_string = (
       f"\n\n---\n\n"
-      f"### 🤖 Charlie님과 비슷한 사용자가 추천한 식당\n\n"
+      f"{header_text}\n\n"
     )
     
     recos_to_show = new_recommendations[:max_new_recos]
     print(f"[유사 추천] 추가할 식당: {recos_to_show}")
     
+    rank_prefix_similar = get_text("rank_prefix_similar", lang_code)
+    
     for i, store_id in enumerate(recos_to_show):
       output_secondary_string += format_restaurant_markdown(
         store_id, 
-        rank_prefix="유사 추천", 
-        rank_index=i+1
+        rank_prefix=rank_prefix_similar,
+        rank_index=i+1,
+        lang_code=lang_code,
       )
       
     return output_secondary_string
