@@ -1,6 +1,7 @@
 import os
 import openai
 from dotenv import load_dotenv
+import json
 
 load_dotenv()
 
@@ -44,14 +45,27 @@ EXPECTED_KEYS = [
 GRAPH_HOPPER_API_URL = "http://localhost:8989/route"
 GRAPH_HOPPER_HEALTH_CHECK_URL = "http://localhost:8989/info"
 
+PROFILE_TEMPLATE = {
+  "name": None, "age": None, "gender": None, "nationality": None, 
+  "travel_type": None, "party_size": None, "can_wait": None, 
+  "budget": None, "spicy_ok": None, "is_vegetarian": None, 
+  "avoid_ingredients": None, "like_ingredients": None, "food_category": None,
+  "start_location": None
+}
+
+EMPTY_PROFILE_JSON_EXAMPLE = json.dumps(PROFILE_TEMPLATE, indent=2, ensure_ascii=False)
+
 # --- 4/4: 챗봇 시스템 프롬프트 ---
-SYSTEM_PROMPT = """
+SYSTEM_PROMPT = f"""
 당신은 매우 친절하고 지능적인 한국 여행 도우미 챗봇 '거긴어때'입니다.
 당신의 유일한 임무는 사용자와 자연스러운 대화를 나누며, 아래 [프로필 스키마]의 14개 항목이 모두 'null'이 아닌 상태가 되도록 완성하는 것입니다.
 
-[현재까지 수집된 프로필]
-{json.dumps(current_profile, indent=2, ensure_ascii=False)}
-(이 JSON은 매 턴 업데이트됩니다.)
+[언어 설정]
+1.  사용자와의 대화(bot_response)는 *반드시* 다음 지정된 언어로 응답하세요: {{lang_code}}
+2.  프로필(updated_profile)의 값은 *반드시* [프로필 스키마]에 정의된 '한글' 키워드(예: "한식", "저", "O")로만 채워야 합니다. (RAG 필터링을 위함)
+    (예: 사용자가 "I want spicy food"라고 해도 `spicy_ok: "O"`로 저장)
+    (예: 사용자가 "I'm looking for cheap places"라고 해도 `budget: "저"`로 저장)
+3.  (중요) [대화 규칙] 1번의 [첫인사] 내용은 사용자와의 첫 대화이므로, 반드시 {{lang_code}}로 *번역*하여 말해야 합니다.
 
 [프로필 스키마 (14개 항목)]
 - name: (사용자의 이름)
@@ -97,18 +111,9 @@ SYSTEM_PROMPT = """
     
 [필수 출력 포맷]
 당신은 *반드시* 다음 JSON 형식으로만 응답해야 합니다.
-{
-  "updated_profile": {
-    // ... (14개 항목이 섞인 순서대로 포함) ...
-  },
+{{
+  "updated_profile": {EMPTY_PROFILE_JSON_EXAMPLE},
   "bot_response": "(규칙 1, 4, 5에 따라 생성된 응답)"
-}
+}}
 """
 
-PROFILE_TEMPLATE = {
-  "name": None, "age": None, "gender": None, "nationality": None, 
-  "travel_type": None, "party_size": None, "can_wait": None, 
-  "budget": None, "spicy_ok": None, "is_vegetarian": None, 
-  "avoid_ingredients": None, "like_ingredients": None, "food_category": None,
-  "start_location": None
-}
