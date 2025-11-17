@@ -280,69 +280,68 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
 
     # ---- 이벤트 바인딩 ----
 
-    # (A) 페이지 로드
-    gradio_app.load(
-        fn=gradio_callbacks.start_chat,  # 5개 값 반환
-        inputs=None,
-        outputs=[chatbot, llm_history_state, profile_state, is_completed_state, user_profile_row_state],
-    )
-
-    def update_ui_language(lang_str: str):
+    def update_ui_language(lang_str: str, current_profile: Dict):
         """선택된 언어에 따라 모든 UI 텍스트를 업데이트"""
         lang_code = get_lang_code(lang_str)
-        
-        # (모든 gr.Component.update(...)를 gr.update(...)로 변경)
+
+        new_profile_html_value = render_profile_card(current_profile, lang_code)
+
         return (
             # Header (1, 2, 3)
-            gr.update(value=f"## {get_text('app_title', lang_code)}"),
-            gr.update(value=get_text("app_description", lang_code)),
-            gr.update(label=get_text("lang_select_label", lang_code)),
+            gr.update(value=f"## {get_text('app_title', lang_code)}"),  # title_md
+            gr.update(value=get_text("app_description", lang_code)), # desc_md
+            gr.update(label=get_text("lang_select_label", lang_code)), # lang_radio
             
             # Tab Labels (4, 5)
-            gr.update(label=get_text("tab_explore", lang_code)),
-            gr.update(label=get_text("tab_setting", lang_code)),
+            gr.update(label=get_text("tab_explore", lang_code)),       # tab_explore
+            gr.update(label=get_text("tab_setting", lang_code)),       # tab_setting
 
             # Chat Tab (6, 7, 8)
-            gr.update(label=get_text("chatbot_label", lang_code)),
-            gr.update(label=get_text("textbox_label", lang_code), placeholder=get_text("textbox_placeholder", lang_code)),
-            gr.update(value=get_text("btn_show_results", lang_code)),
+            gr.update(label=get_text("chatbot_label", lang_code)),    # chatbot
+            gr.update(label=get_text("textbox_label", lang_code), placeholder=get_text("textbox_placeholder", lang_code)), # msg_textbox
+            gr.update(value=get_text("btn_show_results", lang_code)), # show_results_btn
 
             # Result Tab (9, 10, 11)
-            gr.update(label=get_text("slider_label", lang_code)),
-            gr.update(value=get_text("btn_refresh", lang_code)),
-            gr.update(value=get_text("btn_back", lang_code)),
+            gr.update(label=get_text("slider_label", lang_code)),    # topk_slider
+            gr.update(value=get_text("btn_refresh", lang_code)),     # refresh_btn
+            gr.update(value=get_text("btn_back", lang_code)),        # back_btn
 
-            # Setting Tab (12, 13, 14, 15, 16)
-            gr.update(value=get_text("setting_header", lang_code)),
-            gr.update(value=get_text("setting_description", lang_code)),
-            gr.update(value=get_text("btn_rebuild_db", lang_code)),
-            gr.update(label=get_text("checkbox_debug_log", lang_code)),
-            gr.update(label=get_text("checkbox_debug_panel", lang_code)),
+            # Result Tab - Profile Card (12)
+            gr.update(value=new_profile_html_value), # ⬅️ profile_html
 
-            # Setting Tab - Debug (17, 18, 19)
-            gr.update(label=get_text("label_debug_profile", lang_code)),
-            gr.update(label=get_text("label_debug_summary", lang_code)),
-            gr.update(label=get_text("label_debug_norm", lang_code)),
+            # Setting Tab (13, 14, 15, 16, 17)
+            gr.update(value=get_text("setting_header", lang_code)),   # setting_header_md
+            gr.update(value=get_text("setting_description", lang_code)), # setting_desc_md
+            gr.update(value=get_text("btn_rebuild_db", lang_code)),   # rebuild_btn
+            gr.update(label=get_text("checkbox_debug_log", lang_code)), # debug_checkbox
+            gr.update(label=get_text("checkbox_debug_panel", lang_code)), # debug_toggle
+
+            # Setting Tab - Debug (18, 19, 20)
+            gr.update(label=get_text("label_debug_profile", lang_code)), # debug_profile_json
+            gr.update(label=get_text("label_debug_summary", lang_code)), # debug_summary_text
+            gr.update(label=get_text("label_debug_norm", lang_code)),    # debug_norm_json
             
-            # State (20)
-            lang_code,
+            # State (21)
+            lang_code, # lang_code_state
         )
 
-    # ⬇️ lang_radio.change 이벤트 바인딩 (이 부분은 아마 이미 올바르게 되어있을 것입니다)
     lang_radio.change(
         fn=update_ui_language,
-        inputs=[lang_radio],
+        inputs=[lang_radio, profile_state], # ⬅️ inputs에 profile_state 추가
         outputs=[
             title_md, desc_md, lang_radio,
             tab_explore, tab_setting, # 탭 레이블
             chatbot, msg_textbox, show_results_btn, # 채팅 탭
             topk_slider, refresh_btn, back_btn, # 결과 탭
+            
+            profile_html, # ⬅️ outputs에 profile_html 추가 (순서 중요!)
+            
             setting_header_md, setting_desc_md, rebuild_btn, # 설정 탭
             debug_checkbox, debug_toggle,
             debug_profile_json, debug_summary_text, debug_norm_json,
             lang_code_state, # state
         ],
-        queue=False # (UI 업데이트는 큐가 필요 없음)
+        queue=False 
     )
 
     async def chat_survey_handler(
@@ -393,7 +392,7 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
             # 화면 전환/카드 렌더
             chat_group_vis   = gr.update(visible=not is_completed_out)
             result_group_vis = gr.update(visible=is_completed_out)
-            profile_html_out = gr.update(value=render_profile_card(profile_for_view))
+            profile_html_out = gr.update(value=render_profile_card(profile_for_view, lang_code))
     
             # 디버그 패널 값
             norm_preview = normalize_profile(profile_for_view)
@@ -462,7 +461,7 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
         return (
             gr.update(visible=False),                                   # chat_group 숨김
             gr.update(visible=True),                                    # result_group 표시
-            gr.update(value=render_profile_card(profile_for_view)),     # 프로필 카드
+            gr.update(value=render_profile_card(profile_for_view, lang_code)),  # 프로필 카드
             rec_md,                                                     # 추천 결과
             True                                                        # is_completed_state = True
         )
