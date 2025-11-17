@@ -8,7 +8,11 @@ load_dotenv()
 
 # --- 1/4: Global Variables (전역 변수 및 설정) ---
 # (data/ 폴더 경로 적용)
-RESTAURANT_DB_FILE = "data/restaurant_summaries_output_ALL.csv"
+RESTAURANT_DB_FILE_ALL = "data/restaurant_summaries_output_ALL.csv" # (기존 파일명 변경)
+RESTAURANT_DB_FILE_EN = "data/restaurant_summaries_output_en.csv"
+RESTAURANT_DB_FILE_JP = "data/restaurant_summaries_output_jp.csv"
+RESTAURANT_DB_FILE_CN = "data/restaurant_summaries_output_cn.csv"
+
 MENU_DB_FILE = "data/20251017_TOTAL_MENU.csv"
 PROFILE_DB_FILE = "data/user_profiles_for_hybrid_search.csv"
 MOCK_USER_RATINGS_FILE = "data/recommendation_results_with_ratings.csv"
