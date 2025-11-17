@@ -6,15 +6,15 @@ import chromadb
 import chromadb.utils.embedding_functions as embedding_functions
 import sys
 from typing import List
-import config
+import config # ⬅️ config 임포트 (이미 있음)
 
-# ⬇️ [수정] config 임포트 변경
+# ⬇️ config 임포트 (이미 있음)
 from config import (
     RESTAURANT_DB_FILE_ALL, MENU_DB_FILE, DB_PERSISTENT_PATH,
     PROFILE_DB_FILE, MOCK_USER_RATINGS_FILE,
     RESTAURANT_COLLECTION_NAME, PROFILE_COLLECTION_NAME,
     CLEAR_DB_AND_REBUILD,
-    RESTAURANT_DB_FILE_EN, RESTAURANT_DB_FILE_JP, RESTAURANT_DB_FILE_CN # ⬅️ 신규
+    RESTAURANT_DB_FILE_EN, RESTAURANT_DB_FILE_JP, RESTAURANT_DB_FILE_CN
 )
 
 # --- 전역 변수 선언 (app_main.py에서 사용) ---
@@ -62,7 +62,7 @@ def _load_and_merge_translations(base_df):
       df_lang = df_lang.rename(columns=rename_map)
       
       # 기본 DataFrame에 병합(join)
-      merged_df = merged_df.join(df_lang)
+      merged_df = merged_df.join(df_lang, how='left') # ⬅️ [수정] left join
       
     except FileNotFoundError:
       print(f"  > [경고] 번역 파일 없음 (무시): {file_path}")
@@ -138,7 +138,6 @@ def load_and_prepare_data(csv_path):
   print(f"데이터 준비 완료: {len(df)}개")
   return df
 
-
 def build_vector_db(profile_csv_path: str, clear_db=False):
   """
   (함수 3/9 - 수정됨)
@@ -149,18 +148,18 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
   
   print("\n--- 2단계: VectorDB 구축/로드 시작 ---")
   
-  # ... (sentence_transformer_ef, client 초기화 등은 동일) ...
   model_name = "distiluse-base-multilingual-cased-v1"
   sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name=model_name
   )
+  
   sentence_embedder = sentence_transformer_ef._model
   print(f"  > SentenceTransformer 모델 ('{model_name}')을 전역 'sentence_embedder'에 저장했습니다.")
+  
   print(f"'{DB_PERSISTENT_PATH}' 경로에서 Persistent DB 클라이언트를 초기화합니다...")
   client = chromadb.PersistentClient(path=DB_PERSISTENT_PATH)
 
   if clear_db:
-    # ... (컬렉션 삭제 로직은 동일) ...
     print(f"[경고] CLEAR_DB_AND_REBUILD=True. 컬렉션 2개(restaurants, mock_profiles)를 삭제합니다.")
     try:
       client.delete_collection(name=RESTAURANT_COLLECTION_NAME)
@@ -185,13 +184,11 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
     print(f"  > 'restaurants' 컬렉션을 찾을 수 없습니다. (이유: {e})")
     print("  > 새 'restaurants' 컬렉션을 생성하고 데이터 적재를 시작합니다.")
     
-    # ⬇️ [수정] 인자 대신 config.RESTAURANT_DB_FILE_ALL을 직접 사용
     df_for_embedding = load_and_prepare_data(config.RESTAURANT_DB_FILE_ALL)
     if df_for_embedding is None:
       print("[오류] 'restaurants' DB 적재를 위한 원본 CSV 로드에 실패했습니다.")
       return False
 
-    # ... (이하 collection.create_collection, add 로직은 동일) ...
     try:
       collection = client.create_collection(
         name=RESTAURANT_COLLECTION_NAME,
@@ -200,12 +197,20 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
     except Exception as e:
       print(f"[오류] 'restaurants' 컬렉션 생성 실패: {e}")
       return False
+
     documents_list = df_for_embedding['RAG텍스트'].tolist()
-    metadatas_list = df_for_embedding['메타데이터'].tolist() 
     ids_list = df_for_embedding['id'].astype(str).tolist()
+    
+    # ⬇️ [수정] 이미지URL도 메타데이터에 포함
+    df_for_embedding['이미지URL'] = df_for_embedding['이미지URL'].fillna('') 
+
     print("  > 'restaurants' 메타데이터 변환 중...")
     processed_metadatas = []
-    for metadata_dict in metadatas_list:
+    
+    # ⬇️ [수정] .iterrows()를 사용하여 메타데이터(dict)와 이미지URL(str)을 통합
+    for index, row in df_for_embedding.iterrows():
+      # 1. '메타데이터' 컬럼(dict) 처리
+      metadata_dict = row['메타데이터']
       processed_meta_item = {}
       for key, value in metadata_dict.items():
         if value is None:
@@ -214,14 +219,19 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
           processed_meta_item[key] = ",".join(map(str, value))
         else:
           processed_meta_item[key] = str(value)
+          
+      # 2. [신규] '이미지URL' 컬럼(str)을 메타데이터에 추가
+      processed_meta_item['이미지URL'] = row['이미지URL'] 
+      
       processed_metadatas.append(processed_meta_item)
+
     print(f"  > 'restaurants' DB에 {len(ids_list)}개 적재 중 (배치)...")
     BATCH_SIZE = 5000
     for i in range(0, len(ids_list), BATCH_SIZE):
       end_i = min(i + BATCH_SIZE, len(ids_list))
       collection.add(
         documents=documents_list[i:end_i],
-        metadatas=processed_metadatas[i:end_i],
+        metadatas=processed_metadatas[i:end_i], # ⬅️ 이미지URL이 포함된 메타데이터
         ids=ids_list[i:end_i]
       )
     print(f"  > 'restaurants' 신규 구축 완료: {collection.count()}개")
@@ -238,7 +248,6 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
     print(f"  > 'mock_profiles' 컬렉션을 찾을 수 없습니다. (이유: {e})")
     print("  > 새 'mock_profiles' 컬렉션을 생성하고 데이터 적재를 시작합니다.")
     
-    # ⬇️ [수정] 인자로 받은 profile_csv_path 사용 (이 부분은 맞음)
     try:
       df_profiles = pd.read_csv(profile_csv_path) 
       df_profiles = df_profiles.dropna(subset=['rag_query_text', 'user_id'])
@@ -246,10 +255,10 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
     except FileNotFoundError:
       print(f"[오류] '{profile_csv_path}' 파일을 찾을 수 없습니다.")
       return False
-    # ... (이하 로직은 동일) ...
     except Exception as e:
       print(f"[오류] 프로필 파일 로드 실패: {e}")
       return False
+
     try:
       profile_collection = client.create_collection(
         name=PROFILE_COLLECTION_NAME,
@@ -258,9 +267,11 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
     except Exception as e:
       print(f"[오류] 'mock_profiles' 컬렉션 생성 실패: {e}")
       return False
+
     profile_docs = df_profiles['rag_query_text'].tolist()
     profile_ids = df_profiles['user_id'].astype(str).tolist()
     profile_metas = [{'user_id': uid} for uid in profile_ids]
+
     print(f"  > 'mock_profiles' DB에 {len(profile_ids)}개 적재 중...")
     profile_collection.add(
       documents=profile_docs,
@@ -271,7 +282,6 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
 
   print(f"--- 2단계: VectorDB 2개 컬렉션 로드/구축 완료 ---")
   return True
-
 
 def load_user_ratings():
     """ 500명 평가 데이터를 로드하고 집계합니다. """
@@ -318,7 +328,6 @@ def load_user_ratings():
     except Exception as e:
       print(f"[경고] 500명 평가 데이터 로드/집계 중 오류: {e} (평가 카운트 기능 비활성화)")
     
-    # (실패 또는 파일을 못찾아도 일단 True 반환하여 서버가 멈추지 않게 함)
     return True 
 
 def load_scoring_data(file_path):
@@ -344,20 +353,17 @@ def get_restaurants_by_ids(ids: List[str]) -> pd.DataFrame:
     식당 ID 리스트를 받아, final_scorer가 사용할
     'all_restaurants_df_scoring'에서 DataFrame을 반환합니다.
     """
-    global all_restaurants_df_scoring # (load_scoring_data에서 로드된 전역 변수)
+    global all_restaurants_df_scoring 
     
     if all_restaurants_df_scoring is None:
         print("[오류] 스코어링 DB(all_restaurants_df_scoring)가 로드되지 않았습니다.")
         return pd.DataFrame()
         
     try:
-        # loc를 사용하여 ID 리스트 순서대로 DataFrame을 반환
-        # (중복 ID가 있을 경우를 대비해 unique 처리)
         unique_ids = list(dict.fromkeys(ids))
         return all_restaurants_df_scoring.loc[unique_ids].copy()
     except KeyError as e:
         print(f"[오류] get_restaurants_by_ids: 일부 ID를 찾을 수 없음: {e}")
-        # 찾을 수 있는 ID만 필터링
         valid_ids = [id for id in unique_ids if id in all_restaurants_df_scoring.index]
         if valid_ids:
             return all_restaurants_df_scoring.loc[valid_ids].copy()
