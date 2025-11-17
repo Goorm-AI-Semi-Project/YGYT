@@ -231,12 +231,12 @@ async def main_generation():
   # --- [ 2. 데이터 로드 ] ---
   print("--- [1/4] 서버 데이터 로드 시작 ---")
   try:
-    data_loader.load_app_data(config.RESTAURANT_DB_FILE, config.MENU_DB_FILE)
+    data_loader.load_app_data(config.RESTAURANT_DB_FILE_ALL, config.MENU_DB_FILE)
     if not config.client or not config.client.api_key:
       print("[치명적 오류] OpenAI API 키가 로드되지 않았습니다.")
       return
     data_loader.build_vector_db(
-        config.RESTAURANT_DB_FILE, config.PROFILE_DB_FILE, config.CLEAR_DB_AND_REBUILD
+        config.RESTAURANT_DB_FILE_ALL, config.PROFILE_DB_FILE, config.CLEAR_DB_AND_REBUILD
     )
     data_loader.load_scoring_data(config.RESTAURANT_DB_SCORING_FILE)
     print("--- [1/4] 모든 데이터 로드 완료 ---")
