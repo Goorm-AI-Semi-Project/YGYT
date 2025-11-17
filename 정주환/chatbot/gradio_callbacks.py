@@ -1,15 +1,15 @@
-# gradio_callbacks.py
+# gradio_callbacks.py (리셋 함수 추가)
 # (2-space indentation)
 
-import gradio as gr
+import gradio as gr 
 import json
 import pandas as pd
 import httpx
 from typing import Dict, Any, List, Tuple, Set
 import random
 
-# ⬇️ I18N 텍스트 헬퍼 임포트
-from i18n_texts import get_text
+# ⬇️ [수정] get_lang_code 임포트
+from i18n_texts import get_text, get_lang_code
 
 # 내부 모듈 임포트
 import config
@@ -29,8 +29,8 @@ CARD_SEPARATOR = "\n---\n\n"
 def _build_reco_md_from_df(
   df: pd.DataFrame, 
   top_k: int = 5, 
-  prefix: str = "추천", # ⬇️ 기본값은 상위 함수에서 언어 적용 후 전달
-  lang_code: str = "KR" # ⬇️ lang_code 추가
+  prefix: str = "추천",
+  lang_code: str = "KR" 
 ) -> str:
   """
   final_scorer 결과 DataFrame -> 카드형 markdown으로 변환
@@ -45,7 +45,7 @@ def _build_reco_md_from_df(
       store_id_str=str(store_id),
       rank_prefix=prefix,
       rank_index=i,
-      lang_code=lang_code, # ⬇️ lang_code 전달
+      lang_code=lang_code, 
     )
     blocks.append(block.strip())
   return CARD_SEPARATOR.join(blocks)
@@ -54,8 +54,8 @@ def _build_reco_md_from_df(
 def _build_reco_md_from_ids(
   store_ids, 
   top_k: int = 5, 
-  prefix: str = "RAG 추천", # ⬇️ 기본값은 상위 함수에서 언어 적용 후 전달
-  lang_code: str = "KR" # ⬇️ lang_code 추가
+  prefix: str = "RAG 추천",
+  lang_code: str = "KR"
 ) -> str:
   """
   1단계 RAG로 뽑은 식당 id 리스트 -> 카드형 markdown으로 변환
@@ -66,7 +66,7 @@ def _build_reco_md_from_ids(
       store_id_str=str(store_id),
       rank_prefix=prefix,
       rank_index=i,
-      lang_code=lang_code, # ⬇️ lang_code 전달
+      lang_code=lang_code, 
     )
     blocks.append(block.strip())
   return CARD_SEPARATOR.join(blocks)
@@ -156,49 +156,85 @@ def get_start_location_coords(location_name: str) -> str:
 # Gradio 콜백
 # =========================
 
-def start_chat() -> Tuple[List[Dict], List[Dict], Dict, bool, Dict]:
+def start_chat(request: gr.Request) -> Tuple:
   """
-  채팅방이 처음 로드될 때 실행.
-  (app_main.py 수정에 따라 5개 반환)
-  ⬇️ lang_code가 없으므로 "KR"을 기본값으로 사용
+  (페이지 로드용)
+  채팅방이 *로드*될 때 실행됩니다.
+  URL 파라미터(?lang=...)를 읽어 해당 언어로 챗봇과 UI를 초기화합니다.
   """
+  
+  # 1. URL에서 언어 코드 읽기 (기본값 KR)
+  lang_code = "KR"
+  if request:
+    lang_code = request.query_params.get("lang", "KR")
+  print(f"[start_chat] 로드. (Lang={lang_code})")
+
+  # 2. 챗봇 첫 메시지 생성 (수정된 call_gpt4o 호출)
   try:
     profile_keys = list(config.PROFILE_TEMPLATE.keys())
     random.shuffle(profile_keys)
     initial_profile = {key: config.PROFILE_TEMPLATE[key] for key in profile_keys}
     
-    print(f"[start_chat] 섞인 프로필 키 순서: {list(initial_profile.keys())}")
-
     bot_message, updated_profile = llm_utils.call_gpt4o(
-      chat_messages=[], current_profile=initial_profile
+      chat_messages=[], 
+      current_profile=initial_profile,
+      lang_code=lang_code # ⬅️ lang_code 전달
     )
 
     gradio_history = [{"role": "assistant", "content": bot_message}]
     llm_history = [{"role": "assistant", "content": bot_message}]
     initial_user_profile_row = {}
 
-    # (app_main.py에서 initial_reco_state를 제거했으므로 여기도 5개만 반환)
-    return (
-      gradio_history,
-      llm_history,
-      updated_profile,
-      False,
-      initial_user_profile_row,
-    )
-
   except Exception as e:
     print(f"start_chat에서 API 호출 실패: {e}")
-    # ⬇️ 텍스트 대체 ("KR" 하드코딩)
-    error_msg = get_text("error_chatbot_init", "KR", e=e)
+    error_msg = get_text("error_chatbot_init", lang_code, e=e)
+    gradio_history = [{"role": "assistant", "content": error_msg}]
+    llm_history = []
+    updated_profile = config.PROFILE_TEMPLATE.copy()
     initial_user_profile_row = {}
 
-    return (
-      [{"role": "assistant", "content": error_msg}],
-      [],
-      config.PROFILE_TEMPLATE.copy(),
-      False,
-      initial_user_profile_row,
-    )
+  # 3. [중요] app_main.py의 outputs 리스트와 정확히 일치하는 26개 항목 반환
+  
+  lang_map = {"KR": "한국어 KR", "US": "English US", "JP": "日本語 JP", "CN": "中文 CN"}
+  lang_radio_value = lang_map.get(lang_code, "한국어 KR")
+  
+  return (
+    # --- States (6개) ---
+    gradio_history,       # 1. chatbot (value)
+    llm_history,          # 2. llm_history_state
+    updated_profile,      # 3. profile_state
+    False,                # 4. is_completed_state
+    initial_user_profile_row, # 5. user_profile_row_state
+    lang_code,            # 6. lang_code_state
+    
+    # --- UI Components (20개) ---
+    gr.update(value=f"## {get_text('app_title', lang_code)}"),  # 7. title_md
+    gr.update(value=get_text('app_description', lang_code)), # 8. desc_md
+    
+    gr.update(label=get_text('lang_select_label', lang_code), value=lang_radio_value), # 9. lang_radio
+    
+    gr.update(label=get_text('tab_explore', lang_code)),       # 10. tab_explore
+    gr.update(label=get_text('tab_setting', lang_code)),       # 11. tab_setting
+    
+    gr.update(label=get_text('chatbot_label', lang_code)),     # 12. chatbot (label)
+    gr.update(label=get_text('textbox_label', lang_code), placeholder=get_text('textbox_placeholder', lang_code)), # 13. msg_textbox
+    gr.update(value=get_text('btn_show_results', lang_code)),  # 14. show_results_btn
+    
+    gr.update(label=get_text('slider_label', lang_code)),      # 15. topk_slider
+    gr.update(value=get_text('btn_refresh', lang_code)),       # 16. refresh_btn
+    gr.update(value=get_text('btn_back', lang_code)),          # 17. back_btn
+    gr.update(value=None), # 18. profile_html (초기엔 비어있음)
+    
+    gr.update(value=get_text('setting_header', lang_code)),    # 19. setting_header_md
+    gr.update(value=get_text('setting_description', lang_code)), # 20. setting_desc_md
+    gr.update(value=get_text('btn_rebuild_db', lang_code)),    # 21. rebuild_btn
+    gr.update(label=get_text('checkbox_debug_log', lang_code)), # 22. debug_checkbox
+    gr.update(label=get_text('checkbox_debug_panel', lang_code)), # 23. debug_toggle
+    
+    gr.update(label=get_text('label_debug_profile', lang_code)), # 24. debug_profile_json
+    gr.update(label=get_text('label_debug_summary', lang_code)), # 25. debug_summary_text
+    gr.update(label=get_text('label_debug_norm', lang_code)), # 26. debug_norm_json
+  )
 
 
 async def _run_recommendation_flow(
@@ -206,7 +242,7 @@ async def _run_recommendation_flow(
   http_client: httpx.AsyncClient,
   graphhopper_url: str,
   top_k: int,
-  lang_code: str # ⬇️ lang_code 추가
+  lang_code: str 
 ) -> Tuple[gr.update, Dict]:
   """
   1단계 RAG -> 2단계 final_scorer 실행 (Fallback 포함)
@@ -241,7 +277,6 @@ async def _run_recommendation_flow(
 
     if not candidate_ids:
       print("[오류] 1단계 RAG 검색 결과, 후보군 0개.")
-      # ⬇️ 텍스트 대체
       warn_msg = get_text("warn_rag_empty", lang_code)
       gr.Warning(warn_msg)
       return (
@@ -273,7 +308,7 @@ async def _run_recommendation_flow(
         graphhopper_url=graphhopper_url,
       )
       
-      # ( ... 평가 지표 계산 부분은 변경 없음 ... )
+      # ( ... 평가 지표 계산 부분 ... )
       try:
         ground_truth_set = search_logic.get_ground_truth_for_user(
             live_rag_query_text=profile_summary,
@@ -301,7 +336,6 @@ async def _run_recommendation_flow(
         "records"
       )
 
-      # ⬇️ 텍스트 대체 (prefix) 및 lang_code 전달
       prefix_reco = get_text("rank_prefix_reco", lang_code)
       output_md = _build_reco_md_from_df(
         final_scored_df, 
@@ -313,11 +347,9 @@ async def _run_recommendation_flow(
     except GraphHopperDownError as e:
       # --- 2단계 실패 시: 1단계만 사용 ---
       print(f"[경고] 2단계 final_scorer 실패: {e}. 1단계 RAG 결과로 대체합니다.")
-      # ⬇️ 텍스트 대체
       warn_msg_gh = get_text("warn_graphhopper_down", lang_code)
       gr.Warning(warn_msg_gh)
 
-      # ⬇️ 텍스트 대체 (prefix) 및 lang_code 전달
       prefix_rag = get_text("rank_prefix_rag", lang_code)
       output_md = _build_reco_md_from_ids(
         candidate_ids, 
@@ -332,7 +364,6 @@ async def _run_recommendation_flow(
 
   except Exception as e:
     print(f"[오류] 식당 추천 흐름 중 예외 발생: {e}")
-    # ⬇️ 텍스트 대체
     error_msg_reco = get_text("error_reco_general", lang_code, e=e)
     error_msg_details = get_text("error_reco_general_details", lang_code, e=e)
     gr.Error(error_msg_reco)
@@ -352,7 +383,7 @@ async def chat_survey(
   user_profile_row_state: Dict,
   http_client: httpx.AsyncClient,
   graphhopper_url: str,
-  lang_code: str # ⬇️ lang_code 파라미터 추가 (app_main.py에서 전달)
+  lang_code: str # ⬅️ lang_code 파라미터 추가 (app_main.py에서 전달)
 ):
   """
   채팅 답변을 처리하고, 프로필이 완성되면 2단계(대기/결과)로 UI를 업데이트합니다.
@@ -364,11 +395,12 @@ async def chat_survey(
   # 2) LLM 호출해서 다음 질문/응답 생성
   try:
     bot_message, updated_profile = llm_utils.call_gpt4o(
-      llm_history, current_profile
+      llm_history, 
+      current_profile,
+      lang_code=lang_code # ⬅️ lang_code 전달
     )
   except Exception as e:
     print(f"chat_survey에서 API 호출 실패: {e}")
-    # ⬇️ 텍스트 대체
     error_msg = get_text("error_api_call", lang_code, e=e)
     gradio_history.append({"role": "assistant", "content": error_msg})
     yield ( # (오류 상태 반환)
@@ -386,7 +418,11 @@ async def chat_survey(
 
   # 3) 프로필이 다 모였는지 확인
   profile_is_complete = all(v is not None for v in updated_profile.values())
-  llm_signals_completion = "완료되었습니다" in bot_message
+  # ⬇️ [수정] llm_signals_completion: "완료되었습니다" 외 다국어 메시지 확인
+  completion_text_kr = "프로필 수집이 완료되었습니다!" 
+  # (참고: i18n_texts.py에 info_profile_complete 키가 있지만, 
+  #  LLM은 SYSTEM_PROMPT의 규칙 5번을 따르므로 "완료되었습니다"만 확인해도 됨)
+  llm_signals_completion = completion_text_kr in bot_message
 
   recommendation_output = gr.update()
   new_user_profile_row_state = user_profile_row_state
@@ -394,10 +430,8 @@ async def chat_survey(
   if profile_is_complete and llm_signals_completion and not is_completed:
       
     # --- (A) 1차: "대기 메시지" 즉시 반환 ---
-    # ⬇️ 텍스트 대체
     loading_message = get_text("info_profile_complete", lang_code)
     
-    # (LLM의 완료 메시지(bot_message) 대신, UI용 로딩 메시지만 표시)
     gradio_history.append({"role": "assistant", "content": loading_message.strip()})
     
     print("--- 프로필 완성! [1/2] 대기 메시지 전송 (화면 유지) ---")
@@ -457,14 +491,12 @@ def update_recommendations_with_topk(
   Top-K 슬라이더 변경 시 호출.
   """
   if not user_profile_row_state:
-    # ⬇️ 텍스트 대체
     return gr.update(value=get_text("info_complete_profile_first", lang_code), visible=True)
 
   try:
     # 1) 2단계 결과가 있는 경우
     if user_profile_row_state.get("final_scored_df"):
       df = pd.DataFrame(user_profile_row_state["final_scored_df"])
-      # ⬇️ 텍스트 대체 (prefix) 및 lang_code 전달
       prefix_reco = get_text("rank_prefix_reco", lang_code)
       md = _build_reco_md_from_df(
         df, 
@@ -477,7 +509,6 @@ def update_recommendations_with_topk(
     # 2) 1단계 후보만 있는 경우
     if user_profile_row_state.get("final_candidate_ids"):
       ids = user_profile_row_state["final_candidate_ids"]
-      # ⬇️ 텍스트 대체 (prefix) 및 lang_code 전달
       prefix_rag = get_text("rank_prefix_rag", lang_code)
       md = _build_reco_md_from_ids(
         ids, 
@@ -488,12 +519,89 @@ def update_recommendations_with_topk(
       return gr.update(value=md, visible=True)
 
     # 3) 아무것도 없을 때
-    # ⬇️ 텍스트 대체
     return gr.update(value=get_text("error_no_recos_state", lang_code), visible=True)
 
   except Exception as e:
     print(f"[오류] Top-K 슬라이더 변경 중 오류: {e}")
-    # ⬇️ 텍스트 대체
     return gr.update(
       value=get_text("error_slider_update", lang_code, e=e), visible=True
     )
+
+# ⬇️ [신규] 언어 변경 시 챗봇과 UI를 리셋하는 함수
+def reset_chat_for_language(lang_str: str) -> Tuple:
+  """
+  (언어 변경용)
+  lang_radio.change() 시 호출됩니다.
+  start_chat과 거의 동일하나, 입력을 lang_str (예: "English US")로 받습니다.
+  """
+  
+  # 1. 'English US' -> 'US'
+  lang_code = get_lang_code(lang_str)
+  print(f"[reset_chat_for_language] 시작. (Lang={lang_code})")
+
+  # 2. 챗봇 첫 메시지 생성
+  try:
+    profile_keys = list(config.PROFILE_TEMPLATE.keys())
+    random.shuffle(profile_keys)
+    initial_profile = {key: config.PROFILE_TEMPLATE[key] for key in profile_keys}
+    
+    bot_message, updated_profile = llm_utils.call_gpt4o(
+      chat_messages=[], 
+      current_profile=initial_profile,
+      lang_code=lang_code # ⬅️ 새 lang_code 전달
+    )
+
+    gradio_history = [{"role": "assistant", "content": bot_message}]
+    llm_history = [{"role": "assistant", "content": bot_message}]
+    initial_user_profile_row = {}
+
+  except Exception as e:
+    print(f"reset_chat_for_language에서 API 호출 실패: {e}")
+    error_msg = get_text("error_chatbot_init", lang_code, e=e)
+    gradio_history = [{"role": "assistant", "content": error_msg}]
+    llm_history = []
+    updated_profile = config.PROFILE_TEMPLATE.copy()
+    initial_user_profile_row = {}
+
+  # 3. app_main.py의 outputs 리스트와 정확히 일치하는 26개 항목 반환
+  
+  # ⬇️ lang_code가 아닌 lang_str (예: "English US")을 Radio의 value로 설정
+  lang_radio_value = lang_str 
+  
+  return (
+    # --- States (6개) ---
+    gradio_history,       # 1. chatbot (value)
+    llm_history,          # 2. llm_history_state
+    updated_profile,      # 3. profile_state
+    False,                # 4. is_completed_state
+    initial_user_profile_row, # 5. user_profile_row_state
+    lang_code,            # 6. lang_code_state
+    
+    # --- UI Components (20개) ---
+    gr.update(value=f"## {get_text('app_title', lang_code)}"),  # 7. title_md
+    gr.update(value=get_text('app_description', lang_code)), # 8. desc_md
+    
+    gr.update(label=get_text('lang_select_label', lang_code), value=lang_radio_value), # 9. lang_radio
+    
+    gr.update(label=get_text('tab_explore', lang_code)),       # 10. tab_explore
+    gr.update(label=get_text('tab_setting', lang_code)),       # 11. tab_setting
+    
+    gr.update(label=get_text('chatbot_label', lang_code)),     # 12. chatbot (label)
+    gr.update(label=get_text('textbox_label', lang_code), placeholder=get_text('textbox_placeholder', lang_code)), # 13. msg_textbox
+    gr.update(value=get_text('btn_show_results', lang_code)),  # 14. show_results_btn
+    
+    gr.update(label=get_text('slider_label', lang_code)),      # 15. topk_slider
+    gr.update(value=get_text('btn_refresh', lang_code)),       # 16. refresh_btn
+    gr.update(value=get_text('btn_back', lang_code)),          # 17. back_btn
+    gr.update(value=None), # 18. profile_html (리셋)
+    
+    gr.update(value=get_text('setting_header', lang_code)),    # 19. setting_header_md
+    gr.update(value=get_text('setting_description', lang_code)), # 20. setting_desc_md
+    gr.update(value=get_text('btn_rebuild_db', lang_code)),    # 21. rebuild_btn
+    gr.update(label=get_text('checkbox_debug_log', lang_code)), # 22. debug_checkbox
+    gr.update(label=get_text('checkbox_debug_panel', lang_code)), # 23. debug_toggle
+    
+    gr.update(label=get_text('label_debug_profile', lang_code)), # 24. debug_profile_json
+    gr.update(label=get_text('label_debug_summary', lang_code)), # 25. debug_summary_text
+    gr.update(label=get_text('label_debug_norm', lang_code)), # 26. debug_norm_json
+  )
