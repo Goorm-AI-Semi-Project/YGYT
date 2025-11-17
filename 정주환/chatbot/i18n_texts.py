@@ -13,6 +13,10 @@ I18N_TEXTS = {
 
   # Language/Chat Tab
   "lang_select_label": {"KR": "🌐 사용 언어 선택", "US": "🌐 Select Language", "JP": "🌐 使用言語を選択", "CN": "🌐 选择语言"},
+  "btn_lang_kr": {"KR": "한국어", "US": "Korean", "JP": "韓国語", "CN": "韩语"},
+  "btn_lang_us": {"KR": "English", "US": "English", "JP": "英語", "CN": "英语"},
+  "btn_lang_jp": {"KR": "日本語", "US": "Japanese", "JP": "日本語", "CN": "日语"},
+  "btn_lang_cn": {"KR": "中文", "US": "Chinese", "JP": "中国語", "CN": "中文"},   
   "tab_explore": {"KR": "🍽 음식 탐색", "US": "🍽 Explore Food", "JP": "🍽 料理を探索", "CN": "🍽 探索美食"},
   "chatbot_label": {"KR": "한국 여행 도우미 챗봇", "US": "Korea Travel Helper Chatbot", "JP": "韓国旅行アシスタントチャットボット", "CN": "韩国旅行助手聊天机器人"},
   "textbox_label": {"KR": "답변 입력", "US": "Your Answer", "JP": "回答を入力", "CN": "您的回答"},
