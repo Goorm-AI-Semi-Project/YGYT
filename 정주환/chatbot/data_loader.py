@@ -1,16 +1,20 @@
+# data_loader.py (수정 완료)
+
 import pandas as pd
 import ast
 import chromadb
 import chromadb.utils.embedding_functions as embedding_functions
 import sys
 from typing import List
+import config
 
-# 설정 파일에서 전역 변수 임포트
+# ⬇️ [수정] config 임포트 변경
 from config import (
-    RESTAURANT_DB_FILE, MENU_DB_FILE, DB_PERSISTENT_PATH,
+    RESTAURANT_DB_FILE_ALL, MENU_DB_FILE, DB_PERSISTENT_PATH,
     PROFILE_DB_FILE, MOCK_USER_RATINGS_FILE,
     RESTAURANT_COLLECTION_NAME, PROFILE_COLLECTION_NAME,
-    CLEAR_DB_AND_REBUILD
+    CLEAR_DB_AND_REBUILD,
+    RESTAURANT_DB_FILE_EN, RESTAURANT_DB_FILE_JP, RESTAURANT_DB_FILE_CN # ⬅️ 신규
 )
 
 # --- 전역 변수 선언 (app_main.py에서 사용) ---
@@ -22,28 +26,73 @@ menu_groups = None
 df_all_user_ratings = None 
 df_restaurant_ratings_summary = None 
 sentence_embedder = None
-# (기존 main.py의 전역 변수)
 all_restaurants_df_scoring = None
 # -----------------------------------------------
+
+# ⬇️ [신규] 번역 파일을 로드하고 병합하는 헬퍼 함수
+def _load_and_merge_translations(base_df):
+  """
+  기본 df_restaurants(한글)에 번역(en, jp, cn) 파일을 병합합니다.
+  """
+  
+  # (언어 코드, 파일 경로, 컬럼 리스트)
+  lang_files_to_load = [
+    ('en', config.RESTAURANT_DB_FILE_EN, ['id', '가게', '주소', '소개']),
+    ('jp', config.RESTAURANT_DB_FILE_JP, ['id', '가게', '주소', '소개']),
+    ('cn', config.RESTAURANT_DB_FILE_CN, ['id', '가게', '주소', '소개'])
+  ]
+  
+  merged_df = base_df.copy()
+
+  for lang_suffix, file_path, cols_to_use in lang_files_to_load:
+    try:
+      print(f"  > 번역 파일 로드 중: {file_path}")
+      df_lang = pd.read_csv(file_path, usecols=cols_to_use)
+      
+      # id를 문자열로, 인덱스로 설정
+      df_lang['id'] = df_lang['id'].astype(str)
+      df_lang = df_lang.set_index('id')
+      
+      # 컬럼명 변경 (예: '가게' -> '가게_en')
+      rename_map = {
+        '가게': f'가게_{lang_suffix}',
+        '주소': f'주소_{lang_suffix}',
+        '소개': f'소개_{lang_suffix}'
+      }
+      df_lang = df_lang.rename(columns=rename_map)
+      
+      # 기본 DataFrame에 병합(join)
+      merged_df = merged_df.join(df_lang)
+      
+    except FileNotFoundError:
+      print(f"  > [경고] 번역 파일 없음 (무시): {file_path}")
+    except Exception as e:
+      print(f"  > [오류] 번역 파일 처리 실패 ({file_path}): {e}")
+      
+  print(f"  > 번역 파일 병합 완료. (총 컬럼 수: {len(merged_df.columns)})")
+  return merged_df
 
 
 def load_app_data(store_path, menu_path):
   """
-  (함수 1/9)
+  (함수 1/9) [수정됨]
   앱 실행에 필요한 모든 CSV 파일을 로드하여
-  2개의 전역 DataFrame을 생성합니다.
+  2개의 전역 DataFrame을 생성합니다. (번역 포함)
   """
   global df_restaurants, df_menus, menu_groups
   
   try:
-    # 1. 가게 DB (소개, 주소 등) 로드
+    # 1. 가게 DB (기본: 한글) 로드
     print(f"'{store_path}'에서 가게 DB 로드 중...")
     df_restaurants = pd.read_csv(store_path)
     df_restaurants['id'] = df_restaurants['id'].astype(str)
     df_restaurants = df_restaurants.set_index('id') # (id로 검색하기 쉽게 인덱스 설정)
     print(f"가게 DB {len(df_restaurants)}개 로드 완료.")
     
-    # 2. 메뉴 DB (메뉴, 가격) 로드
+    # ⬇️ [신규] 2. 번역 파일 로드 및 병합
+    df_restaurants = _load_and_merge_translations(df_restaurants)
+    
+    # 3. 메뉴 DB (메뉴, 가격) 로드
     print(f"'{menu_path}'에서 메뉴 DB 로드 중...")
     df_menus = pd.read_csv(menu_path)
     df_menus['식당ID'] = df_menus['식당ID'].astype(str)
@@ -89,28 +138,29 @@ def load_and_prepare_data(csv_path):
   print(f"데이터 준비 완료: {len(df)}개")
   return df
 
-def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
+
+def build_vector_db(profile_csv_path: str, clear_db=False):
   """
   (함수 3/9 - 수정됨)
-  레스토랑 DataFrame과 프로필 DataFrame을 받아
-  ChromaDB를 구축하거나 로드합니다. (2개 컬렉션)
+  VectorDB를 구축합니다.
+  [수정] RAG용 'store_csv_path'는 인자로 받지 않고 config에서 직접 참조합니다.
   """
-  global collection, profile_collection, sentence_embedder # (전역 변수 3개 할당)
+  global collection, profile_collection, sentence_embedder 
   
   print("\n--- 2단계: VectorDB 구축/로드 시작 ---")
   
+  # ... (sentence_transformer_ef, client 초기화 등은 동일) ...
   model_name = "distiluse-base-multilingual-cased-v1"
   sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name=model_name
   )
-  
   sentence_embedder = sentence_transformer_ef._model
   print(f"  > SentenceTransformer 모델 ('{model_name}')을 전역 'sentence_embedder'에 저장했습니다.")
-  
   print(f"'{DB_PERSISTENT_PATH}' 경로에서 Persistent DB 클라이언트를 초기화합니다...")
   client = chromadb.PersistentClient(path=DB_PERSISTENT_PATH)
 
   if clear_db:
+    # ... (컬렉션 삭제 로직은 동일) ...
     print(f"[경고] CLEAR_DB_AND_REBUILD=True. 컬렉션 2개(restaurants, mock_profiles)를 삭제합니다.")
     try:
       client.delete_collection(name=RESTAURANT_COLLECTION_NAME)
@@ -135,11 +185,13 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
     print(f"  > 'restaurants' 컬렉션을 찾을 수 없습니다. (이유: {e})")
     print("  > 새 'restaurants' 컬렉션을 생성하고 데이터 적재를 시작합니다.")
     
-    df_for_embedding = load_and_prepare_data(store_csv_path)
+    # ⬇️ [수정] 인자 대신 config.RESTAURANT_DB_FILE_ALL을 직접 사용
+    df_for_embedding = load_and_prepare_data(config.RESTAURANT_DB_FILE_ALL)
     if df_for_embedding is None:
       print("[오류] 'restaurants' DB 적재를 위한 원본 CSV 로드에 실패했습니다.")
       return False
 
+    # ... (이하 collection.create_collection, add 로직은 동일) ...
     try:
       collection = client.create_collection(
         name=RESTAURANT_COLLECTION_NAME,
@@ -148,11 +200,9 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
     except Exception as e:
       print(f"[오류] 'restaurants' 컬렉션 생성 실패: {e}")
       return False
-
     documents_list = df_for_embedding['RAG텍스트'].tolist()
     metadatas_list = df_for_embedding['메타데이터'].tolist() 
     ids_list = df_for_embedding['id'].astype(str).tolist()
-
     print("  > 'restaurants' 메타데이터 변환 중...")
     processed_metadatas = []
     for metadata_dict in metadatas_list:
@@ -163,10 +213,8 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
         elif isinstance(value, list):
           processed_meta_item[key] = ",".join(map(str, value))
         else:
-          # (True -> "True", False -> "False", 123 -> "123")
           processed_meta_item[key] = str(value)
       processed_metadatas.append(processed_meta_item)
-
     print(f"  > 'restaurants' DB에 {len(ids_list)}개 적재 중 (배치)...")
     BATCH_SIZE = 5000
     for i in range(0, len(ids_list), BATCH_SIZE):
@@ -190,18 +238,18 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
     print(f"  > 'mock_profiles' 컬렉션을 찾을 수 없습니다. (이유: {e})")
     print("  > 새 'mock_profiles' 컬렉션을 생성하고 데이터 적재를 시작합니다.")
     
+    # ⬇️ [수정] 인자로 받은 profile_csv_path 사용 (이 부분은 맞음)
     try:
-      # (프로필 DB 파일 로드)
-      df_profiles = pd.read_csv(profile_csv_path)
+      df_profiles = pd.read_csv(profile_csv_path) 
       df_profiles = df_profiles.dropna(subset=['rag_query_text', 'user_id'])
       print(f"  > '{profile_csv_path}' 파일 로드 완료: {len(df_profiles)}개 프로필")
     except FileNotFoundError:
       print(f"[오류] '{profile_csv_path}' 파일을 찾을 수 없습니다.")
       return False
+    # ... (이하 로직은 동일) ...
     except Exception as e:
       print(f"[오류] 프로필 파일 로드 실패: {e}")
       return False
-
     try:
       profile_collection = client.create_collection(
         name=PROFILE_COLLECTION_NAME,
@@ -210,11 +258,9 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
     except Exception as e:
       print(f"[오류] 'mock_profiles' 컬렉션 생성 실패: {e}")
       return False
-
     profile_docs = df_profiles['rag_query_text'].tolist()
     profile_ids = df_profiles['user_id'].astype(str).tolist()
     profile_metas = [{'user_id': uid} for uid in profile_ids]
-
     print(f"  > 'mock_profiles' DB에 {len(profile_ids)}개 적재 중...")
     profile_collection.add(
       documents=profile_docs,
@@ -225,6 +271,7 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
 
   print(f"--- 2단계: VectorDB 2개 컬렉션 로드/구축 완료 ---")
   return True
+
 
 def load_user_ratings():
     """ 500명 평가 데이터를 로드하고 집계합니다. """
@@ -318,4 +365,3 @@ def get_restaurants_by_ids(ids: List[str]) -> pd.DataFrame:
     except Exception as e:
         print(f"[오류] get_restaurants_by_ids: {e}")
         return pd.DataFrame()
-    
