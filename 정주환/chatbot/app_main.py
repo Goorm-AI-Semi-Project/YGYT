@@ -1,4 +1,4 @@
-# app_main.py (Radio + Python 콜백 리셋 방식)
+# app_main.py (CSS 추가)
 
 import uvicorn
 import httpx
@@ -67,16 +67,14 @@ async def lifespan(app: FastAPI):
 
   try:
     data_loader.load_app_data(
-      config.RESTAURANT_DB_FILE_ALL, # ⬅️ load_app_data는 이게 맞음
+      config.RESTAURANT_DB_FILE_ALL, 
       config.MENU_DB_FILE,
     )
     data_loader.load_user_ratings()
     
-    # ⬇️ [핵심 수정] build_vector_db 호출 시 첫 번째 인자 삭제
     data_loader.build_vector_db(
-      # config.RESTAURANT_DB_FILE_ALL,  <- 이 인자를 삭제!
-      config.PROFILE_DB_FILE,         # ⬅️ profile_csv_path
-      config.CLEAR_DB_AND_REBUILD,    # ⬅️ clear_db
+      config.PROFILE_DB_FILE,         
+      config.CLEAR_DB_AND_REBUILD,    
     )
     
     app.state.all_restaurants_df_scoring = data_loader.load_scoring_data(
@@ -206,6 +204,30 @@ GRADIO_CSS = PROFILE_VIEW_CSS + """
   border-color: #F0D900;
   color: #374151; /* Keep Dark Text */
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* ⬇️ [신규] 뱃지/태그 CSS (3개 추가) ⬇️ */
+.badge-ribbon {
+  display: inline-block;
+  font-size: 1.1rem; /* 이모지 크기 */
+  margin-left: 6px;
+  vertical-align: middle;
+  line-height: 1;
+}
+.badge-seoul2025 {
+  display: inline-block;
+  background-color: #007bff; /* 서울시 파란색 (예시) */
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  line-height: 1;
+}
+.tags-container {
+  margin-bottom: 12px;
 }
 /* (★★★ 신규 CSS 끝 ★★★) */
 """
