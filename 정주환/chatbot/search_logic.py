@@ -1,471 +1,177 @@
-import pandas as pd
-import json
-import os
-import ast
-from urllib.parse import quote 
-from typing import List
-from urllib.parse import urlparse, quote
-import textwrap
+# i18n_texts.py
+# (2-space indentation)
 
-# (data_loader에서 로드된 전역 변수를 사용)
-import data_loader as db
-from llm_utils import generate_rag_query
+I18N_TEXTS = {
+  # App Header
+  "app_title": {"KR": "거긴어때", "US": "How About There", "JP": "あそこはどう？", "CN": "那里怎么样?"},
+  "app_description": {
+    "KR": "AI가 14가지 프로필 정보를 수집하고, 완료되면 맞춤 식당을 추천합니다.",
+    "US": "AI collects 14 profile items, then recommends tailored restaurants.",
+    "JP": "AIが14のプロファイル情報を収集し、完了後にカスタムレストランを推薦します。",
+    "CN": "AI收集14个个人资料项，完成后推荐定制餐厅。"
+  },
 
-from i18n_texts import get_text
-from typing import List, Set # ⬅️ Set 추가
-
-# --- (함수 7/9) ---
-def create_filter_metadata(profile_data):
-  """
-  13개 항목의 전체 프로필을 받아,
-  하이브리드 검색에 필요한 6개 항목의 필터 딕셔너리를 생성합니다.
-  """
-  filter_dict = {
-    "budget_range": profile_data.get('budget', 'N/A'),
-    "spicy_available": profile_data.get('spicy_ok', 'N/A'),
-    "vegetarian_options": profile_data.get('is_vegetarian', 'N/A'),
-    "main_ingredients_list": profile_data.get('like_ingredients', 'N/A'),
-    "suitable_for": profile_data.get('travel_type', 'N/A'),
-    "food_category": profile_data.get('food_category', 'N/A')
-  }
-  return filter_dict
-
-# --- (함수 8/9 중 하나) ---
-def build_filters_from_profile(user_filter_dict):
-  """
-  사용자 프로필 딕셔너리를 받아 ChromaDB 1차 필터(DB)를 생성합니다.
-  """
-  db_pre_filter_list = [] 
+  # Language/Chat Tab
+  "lang_select_label": {"KR": "🌐 사용 언어 선택", "US": "🌐 Select Language", "JP": "🌐 使用言語を選択", "CN": "🌐 选择语言"},
+  "tab_explore": {"KR": "🍽 음식 탐색", "US": "🍽 Explore Food", "JP": "🍽 料理を探索", "CN": "🍽 探索美食"},
+  "chatbot_label": {"KR": "한국 여행 도우미 챗봇", "US": "Korea Travel Helper Chatbot", "JP": "韓国旅行アシスタントチャットボット", "CN": "韩国旅行助手聊天机器人"},
+  "textbox_label": {"KR": "답변 입력", "US": "Your Answer", "JP": "回答を入力", "CN": "您的回答"},
+  "textbox_placeholder": {
+    "KR": "여기에 답변을 입력하고 Enter를 누르세요...",
+    "US": "Enter your answer here and press Enter...",
+    "JP": "ここに回答を入力してEnterを押してください...",
+    "CN": "在此输入您的回答并按 Enter..."
+  },
+  "btn_show_results": {"KR": "✅ 결과 보기", "US": "✅ Show Results", "JP": "✅ 結果を見る", "CN": "✅ 查看结果"},
   
-  DB_FILTER_KEYS = ['budget_range', 'spicy_available', 'vegetarian_options']
+  # Result Tab (Controls)
+  "slider_label": {"KR": "표시 개수 (Top-K)", "US": "Display Count (Top-K)", "JP": "表示件数 (Top-K)", "CN": "显示数量 (Top-K)"},
+  "btn_refresh": {"KR": "🔮 추천 새로고침", "US": "🔮 Refresh Recommendation", "JP": "🔮 おすすめを更新", "CN": "🔮 刷新推荐"},
+  "btn_back": {"KR": "✏️ 프로필 수정", "US": "✏️ Edit Profile", "JP": "✏️ プロフィール修正", "CN": "✏️ 编辑资料"},
 
-  for key, value in user_filter_dict.items():
-    if value == 'N/A' or not value: 
-      continue
-      
-    if key == 'food_category':
-      # 사용자의 'food_category'는 가게 DB의 'high_level_category'와 매칭
-      db_pre_filter_list.append({"high_level_category": value})
-      
-    elif key in DB_FILTER_KEYS:
-      # 'O' -> "True" (문자열)
-      # 'X' -> "False" (문자열)
-      # 'budget_range' ('중' 등)은 그대로 사용
-      if value == 'O':
-        filter_value = "True"
-      elif value == 'X':
-        filter_value = "False"
-      else:
-        filter_value = value # ('중', '고' 등)
-      
-      db_pre_filter_list.append({key: filter_value})
-      
-  db_pre_filter = {"$and": db_pre_filter_list} if db_pre_filter_list else {}
+  # Setting Tab
+  "tab_setting": {"KR": "⚙️ 설정", "US": "⚙️ Settings", "JP": "⚙️ 設定", "CN": "⚙️ 设置"},
+  "setting_header": {"KR": "### ⚙️ 앱 설정 (예시)", "US": "### ⚙️ App Settings (Example)", "JP": "### ⚙️ アプリ設定 (例)", "CN": "### ⚙️ 应用设置 (示例)"},
+  "setting_description": {
+    "KR": "- 나중에 벡터 DB 리셋, 디버그 옵션, 모델 선택 등을 넣을 수 있습니다.\n- 현재는 UI 틀만 만들어 둔 상태입니다.",
+    "US": "- Options like vector DB reset, debug options, model selection can be added later.\n- Currently, only the UI frame is set up.",
+    "JP": "- ベクターDBリセット、デバッグオプション、モデル選択などを後で追加できます。\n- 現在はUIの枠組みのみ作成されています。",
+    "CN": "- 稍后可以添加矢量数据库重置、调试选项、模型选择等。\n- 目前仅设置了UI框架。"
+  },
+  "btn_rebuild_db": {"KR": "🔁 벡터 DB 다시 빌드 (예시)", "US": "🔁 Rebuild Vector DB (Example)", "JP": "🔁 ベクターDB再構築 (例)", "CN": "🔁 重建矢量数据库 (示例)"},
+  "checkbox_debug_log": {"KR": "디버그 로그 출력 (예시)", "US": "Output Debug Logs (Example)", "JP": "デバッグログ出力 (例)", "CN": "输出调试日志 (示例)"},
+  "checkbox_debug_panel": {"KR": "🔎 디버그 패널 보기", "US": "🔎 Show Debug Panel", "JP": "🔎 デバッグパネルを表示", "CN": "🔎 显示调试面板"},
+  "label_debug_profile": {"KR": "profile_state(raw)", "US": "profile_state(raw)", "JP": "プロファイル_状態(生)", "CN": "profile_state(原始)"},
+  "label_debug_summary": {"KR": "inferred summary text", "US": "inferred summary text", "JP": "推論された要約テキスト", "CN": "推断摘要文本"},
+  "label_debug_norm": {"KR": "normalized for card", "US": "normalized for card", "JP": "カード用に正規化済み", "CN": "已为卡片规范化"},
   
-  return db_pre_filter
-
-# --- (함수 8/9 중 하나 - 14번 셀) ---
-def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1, lang_code="KR"):
-  """
-  store_id_str(가게ID)을(를) 받아, 전역 변수(df_restaurants 등)를 참조하여
-  Gradio에 표시할 단일 식당의 *HTML* 문자열을 반환합니다. (CSS 클래스 사용)
-  """
+  # --- search_logic.py 텍스트 ---
+  "similar_user_reco_header": {
+    "KR": "### 🤖 Charlie님과 비슷한 사용자가 추천한 식당",
+    "US": "### 🤖 Restaurants Recommended by Users Similar to Charlie",
+    "JP": "### 🤖 Charlie様と似たユーザーがお勧めするレストラン",
+    "CN": "### 🤖 与Charlie相似用户推荐的餐厅"
+  },
+  "rank_prefix_reco": {"KR": "추천", "US": "Reco", "JP": "おすすめ", "CN": "推荐"},
+  "rank_prefix_similar": {"KR": "유사 추천", "US": "Similar", "JP": "類似おすすめ", "CN": "相似推荐"},
+  "detail_link_text": {"KR": "가게 상세정보", "US": "Store Details", "JP": "店舗詳細情報", "CN": "店铺详细信息"},
+  "map_link_text": {"KR": "카카오맵 길찾기", "US": "KakaoMap Directions", "JP": "カカオマップ道案内", "CN": "KakaoMap 路线"},
+  "store_not_loaded": {"KR": "ID: {store_id_str} (DB 미로드)", "US": "ID: {store_id_str} (DB not loaded)", "JP": "ID: {store_id_str} (DB未ロード)", "CN": "ID: {store_id_str} (DB未加载)"},
+  "store_not_found": {"KR": "ID: {store_id_str} (상세 정보 조회 실패)", "US": "ID: {store_id_str} (Details lookup failed)", "JP": "ID: {store_id_str} (詳細情報検索失敗)", "CN": "ID: {store_id_str} (详细信息查询失败)"},
+  "info_address": {"KR": "📍 {store_address}{social_proof_html}", "US": "📍 {store_address}{social_proof_html}", "JP": "📍 {store_address}{social_proof_html}", "CN": "📍 {store_address}{social_proof_html}"},
+  "menu_summary": {"KR": "주요 메뉴 보기", "US": "View Main Menu", "JP": "主なメニューを見る", "CN": "查看主菜单"},
+  "menu_not_found": {"KR": "(메뉴 정보 없음)", "US": "(Menu info not found)", "JP": "(メニュー情報なし)", "CN": "(无菜单信息)"},
   
-  # (전역 변수 참조)
-  if db.df_restaurants is None or db.menu_groups is None:
-       # (오류 메시지도 HTML 형식으로 반환)
-       db_not_loaded_text = get_text("store_not_loaded", lang_code, store_id_str=store_id_str)
-       return """
-       <div class="border-item">
-         <h4>[{rank_prefix} {rank_index}] ID: {store_id_str} {db_not_loaded_text}</h4>
-       </div>
-       """
+# --- gradio_callbacks.py 텍스트 ---
+  "rank_prefix_rag": {"KR": "RAG 추천", "US": "RAG Reco", "JP": "RAGおすすめ", "CN": "RAG 推荐"},
+  "initial_reco_placeholder": {
+    "KR": "...프로필 설문이 완료되면 여기에 추천 결과가 표시됩니다...",
+    "US": "...Recommendation results will be displayed here once the profile is complete...",
+    "JP": "...プロフィールアンケートが完了すると、ここに推薦結果が表示されます...",
+    "CN": "...个人资料调查完成后，推荐结果将显示在此处..."
+  },
+  "error_chatbot_init": {
+    "KR": "챗봇 초기화에 실패했습니다. (API 키 오류일 수 있습니다): {e}",
+    "US": "Failed to initialize chatbot. (May be an API key error): {e}",
+    "JP": "チャットボットの初期化に失敗しました。 (APIキーのエラーかもしれません): {e}",
+    "CN": "聊天机器人初始化失败。 (可能是API密钥错误): {e}"
+  },
+  "error_chatbot_init_short": {
+    "KR": "챗봇 초기화 실패...",
+    "US": "Chatbot init failed...",
+    "JP": "チャットボット初期化失敗...",
+    "CN": "聊天机器人初始化失败..."
+  },
+  "warn_rag_empty": {
+    "KR": "1단계 RAG 검색 결과가 0건입니다. 필터를 완화해보세요.",
+    "US": "Stage 1 RAG search returned 0 results. Try relaxing your filters.",
+    "JP": "第1段階のRAG検索結果が0件です。フィルターを緩和してみてください。",
+    "CN": "第1阶段RAG搜索结果为0。请尝试放宽筛选条件。"
+  },
+  "warn_graphhopper_down": {
+    "KR": "⚠️ 뚜벅이 점수 서버가 응답하지 않습니다. 1단계 RAG 검색 결과로 대체합니다.",
+    "US": "⚠️ Walking score server is not responding. Falling back to Stage 1 RAG results.",
+    "JP": "⚠️ 徒歩スコアサーバーが応答しません。第1段階のRAG検索結果で代替します。",
+    "CN": "⚠️ 步行得分服务器无响应。将回退到第1阶段RAG搜索结果。"
+  },
+  "error_reco_general": {
+    "KR": "추천 생성 중 오류 발생: {e}",
+    "US": "Error during recommendation generation: {e}",
+    "JP": "推薦生成中にエラーが発生しました: {e}",
+    "CN": "生成推荐时出错: {e}"
+  },
+  "error_reco_general_details": {
+    "KR": "[오류] 식당 추천 중 오류가 발생했습니다. (세부정보: {e})",
+    "US": "[Error] An error occurred while recommending restaurants. (Details: {e})",
+    "JP": "[エラー] レストラン推薦中にエラーが発生しました。 (詳細: {e})",
+    "CN": "[错误] 推荐餐厅时发生错误。 (详情: {e})"
+  },
+  "error_api_call": {
+    "KR": "API 호출 중 오류가 발생했습니다: {e}",
+    "US": "An error occurred during API call: {e}",
+    "JP": "API呼び出し中にエラーが発生しました: {e}",
+    "CN": "API调用期间发生错误: {e}"
+  },
+  "info_profile_complete": {
+    "KR": "🤖 프로필 수집이 완료되었습니다! 잠시만 기다려주시면, 수집된 프로필을 기반으로 멋진 음식점을 찾아드릴게요.",
+    "US": "🤖 Profile collection is complete! Please wait a moment while I find great restaurants based on your profile.",
+    "JP": "🤖 プロフィールの収集が完了しました！ただいま、収集したプロフィールに基づいて素敵なお店をお探ししますので、少々お待ちください。",
+    "CN": "🤖 个人资料收集完毕！请稍候，我将根据收集的资料为您寻找合适的餐厅。"
+  },
+  "info_complete_profile_first": {
+    "KR": "...프로필을 먼저 완성해주세요...",
+    "US": "...Please complete your profile first...",
+    "JP": "...まずプロフィールを完成させてください...",
+    "CN": "...请先完成您的个人资料..."
+  },
+  "error_no_recos_state": {
+    "KR": "추천 결과가 없습니다. (State 비어있음)",
+    "US": "No recommendation results found. (State is empty)",
+    "JP": "推薦結果がありません。 (Stateが空です)",
+    "CN": "没有推荐结果。 (状态为空)"
+  },
+  "error_slider_update": {
+    "KR": "[오류] Top-K 슬라이더 변경 중 오류: {e}",
+    "US": "[Error] Error updating Top-K slider: {e}",
+    "JP": "[エラー] Top-Kスライダーの更新中にエラーが発生しました: {e}",
+    "CN": "[错误] 更新Top-K滑块时出错: {e}"
+  },
+  # --- profile_view.py 텍스트 ---
+  "profile_card_title": {
+    "KR": "🤖 AI가 파악한 프로필",
+    "US": "🤖 AI Profile Analysis",
+    "JP": "🤖 AIによるプロフィール分析",
+    "CN": "🤖 AI分析的个人资料"
+  },
+  "pc_chip_origin": {"KR": "출발", "US": "From", "JP": "出発", "CN": "出发"},
+  "pc_chip_budget": {"KR": "예산", "US": "Budget", "JP": "予算", "CN": "预算"},
+  "pc_grid_likes": {"KR": "선호", "US": "Likes", "JP": "好み", "CN": "偏好"},
+  "pc_grid_limits": {"KR": "제한", "US": "Limits", "JP": "制限", "CN": "限制"},
+  "pc_grid_age_gender": {"KR": "연령/성별", "US": "Age/Gender", "JP": "年齢/性別", "CN": "年龄/性别"},
+  "pc_grid_spice": {"KR": "매운맛", "US": "Spice", "JP": "辛さ", "CN": "辣度"}
+}
 
+# --- Helper Functions ---
+
+def get_lang_code(lang_str: str) -> str:
+  """Gradio의 언어 문자열을 코드(KR, US, JP, CN)로 변환"""
+  if "한국어" in lang_str: return "KR"
+  if "English" in lang_str: return "US"
+  if "日本語" in lang_str: return "JP"
+  if "中文" in lang_str: return "CN"
+  return "KR" # 기본값
+
+def get_text(key: str, lang_code: str = "KR", **kwargs) -> str:
+  """I18N_TEXTS 딕셔너리에서 텍스트를 가져와 kwargs로 포맷팅합니다."""
+  # 만약 lang_code가 없으면 KR을 기본값으로 사용
+  text_dict = I18N_TEXTS.get(key, {})
+  text = text_dict.get(lang_code, text_dict.get("KR", f"!!MISSING TEXT for {key}!!"))
+  
+  # kwargs를 사용하여 f-string 포맷팅을 수행합니다.
   try:
-    # 1. (가게 정보 조회)
-    store_info = db.df_restaurants.loc[store_id_str]
-    store_name = store_info['가게']
-    store_address = store_info['주소']
-    store_intro = store_info['소개']
-    store_image_url = store_info.get('이미지URL', '') 
-    
-    detail_url = store_info.get('상세URL', '')
-    store_y = store_info.get('Y좌표', '')
-    store_x = store_info.get('X좌표', '')
-    
-    try:
-      store_category = store_info.get('high_level_category', 'N/A')
-    except KeyError:
-      store_category = 'N/A' 
-
-    # 2. (다른 사용자 평가 카운트 조회) - (간략하게 수정)
-    social_proof_html = "" 
-    if db.df_restaurant_ratings_summary is not None and not db.df_restaurant_ratings_summary.empty:
-      try:
-        rating_info = db.df_restaurant_ratings_summary[
-          db.df_restaurant_ratings_summary['restaurant_id'] == store_id_str
-        ]
-        if not rating_info.empty:
-          recommend_count = rating_info['추천'].iloc[0]
-          non_recommend_count = rating_info['미추천'].iloc[0]
-          # (HTML에 바로 삽입할 수 있도록 ' | ' 포함)
-          social_proof_html = f" | 👍 {recommend_count} / 👎 {non_recommend_count}"
-      except Exception as e:
-        print(f"[서식 오류] ID {store_id_str} 평가 카운트 조회: {e}")
-
-    # 3. (이미지 HTML 생성)
-    image_html_string = ""
-    no_image_filename = "img_restaruant_no_image.png"
-    if pd.notna(store_image_url) and store_image_url:
-      path = urlparse(store_image_url).path
-      filename = os.path.basename(path)
-      if filename != no_image_filename:
-        # (Markdown 대신 HTML <img> 태그 사용)
-        image_html_string = f'<img src="{store_image_url}" alt="{store_name} 이미지" style="width:100%; max-height:200px; object-fit:cover; border-radius: 8px; margin-bottom: 12px;">'
-    
-    detail_link_md = ""
-    if pd.notna(detail_url) and detail_url:
-      # (app_main.py에 추가한 'html-button-primary' 클래스 사용)
-      detail_link_text = get_text("detail_link_text", lang_code)
-      detail_link_md = f'<a href="{detail_url}" target="_blank" class="html-button html-button-primary">{detail_link_text}</a>'
-
-    map_link_md = ""
-    if pd.notna(store_y) and pd.notna(store_x) and store_y and store_x:
-      store_name_encoded = quote(store_name)
-      kakao_map_url = f"https://map.kakao.com/?q={store_name_encoded}&map_type=TYPE_MAP&rq={store_y},{store_x}"
-      # (app_main.py에 추가한 'html-button-secondary' 클래스 사용)
-      map_link_text = get_text("map_link_text", lang_code)
-      map_link_md = f'<a href="{kakao_map_url}" target="_blank" class="html-button html-button-secondary">{map_link_text}</a>'
-
-
-    links_md = ""
-    if detail_link_md and map_link_md:
-      links_md = f"{detail_link_md} | {map_link_md}"
-    elif detail_link_md:
-      links_md = f"{detail_link_md}"
-    elif map_link_md:
-      links_md = f"{map_link_md}"
-
-    # 5. (메뉴 정보 HTML 생성)
-    menu_html = ""
-    menu_items_html = "" # (<li> 태그만 담을 변수)
-    try:
-      menus_df = db.menu_groups.get_group(store_id_str)
-      rep_menus = menus_df[menus_df['대표여부'] == 'Y'].head(3)
-      if rep_menus.empty:
-        rep_menus = menus_df.head(3)
-      for _, menu_row in rep_menus.iterrows():
-        # (Markdown '*' 대신 <li> 태그 사용)
-        menu_items_html += f"<li>{menu_row['메뉴']} ({menu_row['가격원문']})</li>"
-      
-      if not menu_items_html:
-        menu_items_html = f"<li>{get_text('menu_not_found', lang_code)}</li>"
-      
-      # (HTML 문자열 생성 시 f-string의 들여쓰기를 피합니다)
-      menu_summary_text = get_text("menu_summary", lang_code)
-      menu_html = textwrap.dedent(f"""
-        <details open style="margin-bottom: 12px;">
-          <summary style="cursor: pointer; font-weight: bold;">{menu_summary_text}</summary>
-          <ul style="margin-top: 8px;">{menu_items_html}</ul>
-        </details>
-      """)
-        
-    except KeyError:
-      menu_html = "" # (메뉴 정보 없으면 아예 표시 안함)
-
-    # 6. (카테고리 태그 생성)
-    category_tag_html = ""
-    if store_category and store_category != 'N/A':
-        # (app_main.py의 'text-xs-bg' CSS 클래스 사용)
-        category_tag_html = f'<span class="text-xs-bg">{store_category}</span>'
-
-    # 7. (최종 HTML 조합)
-    # (기존 Markdown 대신, 요청하신 UI 구조와 CSS 클래스를 사용)
-    address_html = get_text("info_address", lang_code, store_address=store_address, social_proof_html=social_proof_html)
-    output_html = f"""
-    <div class="border-item">
-      {image_html_string}
-      <h4 style="margin-bottom: 8px;">[{rank_prefix} {rank_index}] {store_name}</h4>
-      <div style="margin-bottom: 8px;">📍 {address_html}</div>
-      <p style="margin-bottom: 12px;">{store_intro}</p>
-      
-      <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;">
-        {category_tag_html}
-      </div>
-      
-      {menu_html}
-      
-      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;">
-        {detail_link_md}
-        {map_link_md}
-      </div>
-    </div>
-    """
-    
-    # ⬅️ 2. 최종 반환값에서 textwrap.dedent()를 호출합니다.
-    #    (f-string의 들여쓰기를 모두 제거하여 순수 HTML로 만듭니다)
-    return textwrap.dedent(output_html).strip()
-    
-  except KeyError as ke:
-     print(f"[서식 오류] ID {store_id_str} (KeyError): {ke}")
-     # ⬇️ 텍스트 대체
-     not_found_text = get_text("store_not_found", lang_code, store_id_str=store_id_str)
-     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] {not_found_text}</h4></div>'
-  except Exception as inner_e:
-     print(f"[서식 오류] ID {store_id_str} (Exception): {inner_e}")
-     # ⬇️ 텍스트 대체
-     not_found_text = get_text("store_not_found", lang_code, store_id_str=store_id_str)
-     return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] {not_found_text}</h4></div>'
-      
-# --- (함수 8/9 중 하나 - 15번 셀) ---
-def get_similar_user_recommendations(
-    live_rag_query_text, 
-    primary_reco_ids, 
-    max_similar_users=1, 
-    max_new_recos=2,
-    lang_code="KR"
-  ):
-  """
-  현재 사용자의 RAG 쿼리와 기본 추천 ID 목록을 받아,
-  유사 사용자가 '추천'한 식당 중 겹치지 않는 식당의
-  Markdown 문자열을 반환합니다.
-  """
-  
-  if db.profile_collection is None:
-    print("[유사 추천] 'profile_collection'이 로드되지 않았습니다.")
-    return ""
-    
-  if db.df_all_user_ratings is None:
-    print("[유사 추천] 'df_all_user_ratings'가 로드되지 않았습니다.")
-    return ""
-
-  try:
-    # 1. 'mock_profiles' DB에서 유사 사용자 쿼리
-    results = db.profile_collection.query(
-      query_texts=[live_rag_query_text],
-      n_results=max_similar_users
-    )
-    
-    if not results.get('ids', [[]])[0]:
-      print("[유사 추천] 유사한 사용자를 찾지 못했습니다.")
-      return ""
-      
-    # 2. 유사 사용자의 user_id 추출
-    similar_user_ids = [meta['user_id'] for meta in results['metadatas'][0]]
-    print(f"[유사 추천] 찾은 유사 사용자: {similar_user_ids}")
-
-    # 3. 유사 사용자가 '추천'한 식당 ID 목록 조회
-    similar_user_likes = db.df_all_user_ratings[
-      (db.df_all_user_ratings['user_id'].isin(similar_user_ids)) &
-      (db.df_all_user_ratings['사용자평가'] == '추천')
-    ]
-    
-    if similar_user_likes.empty:
-      print("[유사 추천] 유사 사용자가 '추천'한 식당이 없습니다.")
-      return ""
-
-    # 4. 기본 추천과 겹치지 않는 식당 ID 필터링
-    new_recommendations = []
-    for store_id in similar_user_likes['restaurant_id'].astype(str):
-      if store_id not in primary_reco_ids and store_id not in new_recommendations:
-        new_recommendations.append(store_id)
-        
-    if not new_recommendations:
-      print("[유사 추천] 겹치지 않는 추가 추천 식당이 없습니다.")
-      return ""
-      
-    # 5. 최종 Markdown 문자열 생성 (구분자 포함)
-    header_text = get_text("similar_user_reco_header", lang_code)
-    output_secondary_string = (
-      f"\n\n---\n\n"
-      f"{header_text}\n\n"
-    )
-    
-    recos_to_show = new_recommendations[:max_new_recos]
-    print(f"[유사 추천] 추가할 식당: {recos_to_show}")
-    
-    rank_prefix_similar = get_text("rank_prefix_similar", lang_code)
-    
-    for i, store_id in enumerate(recos_to_show):
-      output_secondary_string += format_restaurant_markdown(
-        store_id, 
-        rank_prefix=rank_prefix_similar,
-        rank_index=i+1,
-        lang_code=lang_code,
-      )
-      
-    return output_secondary_string
-    
-  except Exception as e:
-    print(f"[오류] 유사 사용자 추천 생성 중 오류: {e}")
-    return "" # (오류 시 빈 문자열 반환)
-
-# --- (함수 8/9 - 16번 셀) ---
-# 1단계 후보군 ID만 반환하는 아래 함수로 대체합니다.
-
-def get_rag_candidate_ids(
-    user_profile_row: dict,
-    n_results: int = 50
-) -> List[str]:
-    """
-    (1단계) RAG + 점수제(Scoring)를 실행하여,
-    최종 후보군 식당 ID 리스트를 반환합니다. (기존 로직 재사용)
-    """
-    print("\n--- 1단계: RAG + 점수제 후보군 생성 시작 ---")
-    
-    # 1. 사용자 프로필(dict)에서 데이터 추출
-    try:
-        user_original_summary = user_profile_row['rag_query_text']
-        user_filter_dict = json.loads(user_profile_row['filter_metadata_json'])
-    except Exception as e:
-        print(f"[오류] 사용자 프로필 파싱 실패: {e}")
-        return []
-
-    # 2. 쿼리 및 필터 생성
-    user_rag_query = generate_rag_query(user_original_summary)
-    db_pre_filter = build_filters_from_profile(user_filter_dict)
-    python_post_filter = {}
-    post_filter_keys = ['main_ingredients_list', 'suitable_for']
-
-    for key, val in user_filter_dict.items():
-      if key in post_filter_keys and val != 'N/A' and val:
-        if isinstance(val, str):
-          # [기존 로직] 값이 문자열이면(예: "닭고기,해산물") 쉼표로 분리
-          python_post_filter[key] = [v.strip() for v in val.split(',') if v.strip()]
-        elif isinstance(val, list):
-          # [수정] 값이 이미 리스트이면(예: ["닭고기", "해산물"]) 그대로 사용
-          python_post_filter[key] = val
-        else:
-          # (기타 예외 처리)
-          try:
-            python_post_filter[key] = [str(val)]
-          except:
-            pass # 변환 실패 시 무시
-    
-    print(f"  > RAG 쿼리: '{user_rag_query}'")
-    print(f"  > DB 1차 필터: {db_pre_filter}")
-
-    # 3. ChromaDB에 RAG 검색 실행
-    try:
-        print(f"  > RAG + 1차 필터 검색 (Top {n_results}개)...")
-        
-        if db_pre_filter: 
-            results = db.collection.query(
-                query_texts=[user_rag_query],
-                n_results=n_results,
-                where=db_pre_filter
-            )
-        else: 
-            results = db.collection.query(
-                query_texts=[user_rag_query],
-                n_results=n_results
-            )
-        
-        print(f"  > 1차 검색 완료: {len(results['ids'][0])}개 후보 반환")
-        
-        if not results.get('ids', [[]])[0]:
-            print("  > [필터 완화] 1차 필터 결과 0건. RAG-Only(필터 없음)로 재시도...")
-            results = db.collection.query(
-                query_texts=[user_rag_query],
-                n_results=n_results
-            )
-            print(f"  > RAG-Only 검색 완료: {len(results['ids'][0])}개 후보 반환")
-            if not results.get('ids', [[]])[0]:
-                print("  > RAG-Only 검색 결과도 없습니다.")
-                return []
-        
-        # 4. Python으로 *점수(Scoring)* 계산 (기존 로직)
-        final_results_with_score = []
-        
-        for i in range(len(results['ids'][0])):
-            store_id = results['ids'][0][i]
-            rag_distance = results['distances'][0][i] 
-            metadata = results['metadatas'][0][i]
-            
-            filter_score = 0
-            
-            if user_filter_dict.get('food_category') == metadata.get('high_level_category'):
-                filter_score += 3
-            if user_filter_dict.get('budget_range') == metadata.get('budget_range'):
-                filter_score += 2
-            if user_filter_dict.get('spicy_available') == metadata.get('spicy_available'):
-                filter_score += 2
-            if user_filter_dict.get('vegetarian_options') == metadata.get('vegetarian_options'):
-                filter_score += 2
-
-            if 'suitable_for' in python_post_filter:
-                if all(req in metadata.get('suitable_for', '') for req in python_post_filter['suitable_for']): 
-                    filter_score += 1
-            if 'main_ingredients_list' in python_post_filter:
-                if any(req in metadata.get('main_ingredients_list', '') for req in python_post_filter['main_ingredients_list']): 
-                    filter_score += 1
-
-            final_results_with_score.append({
-                "id": store_id,
-                "rag_distance": rag_distance, 
-                "filter_score": filter_score,
-            })
-        
-        # 5. 최종 랭킹
-        final_results = sorted(
-            final_results_with_score, 
-            key=lambda x: (-x['filter_score'], x['rag_distance']), 
-        )
-        
-        # [!!! 수정 !!!]
-        # 6. (ID 리스트 대신) 점수가 포함된 딕셔너리 리스트 반환
-        print(f"--- 1단계: RAG + 점수제 완료. 후보 {len(final_results)}개 반환 ---")
-        
-        return final_results # ⬅️ [수정] 점수 정보가 담긴 'final_results'를 반환   
-
-    except Exception as e:
-        print(f"\n[오류] 1단계 후보군 생성 중 오류: {e}")
-        return []
-      
-    
-def get_ground_truth_for_user(
-    live_rag_query_text: str,
-    max_similar_users: int = 5
-) -> Set[str]:
-  """
-  현재 사용자의 RAG 쿼리를 기반으로,
-  유사 사용자들이 '추천'한 식당 ID의 *집합(Set)*을 반환합니다. (Ground Truth)
-  """
-  
-  # (data_loader.py에서 로드된 전역 DB 참조)
-  if db.profile_collection is None or db.df_all_user_ratings is None:
-    print("[Ground Truth] DB가 로드되지 않았습니다.")
-    return set()
-
-  try:
-    # 1. 유사 사용자 쿼리 (기존 로직과 동일)
-    results = db.profile_collection.query(
-      query_texts=[live_rag_query_text],
-      n_results=max_similar_users
-    )
-    
-    if not results.get('ids', [[]])[0]:
-      print("[Ground Truth] 유사 사용자를 찾지 못했습니다.")
-      return set()
-      
-    # 2. 유사 사용자의 user_id 추출
-    similar_user_ids = [meta['user_id'] for meta in results['metadatas'][0]]
-
-    # 3. 유사 사용자가 '추천'한 식당 ID 목록 조회
-    ground_truth_df = db.df_all_user_ratings[
-      (db.df_all_user_ratings['user_id'].isin(similar_user_ids)) &
-      (db.df_all_user_ratings['사용자평가'] == '추천')
-    ]
-    
-    if ground_truth_df.empty:
-      print("[Ground Truth] 유사 사용자가 '추천'한 식당이 없습니다.")
-      return set()
-
-    # 4. ID를 집합(Set)으로 반환
-    ground_truth_set = set(ground_truth_df['restaurant_id'].astype(str))
-    print(f"[Ground Truth] 유사 사용자 {len(similar_user_ids)}명으로부터 정답 {len(ground_truth_set)}개 발견")
-    return ground_truth_set
-
-  except Exception as e:
-    print(f"[오류] Ground Truth 생성 중 오류: {e}")
-    return set()
+    return text.format(**kwargs)
+  except KeyError:
+    # 포맷팅 인수가 필요했지만 제공되지 않은 경우 (예: {store_id_str})
+    return text 
+  except Exception:
+    return text
