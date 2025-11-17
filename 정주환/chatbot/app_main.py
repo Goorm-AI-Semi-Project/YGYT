@@ -420,23 +420,24 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
     
     
 
-    # (C) Top-K 변경 시 추천만 갱신
-    def update_recommendations_with_topk_handler(topk_value: int, user_profile_row: Dict):
+# (C) Top-K 변경 시 추천만 갱신
+    # ⬇️ 함수 정의에 lang_code: str 추가
+    def update_recommendations_with_topk_handler(topk_value: int, user_profile_row: Dict, lang_code: str):
         return gradio_callbacks.update_recommendations_with_topk(
             topk_value=topk_value,
             user_profile_row_state=user_profile_row,
-            lang_code=lang_code,
+            lang_code=lang_code, # ⬅️ 이제 정상 동작
         )
 
     topk_slider.change(
         fn=update_recommendations_with_topk_handler,
-        inputs=[topk_slider, user_profile_row_state],
+        inputs=[topk_slider, user_profile_row_state, lang_code_state], # ⬇️ lang_code_state 추가
         outputs=recommendation_output,
     )
 
     refresh_btn.click(
         fn=update_recommendations_with_topk_handler,
-        inputs=[topk_slider, user_profile_row_state],
+        inputs=[topk_slider, user_profile_row_state, lang_code_state], # ⬇️ lang_code_state 추가
         outputs=recommendation_output,
     )
 
