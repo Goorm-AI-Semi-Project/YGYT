@@ -1,3 +1,5 @@
+# app_main.py (Radio + Python 콜백 리셋 방식)
+
 import uvicorn
 import httpx
 from contextlib import asynccontextmanager
@@ -205,19 +207,24 @@ GRADIO_CSS = PROFILE_VIEW_CSS + """
 /* (★★★ 신규 CSS 끝 ★★★) */
 """
 
-# ⬇️ 초기 언어 설정
+# ⬇️ 초기 언어 설정 (이제 load 이벤트가 덮어씀)
 INITIAL_LANG_CODE = "KR"
 
 with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.Soft(), css=GRADIO_CSS) as gradio_app:
-    title_md = gr.Markdown(f"## {get_text('app_title', INITIAL_LANG_CODE)}")
-    desc_md = gr.Markdown(get_text("app_description", INITIAL_LANG_CODE))
+    # ⬇️ [수정] 컴포넌트 변수만 정의. (값 설정은 load 이벤트에서)
+    title_md = gr.Markdown("## ...")
+    desc_md = gr.Markdown("...")
+
+    # ⬇️ [삭제] js_loader 삭제
+    # js_loader = gr.HTML(visible=False)
 
     with gr.Group():
         #gr.Markdown("### 🌐 언어 설정")
         with gr.Row():
+            # ⬇️ [수정] 4개 버튼 -> 1개 Radio로 복귀
             lang_radio = gr.Radio(
                 ["한국어 KR", "English US", "日本語 JP", "中文 CN"],
-                label=get_text("lang_select_label", INITIAL_LANG_CODE),
+                label="...", # (load에서 설정)
                 value="한국어 KR",
                 interactive=True,
             )
@@ -230,22 +237,23 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
     lang_code_state = gr.State(value=INITIAL_LANG_CODE)
 
     with gr.Tabs():
-        with gr.TabItem(get_text("tab_explore", INITIAL_LANG_CODE)) as tab_explore:
+        # ⬇️ [수정] 컴포넌트 변수만 정의
+        with gr.TabItem("...") as tab_explore:
             # ---- 채팅 영역 ----
             with gr.Group() as chat_group:
                 with gr.Column():
                     chatbot = gr.Chatbot(
-                        label=get_text("chatbot_label", INITIAL_LANG_CODE),
+                        label="...", # (load에서 설정)
                         height=700,
                         show_copy_button=True,
                         type="messages",
                     )
                     msg_textbox = gr.Textbox(
-                        label=get_text("textbox_label", INITIAL_LANG_CODE),
-                        placeholder=get_text("textbox_placeholder", INITIAL_LANG_CODE),
+                        label="...", # (load에서 설정)
+                        placeholder="...", # (load에서 설정)
                     )
                     # ✅ 결과 보기 버튼 (채팅 → 결과 화면 이동)
-                    show_results_btn = gr.Button(get_text("btn_show_results", INITIAL_LANG_CODE), variant="primary")
+                    show_results_btn = gr.Button("...", variant="primary") # (load에서 설정)
 
             # ---- 결과 영역 ----
             with gr.Group(visible=False) as result_group:
@@ -254,95 +262,113 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
                 gr.HTML("<div class='controls-bar'><div id='ctrl-left' class='controls-left'></div><div id='ctrl-right' class='controls-right'></div></div>")
                 with gr.Group(elem_id="ctrl-left"):
                     topk_slider = gr.Slider(
-                        minimum=1, maximum=30, value=5, step=1, label=get_text("slider_label", INITIAL_LANG_CODE)
+                        minimum=1, maximum=30, value=5, step=1, label="..." # (load에서 설정)
                     )
                 with gr.Group(elem_id="ctrl-right"):
                     with gr.Row():
-                        refresh_btn = gr.Button(get_text("btn_refresh", INITIAL_LANG_CODE), variant="secondary")
-                        back_btn    = gr.Button(get_text("btn_back", INITIAL_LANG_CODE),  variant="secondary")
+                        refresh_btn = gr.Button("...", variant="secondary") # (load에서 설정)
+                        back_btn    = gr.Button("...",  variant="secondary") # (load에서 설정)
 
                 recommendation_output = gr.HTML(label=None, value="") # (수정)
                 
-        with gr.TabItem(get_text("tab_setting", INITIAL_LANG_CODE)) as tab_setting:
+        with gr.TabItem("...") as tab_setting:
             with gr.Column():
                 # ⬇️ 설정 탭 텍스트 변수에 할당 및 get_text() 사용
-                setting_header_md = gr.Markdown(get_text("setting_header", INITIAL_LANG_CODE))
-                setting_desc_md = gr.Markdown(get_text("setting_description", INITIAL_LANG_CODE))
+                setting_header_md = gr.Markdown("...") # (load에서 설정)
+                setting_desc_md = gr.Markdown("...") # (load에서 설정)
                 
-                rebuild_btn = gr.Button(get_text("btn_rebuild_db", INITIAL_LANG_CODE))
-                debug_checkbox = gr.Checkbox(label=get_text("checkbox_debug_log", INITIAL_LANG_CODE), value=False)
+                rebuild_btn = gr.Button("...") # (load에서 설정)
+                debug_checkbox = gr.Checkbox(label="...", value=False) # (load에서 설정)
 
                 # 🔎 디버그 패널
-                debug_toggle = gr.Checkbox(label=get_text("checkbox_debug_panel", INITIAL_LANG_CODE), value=False)
-                debug_profile_json = gr.JSON(label=get_text("label_debug_profile", INITIAL_LANG_CODE), visible=False)
-                debug_summary_text = gr.Textbox(label=get_text("label_debug_summary", INITIAL_LANG_CODE), visible=False)
-                debug_norm_json    = gr.JSON(label=get_text("label_debug_norm", INITIAL_LANG_CODE), visible=False)
+                debug_toggle = gr.Checkbox(label="...", value=False) # (load에서 설정)
+                debug_profile_json = gr.JSON(label="...", visible=False) # (load에서 설정)
+                debug_summary_text = gr.Textbox(label="...", visible=False) # (load에서 설정)
+                debug_norm_json    = gr.JSON(label="...", visible=False) # (load에서 설정)
 
     # ---- 이벤트 바인딩 ----
 
-    def update_ui_language(lang_str: str, current_profile: Dict):
-        """선택된 언어에 따라 모든 UI 텍스트를 업데이트"""
-        lang_code = get_lang_code(lang_str)
-
-        new_profile_html_value = render_profile_card(current_profile, lang_code)
-
-        return (
-            # Header (1, 2, 3)
-            gr.update(value=f"## {get_text('app_title', lang_code)}"),  # title_md
-            gr.update(value=get_text("app_description", lang_code)), # desc_md
-            gr.update(label=get_text("lang_select_label", lang_code)), # lang_radio
-            
-            # Tab Labels (4, 5)
-            gr.update(label=get_text("tab_explore", lang_code)),       # tab_explore
-            gr.update(label=get_text("tab_setting", lang_code)),       # tab_setting
-
-            # Chat Tab (6, 7, 8)
-            gr.update(label=get_text("chatbot_label", lang_code)),    # chatbot
-            gr.update(label=get_text("textbox_label", lang_code), placeholder=get_text("textbox_placeholder", lang_code)), # msg_textbox
-            gr.update(value=get_text("btn_show_results", lang_code)), # show_results_btn
-
-            # Result Tab (9, 10, 11)
-            gr.update(label=get_text("slider_label", lang_code)),    # topk_slider
-            gr.update(value=get_text("btn_refresh", lang_code)),     # refresh_btn
-            gr.update(value=get_text("btn_back", lang_code)),        # back_btn
-
-            # Result Tab - Profile Card (12)
-            gr.update(value=new_profile_html_value), # ⬅️ profile_html
-
-            # Setting Tab (13, 14, 15, 16, 17)
-            gr.update(value=get_text("setting_header", lang_code)),   # setting_header_md
-            gr.update(value=get_text("setting_description", lang_code)), # setting_desc_md
-            gr.update(value=get_text("btn_rebuild_db", lang_code)),   # rebuild_btn
-            gr.update(label=get_text("checkbox_debug_log", lang_code)), # debug_checkbox
-            gr.update(label=get_text("checkbox_debug_panel", lang_code)), # debug_toggle
-
-            # Setting Tab - Debug (18, 19, 20)
-            gr.update(label=get_text("label_debug_profile", lang_code)), # debug_profile_json
-            gr.update(label=get_text("label_debug_summary", lang_code)), # debug_summary_text
-            gr.update(label=get_text("label_debug_norm", lang_code)),    # debug_norm_json
-            
-            # State (21)
-            lang_code, # lang_code_state
-        )
-
-    lang_radio.change(
-        fn=update_ui_language,
-        inputs=[lang_radio, profile_state], # ⬅️ inputs에 profile_state 추가
+    # ⬇️ [수정] (A) 페이지 로드
+    # start_chat이 26개의 State/UI 초기값을 반환
+    # (Radio로 복귀했으므로 29개 -> 26개로 다시 변경)
+    gradio_app.load(
+        fn=gradio_callbacks.start_chat,  
+        inputs=None, # (fn 시그니처에 request: gr.Request가 있으면 자동 주입됨)
         outputs=[
-            title_md, desc_md, lang_radio,
-            tab_explore, tab_setting, # 탭 레이블
-            chatbot, msg_textbox, show_results_btn, # 채팅 탭
-            topk_slider, refresh_btn, back_btn, # 결과 탭
+            # --- States (6개) ---
+            chatbot,                  # 1. (Welcome 메시지)
+            llm_history_state,        # 2
+            profile_state,            # 3
+            is_completed_state,       # 4
+            user_profile_row_state,   # 5
+            lang_code_state,          # 6
             
-            profile_html, # ⬅️ outputs에 profile_html 추가 (순서 중요!)
+            # --- UI Components (20개) ---
+            title_md,                 # 7
+            desc_md,                  # 8
             
-            setting_header_md, setting_desc_md, rebuild_btn, # 설정 탭
-            debug_checkbox, debug_toggle,
-            debug_profile_json, debug_summary_text, debug_norm_json,
-            lang_code_state, # state
+            lang_radio,               # 9. (Radio로 복귀)
+            
+            tab_explore,              # 10
+            tab_setting,              # 11
+            chatbot,                  # 12 (chatbot label 업데이트용 - 중복 아님)
+            msg_textbox,              # 13
+            show_results_btn,         # 14
+            topk_slider,              # 15
+            refresh_btn,              # 16
+            back_btn,                 # 17
+            profile_html,             # 18 (value=None으로 초기화)
+            setting_header_md,        # 19
+            setting_desc_md,          # 20
+            rebuild_btn,              # 21
+            debug_checkbox,           # 22
+            debug_toggle,             # 23
+            debug_profile_json,       # 24
+            debug_summary_text,       # 25
+            debug_norm_json           # 26
         ],
-        queue=False 
     )
+
+    # ⬇️ [수정] (B) 언어 변경 (챗봇 초기화 + UI 새로고침)
+    lang_radio.change(
+        fn=gradio_callbacks.reset_chat_for_language, # ⬅️ [신규] 콜백 함수
+        inputs=[lang_radio],
+        outputs=[
+            # ⬇️ load 이벤트의 outputs와 동일한 26개 컴포넌트
+            # --- States (6개) ---
+            chatbot,                  # (Welcome 메시지)
+            llm_history_state,
+            profile_state,
+            is_completed_state,
+            user_profile_row_state,
+            lang_code_state,
+            
+            # --- UI Components (20개) ---
+            title_md,
+            desc_md,
+            lang_radio,
+            tab_explore,
+            tab_setting,
+            chatbot,                  # (chatbot label 업데이트용 - 중복 아님)
+            msg_textbox,
+            show_results_btn,
+            topk_slider,
+            refresh_btn,
+            back_btn,
+            profile_html,
+            setting_header_md,
+            setting_desc_md,
+            rebuild_btn,
+            debug_checkbox,
+            debug_toggle,
+            debug_profile_json,
+            debug_summary_text,
+            debug_norm_json
+        ],
+        queue=True # (LLM API를 호출하므로 큐 사용)
+    )
+    
+    # --- (이하 나머지 이벤트 핸들러는 수정 없이 그대로 사용) ---
 
     async def chat_survey_handler(
         message: str,
@@ -408,7 +434,6 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
                 gr.update(value=summary_text, visible=bool(debug_on)),
                 gr.update(value=norm_preview,  visible=bool(debug_on)),
             )
-    # ⬆️⬆️⬆️ [수정 완료] ⬆️⬆️⬆️
 
     msg_textbox.submit(
         fn=chat_survey_handler, # (이 함수는 이제 제너레이터입니다)
@@ -418,25 +443,23 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
     msg_textbox.submit(lambda: "", inputs=None, outputs=msg_textbox)
     
     
-
-# (C) Top-K 변경 시 추천만 갱신
-    # ⬇️ 함수 정의에 lang_code: str 추가
+    # (C) Top-K 변경 시 추천만 갱신
     def update_recommendations_with_topk_handler(topk_value: int, user_profile_row: Dict, lang_code: str):
         return gradio_callbacks.update_recommendations_with_topk(
             topk_value=topk_value,
             user_profile_row_state=user_profile_row,
-            lang_code=lang_code, # ⬅️ 이제 정상 동작
+            lang_code=lang_code, 
         )
 
     topk_slider.change(
         fn=update_recommendations_with_topk_handler,
-        inputs=[topk_slider, user_profile_row_state, lang_code_state], # ⬇️ lang_code_state 추가
+        inputs=[topk_slider, user_profile_row_state, lang_code_state], 
         outputs=recommendation_output,
     )
 
     refresh_btn.click(
         fn=update_recommendations_with_topk_handler,
-        inputs=[topk_slider, user_profile_row_state, lang_code_state], # ⬇️ lang_code_state 추가
+        inputs=[topk_slider, user_profile_row_state, lang_code_state], 
         outputs=recommendation_output,
     )
 
@@ -478,7 +501,7 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
 app = gr.mount_gradio_app(
     app,
     gradio_app,
-    path="/chatbot",
+    path="/chatbot", # ⬅️ JS 새로고침 경로와 일치
     app_kwargs={
         "title": "Gradio App on FastAPI",
         "description": "Gradio app is mounted at /chatbot",
