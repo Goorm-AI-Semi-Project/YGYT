@@ -1,3 +1,5 @@
+# search_logic.py (수정 완료)
+
 import pandas as pd
 import json
 import os
@@ -65,6 +67,7 @@ def build_filters_from_profile(user_filter_dict):
   return db_pre_filter
 
 # --- (함수 8/9 중 하나 - 14번 셀) ---
+# ⬇️ [수정] format_restaurant_markdown 함수 수정
 def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1, lang_code="KR"):
   """
   store_id_str(가게ID)을(를) 받아, 전역 변수(df_restaurants 등)를 참조하여
@@ -73,9 +76,8 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
   
   # (전역 변수 참조)
   if db.df_restaurants is None or db.menu_groups is None:
-       # (오류 메시지도 HTML 형식으로 반환)
        db_not_loaded_text = get_text("store_not_loaded", lang_code, store_id_str=store_id_str)
-       return """
+       return f"""
        <div class="border-item">
          <h4>[{rank_prefix} {rank_index}] ID: {store_id_str} {db_not_loaded_text}</h4>
        </div>
@@ -84,11 +86,30 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
   try:
     # 1. (가게 정보 조회)
     store_info = db.df_restaurants.loc[store_id_str]
-    store_name = store_info['가게']
-    store_address = store_info['주소']
-    store_intro = store_info['소개']
-    store_image_url = store_info.get('이미지URL', '') 
     
+    # ⬇️ [신규] 언어 코드에 따른 접미사(suffix) 설정
+    suffix_map = {'US': '_en', 'JP': '_jp', 'CN': '_cn'}
+    suffix = suffix_map.get(lang_code, '') # KR이거나 기본값이면 ""
+
+    # ⬇️ [수정] 번역된 컬럼을 우선적으로 가져오고, 없으면 (NaN or None) 한글 원본 사용
+    
+    # 가게
+    store_name = store_info.get(f'가게{suffix}')
+    if pd.isna(store_name) or not store_name:
+      store_name = store_info['가게']
+      
+    # 주소
+    store_address = store_info.get(f'주소{suffix}')
+    if pd.isna(store_address) or not store_address:
+      store_address = store_info['주소']
+      
+    # 소개
+    store_intro = store_info.get(f'소개{suffix}')
+    if pd.isna(store_intro) or not store_intro:
+      store_intro = store_info['소개']
+
+    # (이하 나머지 정보는 기존과 동일)
+    store_image_url = store_info.get('이미지URL', '') 
     detail_url = store_info.get('상세URL', '')
     store_y = store_info.get('Y좌표', '')
     store_x = store_info.get('X좌표', '')
@@ -98,7 +119,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     except KeyError:
       store_category = 'N/A' 
 
-    # 2. (다른 사용자 평가 카운트 조회) - (간략하게 수정)
+    # 2. (다른 사용자 평가 카운트 조회) - (변경 없음)
     social_proof_html = "" 
     if db.df_restaurant_ratings_summary is not None and not db.df_restaurant_ratings_summary.empty:
       try:
@@ -108,35 +129,31 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
         if not rating_info.empty:
           recommend_count = rating_info['추천'].iloc[0]
           non_recommend_count = rating_info['미추천'].iloc[0]
-          # (HTML에 바로 삽입할 수 있도록 ' | ' 포함)
           social_proof_html = f" | 👍 {recommend_count} / 👎 {non_recommend_count}"
       except Exception as e:
         print(f"[서식 오류] ID {store_id_str} 평가 카운트 조회: {e}")
 
-    # 3. (이미지 HTML 생성)
+    # 3. (이미지 HTML 생성) - (변경 없음)
     image_html_string = ""
     no_image_filename = "img_restaruant_no_image.png"
     if pd.notna(store_image_url) and store_image_url:
       path = urlparse(store_image_url).path
       filename = os.path.basename(path)
       if filename != no_image_filename:
-        # (Markdown 대신 HTML <img> 태그 사용)
         image_html_string = f'<img src="{store_image_url}" alt="{store_name} 이미지" style="width:100%; max-height:200px; object-fit:cover; border-radius: 8px; margin-bottom: 12px;">'
     
+    # 4. (링크 2종 HTML 생성) - (i18n 텍스트 사용, 변경 없음)
     detail_link_md = ""
     if pd.notna(detail_url) and detail_url:
-      # (app_main.py에 추가한 'html-button-primary' 클래스 사용)
       detail_link_text = get_text("detail_link_text", lang_code)
       detail_link_md = f'<a href="{detail_url}" target="_blank" class="html-button html-button-primary">{detail_link_text}</a>'
 
     map_link_md = ""
     if pd.notna(store_y) and pd.notna(store_x) and store_y and store_x:
-      store_name_encoded = quote(store_name)
+      store_name_encoded = quote(store_name) # ⬅️ 번역된 가게 이름이 URL에 포함됨
       kakao_map_url = f"https://map.kakao.com/?q={store_name_encoded}&map_type=TYPE_MAP&rq={store_y},{store_x}"
-      # (app_main.py에 추가한 'html-button-secondary' 클래스 사용)
       map_link_text = get_text("map_link_text", lang_code)
       map_link_md = f'<a href="{kakao_map_url}" target="_blank" class="html-button html-button-secondary">{map_link_text}</a>'
-
 
     links_md = ""
     if detail_link_md and map_link_md:
@@ -146,22 +163,20 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     elif map_link_md:
       links_md = f"{map_link_md}"
 
-    # 5. (메뉴 정보 HTML 생성)
+    # 5. (메뉴 정보 HTML 생성) - (변경 없음)
     menu_html = ""
-    menu_items_html = "" # (<li> 태그만 담을 변수)
+    menu_items_html = "" 
     try:
       menus_df = db.menu_groups.get_group(store_id_str)
       rep_menus = menus_df[menus_df['대표여부'] == 'Y'].head(3)
       if rep_menus.empty:
         rep_menus = menus_df.head(3)
       for _, menu_row in rep_menus.iterrows():
-        # (Markdown '*' 대신 <li> 태그 사용)
         menu_items_html += f"<li>{menu_row['메뉴']} ({menu_row['가격원문']})</li>"
       
       if not menu_items_html:
         menu_items_html = f"<li>{get_text('menu_not_found', lang_code)}</li>"
       
-      # (HTML 문자열 생성 시 f-string의 들여쓰기를 피합니다)
       menu_summary_text = get_text("menu_summary", lang_code)
       menu_html = textwrap.dedent(f"""
         <details open style="margin-bottom: 12px;">
@@ -171,17 +186,15 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
       """)
         
     except KeyError:
-      menu_html = "" # (메뉴 정보 없으면 아예 표시 안함)
+      menu_html = "" 
 
-    # 6. (카테고리 태그 생성)
+    # 6. (카테고리 태그 생성) - (변경 없음)
     category_tag_html = ""
     if store_category and store_category != 'N/A':
-        # (app_main.py의 'text-xs-bg' CSS 클래스 사용)
         category_tag_html = f'<span class="text-xs-bg">{store_category}</span>'
 
-    # 7. (최종 HTML 조합)
-    # (기존 Markdown 대신, 요청하신 UI 구조와 CSS 클래스를 사용)
-    address_html = get_text("info_address", lang_code, store_address=store_address, social_proof_html=social_proof_html)
+    # 7. (최종 HTML 조합) - (변경 없음, 변수들이 이미 번역됨)
+    address_html = get_text("info_address", lang_code, store_address=store_address, social_proof_html="") # ⬅️ social_proof_html 중복 제거
     output_html = f"""
     <div class="border-item">
       {image_html_string}
@@ -202,18 +215,14 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     </div>
     """
     
-    # ⬅️ 2. 최종 반환값에서 textwrap.dedent()를 호출합니다.
-    #    (f-string의 들여쓰기를 모두 제거하여 순수 HTML로 만듭니다)
     return textwrap.dedent(output_html).strip()
     
   except KeyError as ke:
      print(f"[서식 오류] ID {store_id_str} (KeyError): {ke}")
-     # ⬇️ 텍스트 대체
      not_found_text = get_text("store_not_found", lang_code, store_id_str=store_id_str)
      return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] {not_found_text}</h4></div>'
   except Exception as inner_e:
      print(f"[서식 오류] ID {store_id_str} (Exception): {inner_e}")
-     # ⬇️ 텍스트 대체
      not_found_text = get_text("store_not_found", lang_code, store_id_str=store_id_str)
      return f'<div class="border-item"><h4>[{rank_prefix} {rank_index}] {not_found_text}</h4></div>'
       
@@ -226,6 +235,7 @@ def get_similar_user_recommendations(
     lang_code="KR"
   ):
   """
+  (변경 없음)
   현재 사용자의 RAG 쿼리와 기본 추천 ID 목록을 받아,
   유사 사용자가 '추천'한 식당 중 겹치지 않는 식당의
   Markdown 문자열을 반환합니다.
@@ -301,8 +311,6 @@ def get_similar_user_recommendations(
     return "" # (오류 시 빈 문자열 반환)
 
 # --- (함수 8/9 - 16번 셀) ---
-# 1단계 후보군 ID만 반환하는 아래 함수로 대체합니다.
-
 def get_rag_candidate_ids(
     user_profile_row: dict,
     n_results: int = 50
@@ -330,17 +338,14 @@ def get_rag_candidate_ids(
     for key, val in user_filter_dict.items():
       if key in post_filter_keys and val != 'N/A' and val:
         if isinstance(val, str):
-          # [기존 로직] 값이 문자열이면(예: "닭고기,해산물") 쉼표로 분리
           python_post_filter[key] = [v.strip() for v in val.split(',') if v.strip()]
         elif isinstance(val, list):
-          # [수정] 값이 이미 리스트이면(예: ["닭고기", "해산물"]) 그대로 사용
           python_post_filter[key] = val
         else:
-          # (기타 예외 처리)
           try:
             python_post_filter[key] = [str(val)]
           except:
-            pass # 변환 실패 시 무시
+            pass 
     
     print(f"  > RAG 쿼리: '{user_rag_query}'")
     print(f"  > DB 1차 필터: {db_pre_filter}")
@@ -428,6 +433,7 @@ def get_ground_truth_for_user(
     max_similar_users: int = 5
 ) -> Set[str]:
   """
+  (변경 없음)
   현재 사용자의 RAG 쿼리를 기반으로,
   유사 사용자들이 '추천'한 식당 ID의 *집합(Set)*을 반환합니다. (Ground Truth)
   """
