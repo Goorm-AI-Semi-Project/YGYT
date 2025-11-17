@@ -388,7 +388,11 @@ with gr.Blocks(title=get_text("app_title", INITIAL_LANG_CODE), theme=gr.themes.S
             debug_toggle,
             debug_profile_json,
             debug_summary_text,
-            debug_norm_json
+            debug_norm_json,
+            
+            # ⬇️ [신규] 27, 28번째 output으로 추가
+            chat_group,               # 27. 채팅 화면
+            result_group,             # 28. 결과 화면
         ],
         queue=True # (LLM API를 호출하므로 큐 사용)
     )
