@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException
 import gradio as gr
 
 # 프로젝트 모듈
-import config
+import config 
 import data_loader
 import llm_utils
 import gradio_callbacks
@@ -67,15 +67,18 @@ async def lifespan(app: FastAPI):
 
   try:
     data_loader.load_app_data(
-      config.RESTAURANT_DB_FILE,
+      config.RESTAURANT_DB_FILE_ALL, # ⬅️ load_app_data는 이게 맞음
       config.MENU_DB_FILE,
     )
     data_loader.load_user_ratings()
+    
+    # ⬇️ [핵심 수정] build_vector_db 호출 시 첫 번째 인자 삭제
     data_loader.build_vector_db(
-      config.RESTAURANT_DB_FILE,
-      config.PROFILE_DB_FILE,
-      config.CLEAR_DB_AND_REBUILD,
+      # config.RESTAURANT_DB_FILE_ALL,  <- 이 인자를 삭제!
+      config.PROFILE_DB_FILE,         # ⬅️ profile_csv_path
+      config.CLEAR_DB_AND_REBUILD,    # ⬅️ clear_db
     )
+    
     app.state.all_restaurants_df_scoring = data_loader.load_scoring_data(
       config.RESTAURANT_DB_SCORING_FILE
     )
