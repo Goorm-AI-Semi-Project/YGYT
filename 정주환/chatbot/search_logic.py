@@ -1,4 +1,4 @@
-# search_logic.py (수정 완료)
+# search_logic.py (수정 완료 - 'no_image' 필터링)
 
 import pandas as pd
 import json
@@ -82,7 +82,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     store_info = db.df_restaurants.loc[store_id_str]
     
     suffix_map = {'US': '_en', 'JP': '_jp', 'CN': '_cn'}
-    suffix = suffix_map.get(lang_code.upper(), '') # ⬅️ .upper() 추가
+    suffix = suffix_map.get(lang_code.upper(), '') 
 
     store_name = store_info.get(f'가게{suffix}')
     if pd.isna(store_name) or not store_name:
@@ -105,6 +105,23 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
       store_category = store_info.get('high_level_category', 'N/A')
     except KeyError:
       store_category = 'N/A' 
+
+    # ⬇️ [신규] 뱃지/로고 데이터 조회
+    is_red_ribbon = store_info.get('레드리본 선정', 'N') == 'Y'
+    is_seoul_2025 = store_info.get('서울 2025 선정', 'N') == 'Y'
+
+    # ⬇️ [신규] 뱃지/로고 HTML 생성 (i18n 텍스트 사용)
+    red_ribbon_html = ""
+    seoul_2025_html = ""
+    if is_red_ribbon:
+      # (i18n_texts.py에 정의된 키 사용)
+      title_text = get_text("pc_red_ribbon_title", lang_code)
+      red_ribbon_html = f' <span class="badge-ribbon" title="{title_text}">🎀</span>'
+    if is_seoul_2025:
+      # (i18n_texts.py에 정의된 키 사용)
+      title_text = get_text("pc_seoul_2025_title", lang_code)
+      seoul_2025_html = f' <span class="badge-seoul2025" title="{title_text}">서울2025</span>'
+    # ⬆️ [신규 수정 완료]
 
     # 2. (다른 사용자 평가 카운트 조회)
     social_proof_html = "" 
@@ -176,21 +193,39 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
       menu_html = "" 
 
     # 6. (카테고리 태그 생성)
+    # 6.1. (기존) high_level_category 태그
     category_tag_html = ""
     if store_category and store_category != 'N/A':
         category_tag_html = f'<span class="text-xs-bg">{store_category}</span>'
+        
+    # ⬇️ [신규] 6.2. '카테고리' 컬럼 상세 태그
+    specific_tags_html = ""
+    # (data_loader.py에서 병합한 번역 컬럼을 사용)
+    category_string_raw = store_info.get(f'카테고리{suffix}')
+    if pd.isna(category_string_raw) or not category_string_raw:
+      # (번역본이 없으면 한글 원본 '카테고리' 컬럼 사용)
+      category_string_raw = store_info.get('카테고리', '') 
+
+    if pd.notna(category_string_raw) and category_string_raw:
+      # (쉼표로 분리하고, strip()으로 공백 제거)
+      tags_list = [tag.strip() for tag in category_string_raw.split(',') if tag.strip()]
+      for tag in tags_list:
+        # (CSS 클래스를 재사용하고, 요청대로 '#' 추가)
+        specific_tags_html += f'<span class="text-xs-bg"># {tag}</span>'
+    # ⬆️ [신규 수정 완료]
 
     # 7. (최종 HTML 조합)
     address_html = get_text("info_address", lang_code, store_address=store_address, social_proof_html="") 
     output_html = f"""
     <div class="border-item">
       {image_html_string}
-      <h4 style="margin-bottom: 8px;">[{rank_prefix} {rank_index}] {store_name}</h4>
+      <h4 style="margin-bottom: 8px;">[{rank_prefix} {rank_index}] {store_name}{red_ribbon_html}{seoul_2025_html}</h4>
       <div style="margin-bottom: 8px;">{address_html}{social_proof_html}</div>
       <p style="margin-bottom: 12px;">{store_intro}</p>
       
       <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;">
         {category_tag_html}
+        {specific_tags_html}
       </div>
       
       {menu_html}
@@ -234,7 +269,6 @@ def get_similar_user_recommendations(
     return ""
 
   try:
-    # 1. 'mock_profiles' DB에서 유사 사용자 쿼리
     results = db.profile_collection.query(
       query_texts=[live_rag_query_text],
       n_results=max_similar_users
@@ -244,11 +278,9 @@ def get_similar_user_recommendations(
       print("[유사 추천] 유사한 사용자를 찾지 못했습니다.")
       return ""
       
-    # 2. 유사 사용자의 user_id 추출
     similar_user_ids = [meta['user_id'] for meta in results['metadatas'][0]]
     print(f"[유사 추천] 찾은 유사 사용자: {similar_user_ids}")
 
-    # 3. 유사 사용자가 '추천'한 식당 ID 목록 조회
     similar_user_likes = db.df_all_user_ratings[
       (db.df_all_user_ratings['user_id'].isin(similar_user_ids)) &
       (db.df_all_user_ratings['사용자평가'] == '추천')
@@ -258,7 +290,6 @@ def get_similar_user_recommendations(
       print("[유사 추천] 유사 사용자가 '추천'한 식당이 없습니다.")
       return ""
 
-    # 4. 기본 추천과 겹치지 않는 식당 ID 필터링
     new_recommendations = []
     for store_id in similar_user_likes['restaurant_id'].astype(str):
       if store_id not in primary_reco_ids and store_id not in new_recommendations:
@@ -268,7 +299,6 @@ def get_similar_user_recommendations(
       print("[유사 추천] 겹치지 않는 추가 추천 식당이 없습니다.")
       return ""
       
-    # 5. 최종 Markdown 문자열 생성 (구분자 포함)
     header_text = get_text("similar_user_reco_header", lang_code)
     output_secondary_string = (
       f"\n\n---\n\n"
@@ -292,20 +322,19 @@ def get_similar_user_recommendations(
     
   except Exception as e:
     print(f"[오류] 유사 사용자 추천 생성 중 오류: {e}")
-    return "" # (오류 시 빈 문자열 반환)
+    return "" 
 
 # --- (함수 8/9 - 16번 셀) ---
 def get_rag_candidate_ids(
     user_profile_row: dict,
     n_results: int = 50
-) -> List[dict]: # ⬅️ [수정] 반환 타입 ID 리스트(List[str]) -> 딕셔너리 리스트(List[dict])
+) -> List[dict]: 
     """
     (1단계) RAG + 점수제(Scoring)를 실행하여,
-    최종 후보군 식당 ID 리스트를 반환합니다. (기존 로직 재사용)
+    최종 후보군 식당 ID 리스트를 반환합니다.
     """
     print("\n--- 1단계: RAG + 점수제 후보군 생성 시작 ---")
     
-    # 1. 사용자 프로필(dict)에서 데이터 추출
     try:
         user_original_summary = user_profile_row['rag_query_text']
         user_filter_dict = json.loads(user_profile_row['filter_metadata_json'])
@@ -313,7 +342,6 @@ def get_rag_candidate_ids(
         print(f"[오류] 사용자 프로필 파싱 실패: {e}")
         return []
 
-    # 2. 쿼리 및 필터 생성
     user_rag_query = generate_rag_query(user_original_summary)
     db_pre_filter = build_filters_from_profile(user_filter_dict)
     python_post_filter = {}
@@ -334,7 +362,6 @@ def get_rag_candidate_ids(
     print(f"  > RAG 쿼리: '{user_rag_query}'")
     print(f"  > DB 1차 필터: {db_pre_filter}")
 
-    # 3. ChromaDB에 RAG 검색 실행
     try:
         print(f"  > RAG + 1차 필터 검색 (Top {n_results}개)...")
         
@@ -371,6 +398,11 @@ def get_rag_candidate_ids(
             rag_distance = results['distances'][0][i] 
             metadata = results['metadatas'][0][i]
             
+            # ⬇️ [핵심 수정] 이미지 필터링 (Boosting -> Filtering으로 변경)
+            image_url_metadata = metadata.get('이미지URL', '')
+            if 'no_image' in image_url_metadata:
+              continue # 'no_image'가 포함된 항목은 리스트에 추가하지 않고 건너뜀
+            
             filter_score = 0
             
             # (기존 필터 점수)
@@ -382,13 +414,11 @@ def get_rag_candidate_ids(
                 filter_score += 2
             if user_filter_dict.get('vegetarian_options') == metadata.get('vegetarian_options'):
                 filter_score += 2
+            
+            # ⬇️ [삭제] 기존 이미지 가중치 로직은 위 'continue'로 대체됨
+            # if 'no_image' not in image_url_metadata:
+            #   filter_score += 2 
 
-            # ⬇️ [신규] 이미지 가중치 추가
-            image_url_metadata = metadata.get('이미지URL', '') # (data_loader.py에서 추가함)
-            if 'no_image' not in image_url_metadata:
-              filter_score += 2 # (이미지가 있으면 +2점)
-
-            # (기존 필터 점수 - 후순위)
             if 'suitable_for' in python_post_filter:
                 if all(req in metadata.get('suitable_for', '') for req in python_post_filter['suitable_for']): 
                     filter_score += 1
@@ -408,9 +438,9 @@ def get_rag_candidate_ids(
             key=lambda x: (-x['filter_score'], x['rag_distance']), 
         )
         
-        print(f"--- 1단계: RAG + 점수제 완료. 후보 {len(final_results)}개 반환 ---")
+        print(f"--- 1단계: RAG + 점수제 완료. (no_image 필터링 후) 후보 {len(final_results)}개 반환 ---")
         
-        return final_results # ⬅️ 점수 정보가 담긴 'final_results'를 반환   
+        return final_results 
 
     except Exception as e:
         print(f"\n[오류] 1단계 후보군 생성 중 오류: {e}")
@@ -430,7 +460,6 @@ def get_ground_truth_for_user(
     return set()
 
   try:
-    # 1. 유사 사용자 쿼리
     results = db.profile_collection.query(
       query_texts=[live_rag_query_text],
       n_results=max_similar_users
@@ -440,10 +469,8 @@ def get_ground_truth_for_user(
       print("[Ground Truth] 유사 사용자를 찾지 못했습니다.")
       return set()
       
-    # 2. 유사 사용자의 user_id 추출
     similar_user_ids = [meta['user_id'] for meta in results['metadatas'][0]]
 
-    # 3. 유사 사용자가 '추천'한 식당 ID 목록 조회
     ground_truth_df = db.df_all_user_ratings[
       (db.df_all_user_ratings['user_id'].isin(similar_user_ids)) &
       (db.df_all_user_ratings['사용자평가'] == '추천')
@@ -453,7 +480,6 @@ def get_ground_truth_for_user(
       print("[Ground Truth] 유사 사용자가 '추천'한 식당이 없습니다.")
       return set()
 
-    # 4. ID를 집합(Set)으로 반환
     ground_truth_set = set(ground_truth_df['restaurant_id'].astype(str))
     print(f"[Ground Truth] 유사 사용자 {len(similar_user_ids)}명으로부터 정답 {len(ground_truth_set)}개 발견")
     return ground_truth_set
