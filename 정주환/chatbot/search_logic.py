@@ -46,19 +46,15 @@ def build_filters_from_profile(user_filter_dict):
       continue
       
     if key == 'food_category':
-      # 사용자의 'food_category'는 가게 DB의 'high_level_category'와 매칭
       db_pre_filter_list.append({"high_level_category": value})
       
     elif key in DB_FILTER_KEYS:
-      # 'O' -> "True" (문자열)
-      # 'X' -> "False" (문자열)
-      # 'budget_range' ('중' 등)은 그대로 사용
       if value == 'O':
         filter_value = "True"
       elif value == 'X':
         filter_value = "False"
       else:
-        filter_value = value # ('중', '고' 등)
+        filter_value = value 
       
       db_pre_filter_list.append({key: filter_value})
       
@@ -67,14 +63,12 @@ def build_filters_from_profile(user_filter_dict):
   return db_pre_filter
 
 # --- (함수 8/9 중 하나 - 14번 셀) ---
-# ⬇️ [수정] format_restaurant_markdown 함수 수정
 def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1, lang_code="KR"):
   """
   store_id_str(가게ID)을(를) 받아, 전역 변수(df_restaurants 등)를 참조하여
   Gradio에 표시할 단일 식당의 *HTML* 문자열을 반환합니다. (CSS 클래스 사용)
   """
   
-  # (전역 변수 참조)
   if db.df_restaurants is None or db.menu_groups is None:
        db_not_loaded_text = get_text("store_not_loaded", lang_code, store_id_str=store_id_str)
        return f"""
@@ -87,28 +81,21 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     # 1. (가게 정보 조회)
     store_info = db.df_restaurants.loc[store_id_str]
     
-    # ⬇️ [신규] 언어 코드에 따른 접미사(suffix) 설정
     suffix_map = {'US': '_en', 'JP': '_jp', 'CN': '_cn'}
-    suffix = suffix_map.get(lang_code, '') # KR이거나 기본값이면 ""
+    suffix = suffix_map.get(lang_code.upper(), '') # ⬅️ .upper() 추가
 
-    # ⬇️ [수정] 번역된 컬럼을 우선적으로 가져오고, 없으면 (NaN or None) 한글 원본 사용
-    
-    # 가게
     store_name = store_info.get(f'가게{suffix}')
     if pd.isna(store_name) or not store_name:
       store_name = store_info['가게']
       
-    # 주소
     store_address = store_info.get(f'주소{suffix}')
     if pd.isna(store_address) or not store_address:
       store_address = store_info['주소']
       
-    # 소개
     store_intro = store_info.get(f'소개{suffix}')
     if pd.isna(store_intro) or not store_intro:
       store_intro = store_info['소개']
 
-    # (이하 나머지 정보는 기존과 동일)
     store_image_url = store_info.get('이미지URL', '') 
     detail_url = store_info.get('상세URL', '')
     store_y = store_info.get('Y좌표', '')
@@ -119,7 +106,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     except KeyError:
       store_category = 'N/A' 
 
-    # 2. (다른 사용자 평가 카운트 조회) - (변경 없음)
+    # 2. (다른 사용자 평가 카운트 조회)
     social_proof_html = "" 
     if db.df_restaurant_ratings_summary is not None and not db.df_restaurant_ratings_summary.empty:
       try:
@@ -133,7 +120,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
       except Exception as e:
         print(f"[서식 오류] ID {store_id_str} 평가 카운트 조회: {e}")
 
-    # 3. (이미지 HTML 생성) - (변경 없음)
+    # 3. (이미지 HTML 생성)
     image_html_string = ""
     no_image_filename = "img_restaruant_no_image.png"
     if pd.notna(store_image_url) and store_image_url:
@@ -142,7 +129,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
       if filename != no_image_filename:
         image_html_string = f'<img src="{store_image_url}" alt="{store_name} 이미지" style="width:100%; max-height:200px; object-fit:cover; border-radius: 8px; margin-bottom: 12px;">'
     
-    # 4. (링크 2종 HTML 생성) - (i18n 텍스트 사용, 변경 없음)
+    # 4. (링크 2종 HTML 생성)
     detail_link_md = ""
     if pd.notna(detail_url) and detail_url:
       detail_link_text = get_text("detail_link_text", lang_code)
@@ -150,7 +137,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
 
     map_link_md = ""
     if pd.notna(store_y) and pd.notna(store_x) and store_y and store_x:
-      store_name_encoded = quote(store_name) # ⬅️ 번역된 가게 이름이 URL에 포함됨
+      store_name_encoded = quote(store_name) 
       kakao_map_url = f"https://map.kakao.com/?q={store_name_encoded}&map_type=TYPE_MAP&rq={store_y},{store_x}"
       map_link_text = get_text("map_link_text", lang_code)
       map_link_md = f'<a href="{kakao_map_url}" target="_blank" class="html-button html-button-secondary">{map_link_text}</a>'
@@ -163,7 +150,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     elif map_link_md:
       links_md = f"{map_link_md}"
 
-    # 5. (메뉴 정보 HTML 생성) - (변경 없음)
+    # 5. (메뉴 정보 HTML 생성)
     menu_html = ""
     menu_items_html = "" 
     try:
@@ -188,13 +175,13 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     except KeyError:
       menu_html = "" 
 
-    # 6. (카테고리 태그 생성) - (변경 없음)
+    # 6. (카테고리 태그 생성)
     category_tag_html = ""
     if store_category and store_category != 'N/A':
         category_tag_html = f'<span class="text-xs-bg">{store_category}</span>'
 
-    # 7. (최종 HTML 조합) - (변경 없음, 변수들이 이미 번역됨)
-    address_html = get_text("info_address", lang_code, store_address=store_address, social_proof_html="") # ⬅️ social_proof_html 중복 제거
+    # 7. (최종 HTML 조합)
+    address_html = get_text("info_address", lang_code, store_address=store_address, social_proof_html="") 
     output_html = f"""
     <div class="border-item">
       {image_html_string}
@@ -236,9 +223,6 @@ def get_similar_user_recommendations(
   ):
   """
   (변경 없음)
-  현재 사용자의 RAG 쿼리와 기본 추천 ID 목록을 받아,
-  유사 사용자가 '추천'한 식당 중 겹치지 않는 식당의
-  Markdown 문자열을 반환합니다.
   """
   
   if db.profile_collection is None:
@@ -314,7 +298,7 @@ def get_similar_user_recommendations(
 def get_rag_candidate_ids(
     user_profile_row: dict,
     n_results: int = 50
-) -> List[str]:
+) -> List[dict]: # ⬅️ [수정] 반환 타입 ID 리스트(List[str]) -> 딕셔너리 리스트(List[dict])
     """
     (1단계) RAG + 점수제(Scoring)를 실행하여,
     최종 후보군 식당 ID 리스트를 반환합니다. (기존 로직 재사용)
@@ -389,6 +373,7 @@ def get_rag_candidate_ids(
             
             filter_score = 0
             
+            # (기존 필터 점수)
             if user_filter_dict.get('food_category') == metadata.get('high_level_category'):
                 filter_score += 3
             if user_filter_dict.get('budget_range') == metadata.get('budget_range'):
@@ -398,6 +383,12 @@ def get_rag_candidate_ids(
             if user_filter_dict.get('vegetarian_options') == metadata.get('vegetarian_options'):
                 filter_score += 2
 
+            # ⬇️ [신규] 이미지 가중치 추가
+            image_url_metadata = metadata.get('이미지URL', '') # (data_loader.py에서 추가함)
+            if 'no_image' not in image_url_metadata:
+              filter_score += 2 # (이미지가 있으면 +2점)
+
+            # (기존 필터 점수 - 후순위)
             if 'suitable_for' in python_post_filter:
                 if all(req in metadata.get('suitable_for', '') for req in python_post_filter['suitable_for']): 
                     filter_score += 1
@@ -417,11 +408,9 @@ def get_rag_candidate_ids(
             key=lambda x: (-x['filter_score'], x['rag_distance']), 
         )
         
-        # [!!! 수정 !!!]
-        # 6. (ID 리스트 대신) 점수가 포함된 딕셔너리 리스트 반환
         print(f"--- 1단계: RAG + 점수제 완료. 후보 {len(final_results)}개 반환 ---")
         
-        return final_results # ⬅️ [수정] 점수 정보가 담긴 'final_results'를 반환   
+        return final_results # ⬅️ 점수 정보가 담긴 'final_results'를 반환   
 
     except Exception as e:
         print(f"\n[오류] 1단계 후보군 생성 중 오류: {e}")
@@ -434,17 +423,14 @@ def get_ground_truth_for_user(
 ) -> Set[str]:
   """
   (변경 없음)
-  현재 사용자의 RAG 쿼리를 기반으로,
-  유사 사용자들이 '추천'한 식당 ID의 *집합(Set)*을 반환합니다. (Ground Truth)
   """
   
-  # (data_loader.py에서 로드된 전역 DB 참조)
   if db.profile_collection is None or db.df_all_user_ratings is None:
     print("[Ground Truth] DB가 로드되지 않았습니다.")
     return set()
 
   try:
-    # 1. 유사 사용자 쿼리 (기존 로직과 동일)
+    # 1. 유사 사용자 쿼리
     results = db.profile_collection.query(
       query_texts=[live_rag_query_text],
       n_results=max_similar_users
