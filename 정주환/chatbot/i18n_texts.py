@@ -135,7 +135,20 @@ I18N_TEXTS = {
     "US": "[Error] Error updating Top-K slider: {e}",
     "JP": "[エラー] Top-Kスライダーの更新中にエラーが発生しました: {e}",
     "CN": "[错误] 更新Top-K滑块时出错: {e}"
-  }  
+  },
+  # --- profile_view.py 텍스트 ---
+  "profile_card_title": {
+    "KR": "🤖 AI가 파악한 프로필",
+    "US": "🤖 AI Profile Analysis",
+    "JP": "🤖 AIによるプロフィール分析",
+    "CN": "🤖 AI分析的个人资料"
+  },
+  "pc_chip_origin": {"KR": "출발", "US": "From", "JP": "出発", "CN": "出发"},
+  "pc_chip_budget": {"KR": "예산", "US": "Budget", "JP": "予算", "CN": "预算"},
+  "pc_grid_likes": {"KR": "선호", "US": "Likes", "JP": "好み", "CN": "偏好"},
+  "pc_grid_limits": {"KR": "제한", "US": "Limits", "JP": "制限", "CN": "限制"},
+  "pc_grid_age_gender": {"KR": "연령/성별", "US": "Age/Gender", "JP": "年齢/性別", "CN": "年龄/性别"},
+  "pc_grid_spice": {"KR": "매운맛", "US": "Spice", "JP": "辛さ", "CN": "辣度"}
 }
 
 # --- Helper Functions ---
