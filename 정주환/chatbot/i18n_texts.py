@@ -56,6 +56,25 @@ I18N_TEXTS = {
     "JP": "### 🤖 Charlie様と似たユーザーがお勧めするレストラン",
     "CN": "### 🤖 与Charlie相似用户推荐的餐厅"
   },
+  "pc_tags_label": {
+    "KR": "주요 태그",
+    "US": "Tags",
+    "JP": "主なタグ",
+    "CN": "主要标签"
+  },
+  "pc_red_ribbon_title": {
+    "KR": "레드 리본 선정",
+    "US": "Red Ribbon Selection",
+    "JP": "レッドリボン選定",
+    "CN": "红丝带入选"
+  },
+  "pc_seoul_2025_title": {
+    "KR": "서울 2025 선정",
+    "US": "Seoul 2025 Selection",
+    "JP": "ソウル2025選定",
+    "CN": "首尔 2025 入选"
+  },  
+  
   "rank_prefix_reco": {"KR": "추천", "US": "Reco", "JP": "おすすめ", "CN": "推荐"},
   "rank_prefix_similar": {"KR": "유사 추천", "US": "Similar", "JP": "類似おすすめ", "CN": "相似推荐"},
   "detail_link_text": {"KR": "가게 상세정보", "US": "Store Details", "JP": "店舗詳細情報", "CN": "店铺详细信息"},
