@@ -186,7 +186,7 @@ def format_restaurant_markdown(store_id_str, rank_prefix="추천", rank_index=1,
     <div class="border-item">
       {image_html_string}
       <h4 style="margin-bottom: 8px;">[{rank_prefix} {rank_index}] {store_name}</h4>
-      <div style="margin-bottom: 8px;">📍 {address_html}{social_proof_html}</div>
+      <div style="margin-bottom: 8px;">📍 {address_html}</div>
       <p style="margin-bottom: 12px;">{store_intro}</p>
       
       <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;">
