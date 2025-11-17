@@ -563,7 +563,7 @@ def reset_chat_for_language(lang_str: str) -> Tuple:
     updated_profile = config.PROFILE_TEMPLATE.copy()
     initial_user_profile_row = {}
 
-  # 3. app_main.py의 outputs 리스트와 정확히 일치하는 26개 항목 반환
+  # 3. [수정] app_main.py의 outputs 리스트와 정확히 일치하는 28개 항목 반환
   
   # ⬇️ lang_code가 아닌 lang_str (예: "English US")을 Radio의 value로 설정
   lang_radio_value = lang_str 
@@ -604,4 +604,8 @@ def reset_chat_for_language(lang_str: str) -> Tuple:
     gr.update(label=get_text('label_debug_profile', lang_code)), # 24. debug_profile_json
     gr.update(label=get_text('label_debug_summary', lang_code)), # 25. debug_summary_text
     gr.update(label=get_text('label_debug_norm', lang_code)), # 26. debug_norm_json
+    
+    # ⬇️ [신규] 27, 28번째 반환값으로 추가 (화면 전환)
+    gr.update(visible=True),  # 27. chat_group (채팅창 보이기)
+    gr.update(visible=False)  # 28. result_group (결과창 숨기기)
   )
