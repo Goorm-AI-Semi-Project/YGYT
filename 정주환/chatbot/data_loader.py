@@ -1,4 +1,4 @@
-# data_loader.py (수정 완료)
+# data_loader.py (수정 완료 - 이미지URL 메타데이터 포함)
 
 import pandas as pd
 import ast
@@ -6,9 +6,9 @@ import chromadb
 import chromadb.utils.embedding_functions as embedding_functions
 import sys
 from typing import List
-import config # ⬅️ config 임포트 (이미 있음)
+import config # ⬅️ config 임포트
 
-# ⬇️ config 임포트 (이미 있음)
+# ⬇️ config 임포트
 from config import (
     RESTAURANT_DB_FILE_ALL, MENU_DB_FILE, DB_PERSISTENT_PATH,
     PROFILE_DB_FILE, MOCK_USER_RATINGS_FILE,
@@ -29,17 +29,17 @@ sentence_embedder = None
 all_restaurants_df_scoring = None
 # -----------------------------------------------
 
-# ⬇️ [신규] 번역 파일을 로드하고 병합하는 헬퍼 함수
+# ⬇️ 번역 파일을 로드하고 병합하는 헬퍼 함수
 def _load_and_merge_translations(base_df):
   """
   기본 df_restaurants(한글)에 번역(en, jp, cn) 파일을 병합합니다.
   """
   
-  # (언어 코드, 파일 경로, 컬럼 리스트)
+  # ⬇️ [수정] '카테고리' 컬럼을 usecols에 추가
   lang_files_to_load = [
-    ('en', config.RESTAURANT_DB_FILE_EN, ['id', '가게', '주소', '소개']),
-    ('jp', config.RESTAURANT_DB_FILE_JP, ['id', '가게', '주소', '소개']),
-    ('cn', config.RESTAURANT_DB_FILE_CN, ['id', '가게', '주소', '소개'])
+    ('en', config.RESTAURANT_DB_FILE_EN, ['id', '가게', '주소', '소개', '카테고리']),
+    ('jp', config.RESTAURANT_DB_FILE_JP, ['id', '가게', '주소', '소개', '카테고리']),
+    ('cn', config.RESTAURANT_DB_FILE_CN, ['id', '가게', '주소', '소개', '카테고리'])
   ]
   
   merged_df = base_df.copy()
@@ -49,20 +49,19 @@ def _load_and_merge_translations(base_df):
       print(f"  > 번역 파일 로드 중: {file_path}")
       df_lang = pd.read_csv(file_path, usecols=cols_to_use)
       
-      # id를 문자열로, 인덱스로 설정
       df_lang['id'] = df_lang['id'].astype(str)
       df_lang = df_lang.set_index('id')
       
-      # 컬럼명 변경 (예: '가게' -> '가게_en')
+      # ⬇️ [수정] '카테고리' 컬럼을 rename_map에 추가
       rename_map = {
         '가게': f'가게_{lang_suffix}',
         '주소': f'주소_{lang_suffix}',
-        '소개': f'소개_{lang_suffix}'
+        '소개': f'소개_{lang_suffix}',
+        '카테고리': f'카테고리_{lang_suffix}'
       }
       df_lang = df_lang.rename(columns=rename_map)
       
-      # 기본 DataFrame에 병합(join)
-      merged_df = merged_df.join(df_lang, how='left') # ⬅️ [수정] left join
+      merged_df = merged_df.join(df_lang, how='left') 
       
     except FileNotFoundError:
       print(f"  > [경고] 번역 파일 없음 (무시): {file_path}")
@@ -82,21 +81,19 @@ def load_app_data(store_path, menu_path):
   global df_restaurants, df_menus, menu_groups
   
   try:
-    # 1. 가게 DB (기본: 한글) 로드
     print(f"'{store_path}'에서 가게 DB 로드 중...")
     df_restaurants = pd.read_csv(store_path)
     df_restaurants['id'] = df_restaurants['id'].astype(str)
-    df_restaurants = df_restaurants.set_index('id') # (id로 검색하기 쉽게 인덱스 설정)
+    df_restaurants = df_restaurants.set_index('id') 
     print(f"가게 DB {len(df_restaurants)}개 로드 완료.")
     
-    # ⬇️ [신규] 2. 번역 파일 로드 및 병합
+    # ⬇️ [수정됨] 이 함수가 '카테고리' 번역본을 병합합니다.
     df_restaurants = _load_and_merge_translations(df_restaurants)
     
-    # 3. 메뉴 DB (메뉴, 가격) 로드
     print(f"'{menu_path}'에서 메뉴 DB 로드 중...")
     df_menus = pd.read_csv(menu_path)
     df_menus['식당ID'] = df_menus['식당ID'].astype(str)
-    menu_groups = df_menus.groupby('식당ID') # (전역 변수로 그룹화)
+    menu_groups = df_menus.groupby('식당ID') 
     print(f"메뉴 DB {len(df_menus)}개 로드 완료 (그룹화 완료).")
     
     return True
@@ -142,7 +139,6 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
   """
   (함수 3/9 - 수정됨)
   VectorDB를 구축합니다.
-  [수정] RAG용 'store_csv_path'는 인자로 받지 않고 config에서 직접 참조합니다.
   """
   global collection, profile_collection, sentence_embedder 
   
@@ -184,6 +180,7 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
     print(f"  > 'restaurants' 컬렉션을 찾을 수 없습니다. (이유: {e})")
     print("  > 새 'restaurants' 컬렉션을 생성하고 데이터 적재를 시작합니다.")
     
+    # ⬇️ config.RESTAURANT_DB_FILE_ALL을 직접 사용
     df_for_embedding = load_and_prepare_data(config.RESTAURANT_DB_FILE_ALL)
     if df_for_embedding is None:
       print("[오류] 'restaurants' DB 적재를 위한 원본 CSV 로드에 실패했습니다.")
