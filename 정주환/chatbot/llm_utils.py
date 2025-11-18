@@ -2,14 +2,20 @@ import json
 from config import client, GPT_API_NAME, SYSTEM_PROMPT, PROFILE_TEMPLATE
 
 # --- (함수 4/9) ---
-def call_gpt4o(chat_messages, current_profile):
+def call_gpt4o(chat_messages, current_profile, lang_code: str = "KR"):
   """(메인) gpt-4.1-mini API를 호출하고 JSON 응답을 파싱하는 함수"""
   
   if client is None:
       return "죄송합니다. OpenAI API 키가 설정되지 않았습니다.", current_profile
+
+  lang_map = {"KR": "Korean", "US": "English", "JP": "Japanese", "CN": "Chinese"}
+  target_language = lang_map.get(lang_code, "Korean")
+  
+  # ⬇️ [핵심 수정] .format() 대신 .replace()를 사용하여 KeyError를 원천 방지
+  formatted_system_prompt = SYSTEM_PROMPT.replace("{lang_code}", target_language)
       
   system_message_with_profile = f"""
-  {SYSTEM_PROMPT}
+  {formatted_system_prompt}
   [현재까지 수집된 프로필]
   {json.dumps(current_profile, indent=2, ensure_ascii=False)}
   [대화 기록]
