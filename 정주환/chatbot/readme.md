@@ -21,6 +21,7 @@ ChatBot 구동시 참조사항
   * app_main.sh
   * OPENAI_API_KEY 값을 자신의 것으로 넣어야함
   * app_main.py 하단의 host를 0.0.0.0과 환경에 맞는 port(ex:8080)으로 변경해야함
+  * https://gl2mek3hekdujx-8080.proxy.runpod.net/chatbot/
  
 * JDK 설치 - runpod 기준
   * sudo apt update
