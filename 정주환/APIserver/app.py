@@ -53,6 +53,7 @@ class RecommendationGenerateRequest(BaseModel):
     """추천 생성 요청 (프로필 기반)"""
     profile: Dict[str, Any]
     top_k: int = 10
+    weights: Optional[Dict[str, float]] = None
 
 class RecommendationGenerateResponse(BaseModel):
     """추천 생성 응답"""
@@ -307,7 +308,8 @@ async def generate_recommendations(request: RecommendationGenerateRequest):
                 user_start_location=user_start_coords,
                 user_price_prefs=user_price_prefs,
                 async_http_client=app.state.http_client,
-                graphhopper_url=config.GRAPH_HOPPER_API_URL
+                graphhopper_url=config.GRAPH_HOPPER_API_URL,
+                weights=request.weights
             )
 
             print(f"--- 2단계 완료: {len(final_scored_df)}개 스코어링 ---")

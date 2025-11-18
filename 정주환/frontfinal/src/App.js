@@ -6,6 +6,7 @@ import { BiSolidFoodMenu } from 'react-icons/bi';
 import SurveyChat from './components/SurveyChat';
 import RestaurantList from './components/RestaurantList';
 import RestaurantModal from './components/RestaurantModal';
+import WeightsControl from './components/WeightsControl';
 import { generateRecommendations } from './services/api';
 import './App.css';
 
@@ -17,6 +18,12 @@ function App() {
   const [error, setError] = useState(null);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [topK, setTopK] = useState(10);
+  const [weights, setWeights] = useState({
+    travel: 0.4,
+    friendliness: 0.3,
+    quality: 0.2,
+    price: 0.1
+  });
 
   const handleSurveyComplete = async (profile) => {
     console.log('설문 완료! 프로필:', profile);
@@ -24,15 +31,15 @@ function App() {
     setCurrentStep('loading');
 
     // 추천 생성
-    await loadRecommendations(profile, topK);
+    await loadRecommendations(profile, topK, weights);
   };
 
-  const loadRecommendations = async (profile, k = 10) => {
+  const loadRecommendations = async (profile, k = 10, currentWeights = null) => {
     setLoading(true);
     setError(null);
 
     try {
-      const response = await generateRecommendations(profile, k);
+      const response = await generateRecommendations(profile, k, currentWeights);
       setRestaurants(response.restaurants);
       setCurrentStep('recommendations');
     } catch (err) {
@@ -47,7 +54,25 @@ function App() {
   const handleTopKChange = async (newTopK) => {
     setTopK(newTopK);
     if (userProfile) {
-      await loadRecommendations(userProfile, newTopK);
+      await loadRecommendations(userProfile, newTopK, weights);
+    }
+  };
+
+  const handleWeightsChange = async (newWeights) => {
+    setWeights(newWeights);
+    if (userProfile && currentStep === 'recommendations') {
+      await loadRecommendations(userProfile, topK, newWeights);
+    }
+  };
+
+  const handleWeightsReset = async () => {
+    if (userProfile && currentStep === 'recommendations') {
+      await loadRecommendations(userProfile, topK, {
+        travel: 0.4,
+        friendliness: 0.3,
+        quality: 0.2,
+        price: 0.1
+      });
     }
   };
 
@@ -149,6 +174,10 @@ function App() {
                 </select>
               </div>
             </div>
+            <WeightsControl
+              onWeightsChange={handleWeightsChange}
+              onReset={handleWeightsReset}
+            />
             <RestaurantList
               restaurants={restaurants}
               loading={loading}

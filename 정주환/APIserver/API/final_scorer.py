@@ -9,9 +9,9 @@ class GraphHopperDownError(Exception):
     """GraphHopper 서버가 다운되었거나 모든 요청이 실패했을 때 발생하는 전용 오류"""
     pass
 
-# --- 기획자가 설정하는 가중치 (Weights) ---
-# 기획 의도: "뚜벅이 경험이 가장 중요하고, 그다음이 외국인 친화도"
-WEIGHTS = {
+# --- 기본 가중치 (Weights) ---
+# 사용자가 지정하지 않을 경우 사용되는 기본값
+DEFAULT_WEIGHTS = {
     'travel': 0.4,      # w_1: Travel_Friction (이동 마찰)
     'friendliness': 0.3, # w_2: Foreigner_Friendliness (외국인 친화도)
     'quality': 0.2,      # w_3: Quality_Score (품질 점수)
@@ -117,17 +117,23 @@ def get_price_match_score(restaurant_price: str, user_price_prefs: List[str]) ->
 # --- 메인 스코어링 함수 ---
 
 async def calculate_final_scores_async(
-    candidate_df: pd.DataFrame, 
-    user_start_location: str, 
+    candidate_df: pd.DataFrame,
+    user_start_location: str,
     user_price_prefs: List[str],
     async_http_client: httpx.AsyncClient,
-    graphhopper_url: str
+    graphhopper_url: str,
+    weights: Dict[str, float] = None
 ) -> pd.DataFrame:
-    """ 
-    (대폭 수정) 
+    """
+    (대폭 수정)
     1. 후보군 DF에 4가지 점수를 계산 (비동기 GraphHopper 호출 포함)
     2. 모든 GraphHopper 호출 실패 시 GraphHopperDownError 발생
+    3. weights: 사용자 지정 가중치 (미지정 시 DEFAULT_WEIGHTS 사용)
     """
+
+    # 가중치 기본값 설정
+    if weights is None:
+        weights = DEFAULT_WEIGHTS
     
     # --- 1/4. 이동 마찰 점수 (비동기) ---
     print(f"1/4. 이동 마찰 점수 계산 중 (API 동시 호출)...")
@@ -195,8 +201,8 @@ async def calculate_final_scores_async(
 
     # --- 최종 점수 합산 ---
     print("--- 최종 점수 합산 및 정렬 중 ---")
-    weights = WEIGHTS
-    
+    print(f"사용 중인 가중치: {weights}")
+
     candidate_df['final_score'] = (
         (candidate_df['score_travel'] * weights['travel']) +
         (candidate_df['score_friendliness'] * weights['friendliness']) +

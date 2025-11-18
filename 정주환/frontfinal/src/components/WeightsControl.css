@@ -1,0 +1,239 @@
+.weights-control {
+  margin: 20px 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.weights-toggle-button {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.weights-toggle-button:hover {
+  background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+  transform: translateY(-1px);
+}
+
+.toggle-icon {
+  font-size: 20px;
+}
+
+.arrow {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+  font-size: 12px;
+}
+
+.arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.weights-panel {
+  padding: 24px;
+  background: #fafbfc;
+  border-top: 1px solid #e1e4e8;
+}
+
+.weights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e1e4e8;
+}
+
+.weights-header p {
+  margin: 0;
+  color: #586069;
+  font-size: 14px;
+}
+
+.reset-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #d1d5da;
+  border-radius: 6px;
+  color: #586069;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reset-button:hover {
+  background: #f6f8fa;
+  border-color: #959da5;
+  color: #24292e;
+}
+
+.weights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.weight-item {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e1e4e8;
+  transition: all 0.3s ease;
+}
+
+.weight-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.weight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.weight-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.weight-icon {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.weight-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weight-label {
+  font-weight: 600;
+  color: #24292e;
+  font-size: 15px;
+  margin: 0;
+}
+
+.weight-description {
+  font-size: 12px;
+  color: #6a737d;
+}
+
+.weight-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #667eea;
+  min-width: 50px;
+  text-align: right;
+}
+
+.slider-container {
+  margin-top: 8px;
+}
+
+.weight-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.weight-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #667eea;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.weight-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.weight-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #667eea;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.weight-slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.weights-summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #667eea;
+}
+
+.summary-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #24292e;
+}
+
+.summary-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+@media (max-width: 768px) {
+  .weights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .weights-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .reset-button {
+    align-self: flex-end;
+  }
+}

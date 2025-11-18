@@ -13,10 +13,13 @@ const apiClient = axios.create({
 
 /**
  * 채팅 세션 초기화 - AI가 첫 인사
+ * @param {string} language - 언어 코드 (ko, en, ja, zh)
  */
-export const initChat = async () => {
+export const initChat = async (language = 'ko') => {
   try {
-    const response = await apiClient.post('/api/chat/init');
+    const response = await apiClient.post('/api/chat/init', {
+      language
+    });
     return response.data;
   } catch (error) {
     console.error('채팅 초기화 실패:', error);
@@ -48,13 +51,21 @@ export const sendChatMessage = async (message, llmHistory, profile) => {
  * 프로필 기반 맞춤 추천 생성
  * @param {Object} profile - 사용자 프로필 (13개 항목)
  * @param {number} topK - 반환할 결과 수
+ * @param {Object} weights - 가중치 설정 (선택적)
  */
-export const generateRecommendations = async (profile, topK = 10) => {
+export const generateRecommendations = async (profile, topK = 10, weights = null) => {
   try {
-    const response = await apiClient.post('/api/recommendations/generate', {
+    const requestData = {
       profile,
       top_k: topK,
-    });
+    };
+
+    // 가중치가 제공되면 추가
+    if (weights) {
+      requestData.weights = weights;
+    }
+
+    const response = await apiClient.post('/api/recommendations/generate', requestData);
     return response.data;
   } catch (error) {
     console.error('추천 생성 실패:', error);
