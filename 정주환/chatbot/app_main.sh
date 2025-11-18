@@ -15,10 +15,10 @@ pip install uvicorn fastapi gradio openai dotenv chromadb hf_transfer
 
 # 3. OpenAI API 키 환경 변수로 설정
 echo "Setting OPENAI_API_KEY..."
-export OPENAI_API_KEY='YOUR KEY IN HERE'
+export OPENAI_API_KEY='YOUR KEY HERE'
 
-# 4. 메인 애플리케이션 실행
-echo "Starting the application (app_main.py)..."
-python app_main.py
+# 4. 메인 애플리케이션을 백그라운드에서 실행 (로그 파일 포함)
+echo "Starting the application (app_main.py) in the background..."
+nohup python app_main.py > app_main.log 2>&1 &
 
 echo "스크립트 실행 완료."
