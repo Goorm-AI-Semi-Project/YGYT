@@ -22,7 +22,7 @@ DB_PERSISTENT_PATH = "./restaurant_db"
 
 RESTAURANT_COLLECTION_NAME = "restaurants"
 PROFILE_COLLECTION_NAME = "mock_profiles"
-CLEAR_DB_AND_REBUILD = True
+CLEAR_DB_AND_REBUILD = False
 
 # --- 2/4: LLM API 설정 ---
 GPT_API_NAME = "gpt-4.1-mini" 
