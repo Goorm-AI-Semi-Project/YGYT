@@ -145,6 +145,8 @@ def build_vector_db(profile_csv_path: str, clear_db=False):
   print("\n--- 2단계: VectorDB 구축/로드 시작 ---")
   
   model_name = "distiluse-base-multilingual-cased-v1"
+  #model_name = "paraphrase-multilingual-mpnet-base-v2"
+    
   sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name=model_name
   )
