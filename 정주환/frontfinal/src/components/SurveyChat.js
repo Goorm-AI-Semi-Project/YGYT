@@ -11,6 +11,7 @@ function SurveyChat({ onSurveyComplete }) {
   const [llmHistory, setLlmHistory] = useState([]);
   const [profile, setProfile] = useState({});
   const [isCompleted, setIsCompleted] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('ko');
   const messagesEndRef = useRef(null);
 
   // 자동 스크롤
@@ -27,10 +28,10 @@ function SurveyChat({ onSurveyComplete }) {
     initializeChat();
   }, []);
 
-  const initializeChat = async () => {
+  const initializeChat = async (language = 'ko') => {
     setLoading(true);
     try {
-      const response = await initChat();
+      const response = await initChat(language);
       setMessages([{ role: 'assistant', content: response.bot_message }]);
       setLlmHistory([{ role: 'assistant', content: response.bot_message }]);
       setProfile(response.profile);
@@ -44,6 +45,15 @@ function SurveyChat({ onSurveyComplete }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLanguageChange = (language) => {
+    setSelectedLanguage(language);
+    setMessages([]);
+    setLlmHistory([]);
+    setProfile({});
+    setIsCompleted(false);
+    initializeChat(language);
   };
 
   const handleSendMessage = async () => {
@@ -108,6 +118,39 @@ function SurveyChat({ onSurveyComplete }) {
           <IoSparkles className="header-sparkle" />
           <h2>맞춤 식당 추천을 위한 간단한 설문</h2>
         </div>
+
+        {/* 언어 선택 버튼 */}
+        <div className="language-selector-chat">
+          <button
+            className={`language-btn-chat ${selectedLanguage === 'ko' ? 'active' : ''}`}
+            onClick={() => handleLanguageChange('ko')}
+            disabled={loading}
+          >
+            한국어
+          </button>
+          <button
+            className={`language-btn-chat ${selectedLanguage === 'en' ? 'active' : ''}`}
+            onClick={() => handleLanguageChange('en')}
+            disabled={loading}
+          >
+            English
+          </button>
+          <button
+            className={`language-btn-chat ${selectedLanguage === 'ja' ? 'active' : ''}`}
+            onClick={() => handleLanguageChange('ja')}
+            disabled={loading}
+          >
+            日本語
+          </button>
+          <button
+            className={`language-btn-chat ${selectedLanguage === 'zh' ? 'active' : ''}`}
+            onClick={() => handleLanguageChange('zh')}
+            disabled={loading}
+          >
+            中文
+          </button>
+        </div>
+
         <div className="progress-section">
           <div className="progress-bar-container">
             <div className="progress-bar" style={{ width: `${getProfileProgress()}%` }}></div>

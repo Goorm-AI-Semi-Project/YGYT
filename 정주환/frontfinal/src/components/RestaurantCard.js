@@ -7,10 +7,10 @@ function RestaurantCard({ restaurant, onClick }) {
   console.log('Restaurant data:', restaurant);
   console.log('Available keys:', Object.keys(restaurant));
 
-  // 여러 가능한 필드명 처리
-  const name = restaurant.name || restaurant['식당명'] || 'Unknown';
-  const cuisine_type = restaurant.cuisine_type || restaurant.high_level_category || restaurant['음식종류'];
-  const address = restaurant.address || restaurant['상세주소'] || restaurant['지역'];
+  // 번역된 데이터가 있으면 사용, 없으면 원본 사용
+  const name = restaurant.translatedName || restaurant.name || restaurant['식당명'] || 'Unknown';
+  const cuisine_type = restaurant.translatedCuisine || restaurant.cuisine_type || restaurant.high_level_category || restaurant['음식종류'];
+  const address = restaurant.translatedAddress || restaurant.address || restaurant['상세주소'] || restaurant['지역'];
   const rating = restaurant.rating || restaurant['평점'];
   const price_range = restaurant.price_range || restaurant.budget_range || restaurant['가격대'];
   const image_url = restaurant.image_url;

@@ -18,6 +18,7 @@ function App() {
   const [error, setError] = useState(null);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [topK, setTopK] = useState(10);
+  const [selectedLanguage, setSelectedLanguage] = useState('ko');
   const [weights, setWeights] = useState({
     travel: 0.4,
     friendliness: 0.3,
@@ -163,15 +164,44 @@ function App() {
                 <IoSparkles className="header-icon sparkle" />
                 <h2>{userProfile?.name}님을 위한 맞춤 추천</h2>
               </div>
-              <div className="topk-control">
-                <MdTrendingUp className="control-icon" />
-                <label>표시 개수</label>
-                <select value={topK} onChange={(e) => handleTopKChange(Number(e.target.value))}>
-                  <option value={5}>5개</option>
-                  <option value={10}>10개</option>
-                  <option value={15}>15개</option>
-                  <option value={20}>20개</option>
-                </select>
+              <div className="header-controls">
+                {/* 언어 선택 */}
+                <div className="language-selector-recommendations">
+                  <button
+                    className={`lang-btn ${selectedLanguage === 'ko' ? 'active' : ''}`}
+                    onClick={() => setSelectedLanguage('ko')}
+                  >
+                    한국어
+                  </button>
+                  <button
+                    className={`lang-btn ${selectedLanguage === 'en' ? 'active' : ''}`}
+                    onClick={() => setSelectedLanguage('en')}
+                  >
+                    EN
+                  </button>
+                  <button
+                    className={`lang-btn ${selectedLanguage === 'ja' ? 'active' : ''}`}
+                    onClick={() => setSelectedLanguage('ja')}
+                  >
+                    日本語
+                  </button>
+                  <button
+                    className={`lang-btn ${selectedLanguage === 'zh' ? 'active' : ''}`}
+                    onClick={() => setSelectedLanguage('zh')}
+                  >
+                    中文
+                  </button>
+                </div>
+                <div className="topk-control">
+                  <MdTrendingUp className="control-icon" />
+                  <label>표시 개수</label>
+                  <select value={topK} onChange={(e) => handleTopKChange(Number(e.target.value))}>
+                    <option value={5}>5개</option>
+                    <option value={10}>10개</option>
+                    <option value={15}>15개</option>
+                    <option value={20}>20개</option>
+                  </select>
+                </div>
               </div>
             </div>
             <WeightsControl
@@ -183,6 +213,7 @@ function App() {
               loading={loading}
               error={error}
               onRestaurantClick={handleRestaurantClick}
+              selectedLanguage={selectedLanguage}
             />
           </div>
         )}
@@ -204,7 +235,11 @@ function App() {
       </main>
 
       {selectedRestaurant && (
-        <RestaurantModal restaurant={selectedRestaurant} onClose={closeModal} />
+        <RestaurantModal
+          restaurant={selectedRestaurant}
+          onClose={closeModal}
+          selectedLanguage={selectedLanguage}
+        />
       )}
 
       <footer className="app-footer">

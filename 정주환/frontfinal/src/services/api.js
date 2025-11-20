@@ -87,4 +87,40 @@ export const getRestaurantDetail = async (restaurantId) => {
   }
 };
 
+/**
+ * 텍스트 번역
+ * @param {string} text - 번역할 텍스트
+ * @param {string} targetLanguage - 목표 언어 (en, ja, zh)
+ */
+export const translateText = async (text, targetLanguage) => {
+  try {
+    const response = await apiClient.post('/api/translate', {
+      text,
+      target_language: targetLanguage,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('번역 실패:', error);
+    throw error;
+  }
+};
+
+/**
+ * 배치 텍스트 번역
+ * @param {Array<string>} texts - 번역할 텍스트 배열
+ * @param {string} targetLanguage - 목표 언어 (en, ja, zh)
+ */
+export const batchTranslateText = async (texts, targetLanguage) => {
+  try {
+    const response = await apiClient.post('/api/translate/batch', {
+      texts,
+      target_language: targetLanguage,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('배치 번역 실패:', error);
+    throw error;
+  }
+};
+
 export default apiClient;

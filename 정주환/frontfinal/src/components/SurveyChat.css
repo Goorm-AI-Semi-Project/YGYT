@@ -41,6 +41,49 @@
   letter-spacing: -0.3px;
 }
 
+/* ===== 언어 선택 버튼 (채팅) ===== */
+.language-selector-chat {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0 0.8rem 0;
+}
+
+.language-btn-chat {
+  padding: 0.4rem 0.9rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 70px;
+  backdrop-filter: blur(10px);
+}
+
+.language-btn-chat:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.language-btn-chat.active {
+  background: white;
+  border-color: white;
+  color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+}
+
+.language-btn-chat:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* 진행률 바 */
 .progress-section {
   display: flex;
@@ -319,6 +362,17 @@
 
   .survey-header h2 {
     font-size: 1.1rem;
+  }
+
+  .language-selector-chat {
+    gap: 0.4rem;
+    margin: 0.8rem 0 0.6rem 0;
+  }
+
+  .language-btn-chat {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 65px;
   }
 
   .messages-container {
