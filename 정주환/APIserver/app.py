@@ -301,6 +301,28 @@ async def generate_recommendations(request: RecommendationGenerateRequest):
         if candidate_df.empty:
             raise HTTPException(status_code=404, detail="후보군 DataFrame 조회 실패")
 
+        # 이미지 필터링을 스코어링 전에 수행 (Top-K 선택 전)
+        image_col = None
+        if 'image_url' in candidate_df.columns:
+            image_col = 'image_url'
+        elif '이미지URL' in candidate_df.columns:
+            image_col = '이미지URL'
+
+        if image_col:
+            print(f"  > 필터링 전 후보군: {len(candidate_df)}개")
+            no_image_filename = "img_restaruant_no_image.png"
+            candidate_df = candidate_df[
+                (candidate_df[image_col].notna()) &
+                (candidate_df[image_col] != '') &
+                (candidate_df[image_col] != 'N/A') &
+                (candidate_df[image_col].str.startswith('http', na=False)) &
+                (~candidate_df[image_col].str.contains(no_image_filename, na=False))
+            ]
+            print(f"  > 이미지 필터링 후: {len(candidate_df)}개 식당 (이미지 있음)")
+
+            if candidate_df.empty:
+                raise HTTPException(status_code=404, detail="이미지가 있는 식당이 없습니다.")
+
         user_start_coords = get_start_location_coords(profile.get('start_location'))
         user_price_prefs = budget_mapper(profile.get('budget'))
 
@@ -330,14 +352,6 @@ async def generate_recommendations(request: RecommendationGenerateRequest):
         # NaN, Infinity 등을 None으로 변환 (JSON 직렬화 가능하게)
         result_df_reset = result_df_reset.replace([float('inf'), float('-inf')], None)
         result_df_reset = result_df_reset.where(pd.notnull(result_df_reset), None)
-
-        # 이미지가 있는 식당만 필터링 (임시)
-        if 'image_url' in result_df_reset.columns:
-            result_df_reset = result_df_reset[
-                (result_df_reset['image_url'].notna()) &
-                (result_df_reset['image_url'] != 'N/A') &
-                (result_df_reset['image_url'].str.startswith('http', na=False))
-            ]
 
         restaurants = result_df_reset.to_dict('records')
 
