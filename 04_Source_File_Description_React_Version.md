@@ -12,8 +12,6 @@
 | | llm_utils.py | • OpenAI API와 통신합니다.<br>• call_gpt4o: 챗봇 대화 생성 (13가지 프로필 정보 수집)<br>• generate_profile_summary_text_only: 프로필 요약문 생성 (RAG 쿼리용)<br>• generate_rag_query: 사용자 프로필을 RAG 검색용 쿼리로 최적화<br>• 다국어 지원: 4개 국어(한국어, English, 日本語, 中文) 프롬프트 처리 |
 | Utils<br>&<br>View | API/final_scorer.py | • 2단계 정밀 스코어링: 1단계 RAG 후보군에 뚜벅이 점수를 적용합니다.<br>• calculate_final_scores_async: 비동기 병렬 처리로 GraphHopper API 호출<br>• 사용자 출발지~식당 간 도보 시간, 가격 매칭, 품질 점수를 종합하여 최종 순위 계산<br>• 가중치 조절 가능: travel, friendliness, quality, price 4가지 요소 |
 
----
-
 ## Frontend (frontfinal)
 
 | Structure | File Name | Description |
@@ -25,5 +23,4 @@
 | | src/components/RestaurantCard.js | • 개별 식당 카드 UI입니다. 이미지, 이름, 음식 종류, 평점, 주소 등을 표시합니다.<br>• 클릭 시 RestaurantModal로 상세 정보 표시 |
 | | src/components/RestaurantModal.js | • 식당 상세 정보를 보여주는 모달 컴포넌트입니다.<br>• 메뉴 정보, 가격, 카카오맵 길찾기 링크, 식당 상세 페이지 링크 등을 표시 |
 | | src/components/WeightsControl.js | • 추천 알고리즘의 가중치를 사용자가 직접 조절할 수 있는 슬라이더 UI입니다.<br>• 4가지 요소: 뚜벅이 점수(travel), 친절도(friendliness), 품질(quality), 가격(price)<br>• 가중치 변경 시 실시간으로 추천 재계산 |
-| | src/components/SearchBar.js | • 키워드 검색바 컴포넌트 |
-| Services<br>&<br>API | src/services/api.js | • Backend FastAPI와 통신하는 API 클라이언트입니다. Axios를 사용하여 HTTP 요청을 처리합니다.<br>• 주요 함수: initChat (채팅 초기화), sendChatMessage (사용자 메시지 전송), generateRecommendations (프로필 기반 추천 생성), getRestaurantDetail (식당 상세 조회), batchTranslateText (배치 번역) |
+| Utils<br>&<br>View | src/services/api.js | • Backend FastAPI와 통신하는 API 클라이언트입니다. Axios를 사용하여 HTTP 요청을 처리합니다.<br>• 주요 함수: initChat (채팅 초기화), sendChatMessage (사용자 메시지 전송), generateRecommendations (프로필 기반 추천 생성), getRestaurantDetail (식당 상세 조회), batchTranslateText (배치 번역) |
