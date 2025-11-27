@@ -12,33 +12,19 @@ services:
     networks:
       - app-network
 
-  # Backend API (식당 추천 로직)
-  backend:
-    build: ./back
-    container_name: backend
-    ports:
-      - "8000:8000"
-    environment:
-      - PYTHONUNBUFFERED=1
-      - GRAPH_HOPPER_API_URL=http://graphhopper:8989/route
-    depends_on:
-      - graphhopper
-    networks:
-      - app-network
-
   # API Server (챗봇 및 추가 기능)
   apiserver:
     build: ./APIserver
     container_name: apiserver
     ports:
-      - "8001:8001"
+      - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
       - GRAPH_HOPPER_API_URL=http://graphhopper:8989/route
     env_file:
       - ./APIserver/.env
     depends_on:
-      - backend
+      - graphhopper
     networks:
       - app-network
 
@@ -50,7 +36,6 @@ services:
       - "3000:3000"
     depends_on:
       - apiserver
-      - backend
     networks:
       - app-network
 
