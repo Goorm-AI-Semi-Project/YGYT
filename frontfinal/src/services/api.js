@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // FastAPI 백엔드 URL
-const API_BASE_URL = 'http://127.0.0.1:8000';
+// Docker 환경: 컨테이너 이름 사용, 로컬 개발: localhost 사용
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 // Axios 인스턴스 생성
 const apiClient = axios.create({
