@@ -178,15 +178,11 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS 설정 (로컬 개발 + AWS 배포)
+# CORS 설정 (모든 오리진 허용)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",           # 로컬 개발
-        "http://43.200.106.102:3000",      # AWS 배포
-        "http://43.200.106.102",           # AWS 배포 (포트 없이)
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -358,6 +354,13 @@ async def generate_recommendations(request: RecommendationGenerateRequest):
         result_df_reset = result_df_reset.where(pd.notnull(result_df_reset), None)
 
         restaurants = result_df_reset.to_dict('records')
+
+        # 추가 안전 처리: 각 레코드의 모든 float 값을 체크
+        for restaurant in restaurants:
+            for key, value in list(restaurant.items()):
+                if isinstance(value, float):
+                    if pd.isna(value) or value == float('inf') or value == float('-inf'):
+                        restaurant[key] = None
 
         return RecommendationGenerateResponse(
             restaurants=restaurants,
