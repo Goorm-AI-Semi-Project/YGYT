@@ -17,6 +17,6 @@ langchain-openai==0.0.2
 openai>=1.6.1,<2.0.0
 python-multipart==0.0.6
 aiofiles==23.2.1
-chromadb
+chromadb==0.4.22
 requests
 sentence-transformers

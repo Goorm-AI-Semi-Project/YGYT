@@ -134,7 +134,7 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
   except Exception as e:
     print(f"  > 'restaurants' 컬렉션을 찾을 수 없습니다. (이유: {e})")
     print("  > 새 'restaurants' 컬렉션을 생성하고 데이터 적재를 시작합니다.")
-    
+
     df_for_embedding = load_and_prepare_data(store_csv_path)
     if df_for_embedding is None:
       print("[오류] 'restaurants' DB 적재를 위한 원본 CSV 로드에 실패했습니다.")
@@ -146,8 +146,19 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
         embedding_function=sentence_transformer_ef
       )
     except Exception as e:
-      print(f"[오류] 'restaurants' 컬렉션 생성 실패: {e}")
-      return False
+      # 컬렉션이 이미 존재하지만 로드 실패한 경우 (손상된 DB)
+      print(f"[경고] 컬렉션 생성 실패: {e}")
+      print("  > 손상된 컬렉션을 삭제하고 재생성합니다.")
+      try:
+        client.delete_collection(name=RESTAURANT_COLLECTION_NAME)
+        collection = client.create_collection(
+          name=RESTAURANT_COLLECTION_NAME,
+          embedding_function=sentence_transformer_ef
+        )
+        print("  > 컬렉션 재생성 완료")
+      except Exception as e2:
+        print(f"[오류] 'restaurants' 컬렉션 재생성 실패: {e2}")
+        return False
 
     documents_list = df_for_embedding['RAG텍스트'].tolist()
     metadatas_list = df_for_embedding['메타데이터'].tolist() 
@@ -208,8 +219,19 @@ def build_vector_db(store_csv_path, profile_csv_path, clear_db=False):
         embedding_function=sentence_transformer_ef
       )
     except Exception as e:
-      print(f"[오류] 'mock_profiles' 컬렉션 생성 실패: {e}")
-      return False
+      # 컬렉션이 이미 존재하지만 로드 실패한 경우 (손상된 DB)
+      print(f"[경고] 컬렉션 생성 실패: {e}")
+      print("  > 손상된 컬렉션을 삭제하고 재생성합니다.")
+      try:
+        client.delete_collection(name=PROFILE_COLLECTION_NAME)
+        profile_collection = client.create_collection(
+          name=PROFILE_COLLECTION_NAME,
+          embedding_function=sentence_transformer_ef
+        )
+        print("  > 컬렉션 재생성 완료")
+      except Exception as e2:
+        print(f"[오류] 'mock_profiles' 컬렉션 재생성 실패: {e2}")
+        return False
 
     profile_docs = df_profiles['rag_query_text'].tolist()
     profile_ids = df_profiles['user_id'].astype(str).tolist()
