@@ -6,7 +6,7 @@ torch
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
-httpx==0.25.1
+httpx>=0.27.0
 pandas==2.1.3
 deep-translator==1.11.4
 python-dotenv==1.0.0
