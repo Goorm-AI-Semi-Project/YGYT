@@ -178,10 +178,14 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS 설정
+# CORS 설정 (로컬 개발 + AWS 배포)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",           # 로컬 개발
+        "http://43.200.106.102:3000",      # AWS 배포
+        "http://43.200.106.102",           # AWS 배포 (포트 없이)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

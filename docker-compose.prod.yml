@@ -28,17 +28,17 @@ services:
     networks:
       - app-network
 
-  # Frontend (React 개발 서버)
+  # Frontend (React - AWS 배포용)
   frontend:
     build:
       context: ./frontfinal
       args:
-        - REACT_APP_API_URL=http://localhost:8000
+        - REACT_APP_API_URL=http://43.200.106.102:8000
     container_name: frontend
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_API_URL=http://43.200.106.102:8000
     depends_on:
       - apiserver
     networks:

@@ -11,6 +11,10 @@ RUN npm install --legacy-peer-deps
 # 소스 코드 복사
 COPY . .
 
+# 환경변수 설정 (빌드 시점에 적용)
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+
 # 개발 서버 포트 노출
 EXPOSE 3000
 
