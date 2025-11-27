@@ -1,0 +1,6 @@
+# 이미지 크롤러를 위한 추가 패키지
+
+selenium==4.16.0
+webdriver-manager==4.0.1
+beautifulsoup4==4.12.2
+lxml==5.1.0

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # GraphHopper 라우팅 엔진
+  graphhopper:
+    build: ./deploy
+    container_name: graphhopper
+    ports:
+      - "8989:8989"
+    environment:
+      - JAVA_OPTS=-Xmx24g -Xms4g
+    networks:
+      - app-network
+
+  # Backend API (식당 추천 로직)
+  backend:
+    build: ./back
+    container_name: backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GRAPH_HOPPER_API_URL=http://graphhopper:8989/route
+    depends_on:
+      - graphhopper
+    networks:
+      - app-network
+
+  # API Server (챗봇 및 추가 기능)
+  apiserver:
+    build: ./APIserver
+    container_name: apiserver
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GRAPH_HOPPER_API_URL=http://graphhopper:8989/route
+    env_file:
+      - ./APIserver/.env
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Frontend (React 개발 서버)
+  frontend:
+    build: ./frontfinal
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - apiserver
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
