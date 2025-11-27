@@ -29,4 +29,4 @@ ChatBot 구동시 참조사항
 
 * Structure Info
   * https://github.com/Goorm-AI-Semi-Project/YGYT/blob/main/%EC%A0%95%EC%A3%BC%ED%99%98/chatbot/MermaidChart.png
-  * https://github.com/Goorm-AI-Semi-Project/YGYT/blob/main/%EC%A0%95%EC%A3%BC%ED%99%98/chatbot/MermaidChart_search.png 
+  * https://github.com/Goorm-AI-Semi-Project/YGYT/blob/main/%EC%A0%95%EC%A3%BC%ED%99%98/chatbot/MermaidChart_search2.png 

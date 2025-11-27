@@ -11,7 +11,8 @@ pip install sentence-transformers==5.1.2
 
 # 2. 기타 필수 패키지 설치
 echo "Installing other dependencies (uvicorn, fastapi, gradio, etc.)..."
-pip install uvicorn fastapi gradio openai dotenv chromadb hf_transfer
+pip install "gradio>=5.0.0,<6.0.0" --force-reinstall
+pip install uvicorn fastapi openai dotenv chromadb hf_transfer
 
 # 3. OpenAI API 키 환경 변수로 설정
 echo "Setting OPENAI_API_KEY..."
