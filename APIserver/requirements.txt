@@ -1,3 +1,8 @@
+# PyTorch CPU 버전 (GPU 버전 방지 - 용량 절약)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+
+# 나머지 패키지들
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==2.5.0
