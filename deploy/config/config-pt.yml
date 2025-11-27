@@ -7,9 +7,7 @@ graphhopper:
   profiles:
     - name: foot
       custom_model_files:
-        - custom_models/foot.json
-      # optionally add
-      #  - foot_elevation.json
+        - foot.json
 
   import.osm.ignored_highways: motorway,trunk
   graph.encoded_values: foot_access, foot_average_speed, foot_priority, foot_road_access, hike_rating, mtb_rating, country, road_class
